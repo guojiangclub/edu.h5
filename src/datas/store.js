@@ -1,0 +1,28 @@
+/**
+ * Created by admin on 2017/5/19.
+ */
+import Vue from 'vue';
+import Vuex from 'vuex';
+import chub from './modules/chub';
+import user from './modules/user';
+import blogs from './modules/blogs';
+import news from './modules/news';
+import question from './modules/question';
+import activity from './modules/activity';
+import edu from './modules/edu';
+import major from './modules/major';
+Vue.use(Vuex);
+
+export default new Vuex.Store({
+	modules: {
+		chub,
+		user,
+		blogs,
+		news,
+		question,
+		activity,
+		edu,
+        major
+	}
+})
+
