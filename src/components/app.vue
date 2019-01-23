@@ -4,7 +4,7 @@
     @import "~vlc-ui/dist/styles/vlc.css";
     @import "../static/css/1px.css";
     /*@import "../static/css/reset.css";*/
-    @import "//at.alicdn.com/t/font_384012_8030xmrpm71ll3di.css";
+    @import "//at.alicdn.com/t/font_973221_8ks24fxe0at.css";
     /*@import 'video.js/dist/video-js.css'*/
     html, body {
         width: 100%;
