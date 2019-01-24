@@ -62,5 +62,14 @@ export default [
             title:'课时详情'
         }
 
+    },
+    {
+        path:'/index/svip',
+        name:'index-svip',
+        component: resolve => require(['./svip.vue'],resolve),
+        meta :{
+            title:'svip页面'
+        }
+
     }
 ]
