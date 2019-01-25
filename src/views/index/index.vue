@@ -112,21 +112,20 @@
         name: 'index',
         data(){
             return {
-                banners:[
-                    {
-                        'image':'http://img0.imgtn.bdimg.com/it/u=92552686,2156973452&fm=26&gp=0.jpg'
-                    },
-                    {
-                        'image': 'http://img5.imgtn.bdimg.com/it/u=1512848658,303017849&fm=26&gp=0.jpg'
-                    },
-                    {
-                        'image':'http://img0.imgtn.bdimg.com/it/u=1230863123,3589651811&fm=26&gp=0.jpg'
-                    }
+                homeDate:''
 
-
-                ]
 
             }
+        },
+        created(){
+            //请求首页数据
+            this.$store.dispatch('queryHomeDate');
+            //监听从action js 里面的数据，拿到首页数据
+            EventBus.$on('homeDate',this.homeDate);
+
+        },
+        methods:{
+
         }
 
     }

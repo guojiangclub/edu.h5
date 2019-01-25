@@ -151,7 +151,7 @@ router.afterEach(() => {
 window.EventBus = new Vue();
 
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV == 'production') {
 
 
      global = global || globalConfigs.GLOBAL.ea
@@ -201,7 +201,7 @@ if (process.env.NODE_ENV === 'production') {
 
     })
 } else {
-	wechat.wechat_getInfo(EventBus.$Config.baseUrl+"api/wechat/jssdkconfig",{url: encodeURIComponent(location.href.replace(/#.*$/, ""))},function(data){
+	/*wechat.wechat_getInfo(EventBus.$Config.baseUrl+"api/wechat/jssdkconfig",{url: encodeURIComponent(location.href.replace(/#.*$/, ""))},function(data){
 		new Vue({
 			el: '#app',
 			store,
@@ -210,13 +210,13 @@ if (process.env.NODE_ENV === 'production') {
 		});
 		EventBus.wxShare=data;
 		wechat.wechat_init(data);
-	});
-   /* new Vue({
+	});*/
+    new Vue({
         el: '#app',
         router: router,
         render: h => h(App),
         store: store
-    })*/
+    })
 }
 
 

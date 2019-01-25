@@ -314,6 +314,7 @@
 	        	page: 1,
 		        type: this.tabIndex
             };
+	        //
 	        this.$store.dispatch('queryCoursesList', data);
     		this.$store.dispatch('queryEduIndex');
     		EventBus.$on('eduIndex', this.indexData);

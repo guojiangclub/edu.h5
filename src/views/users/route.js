@@ -26,5 +26,21 @@ export default [
         meta :{
             title:'老用户登录'
         }
+    },
+    {
+        path:'/users/mycourse',
+        name:'users-mycourse',
+        component: resolve => require(['./mycourse.vue'],resolve),
+        meta :{
+            title:'我的课程'
+        }
+    },
+    {
+        path:'/users/setting',
+        name:'users-setting',
+        component: resolve => require(['./setting.vue'],resolve),
+        meta :{
+            title:'设置'
+        }
     }
 ]

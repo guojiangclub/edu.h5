@@ -5,7 +5,7 @@
 var globalConfigs = {
 
 	'GLOBAL': {
-		'baseUrl': process.env.NODE_ENV !== '"production"' ? '"https://api.hellobi.com/"' : '"{!API_URL}"', // 运行时自动替换变量
+		'baseUrl': process.env.NODE_ENV !== '"production"' ? '"https://hellobi-dev-admin.ibrand.cc/"' : '"{!API_URL}"', // 运行时自动替换变量
         'ea': {
             'analytics':{
                 'accounts':{

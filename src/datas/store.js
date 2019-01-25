@@ -11,10 +11,12 @@ import question from './modules/question';
 import activity from './modules/activity';
 import edu from './modules/edu';
 import major from './modules/major';
+import index from './modules/index'
 Vue.use(Vuex);
 
 export default new Vuex.Store({
 	modules: {
+	    index,
 		chub,
 		user,
 		blogs,
