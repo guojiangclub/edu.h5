@@ -9,42 +9,22 @@
                 </div>
                 <!--轮播图-->
                 <div class="banner">
-                    <img src="http://img0.imgtn.bdimg.com/it/u=92552686,2156973452&fm=26&gp=0.jpg" alt="">
+                    <img :src="homedata.banners[0].image" alt="">
                 </div>
             </div>
             <!--svip的广告图-->
             <div class="svip-box">
-                <img src="http://img4.imgtn.bdimg.com/it/u=1319548860,409888960&fm=26&gp=0.jpg">
+                <img :src="homedata.svipBanner[0].image">
             </div>
             <!--优惠券-->
             <div class="coupon-box">
                 <div class="scroll-view">
-                    <div class="pa-li">
+                    <div class="pa-li" v-for="item in homedata.coupons">
                         <div class="li-item">
-                            <!--<div class="left-info" wx:if="{{item.action_type.type == 'cash'}}">{{item.action_type.value}}元</div>-->
-                            <div class="left-info">8折</div>
+                            <div class="left-info" v-if="item.action_type.type == 'cash'">{{item.action_type.value}}元</div>
+                            <div class="left-info" v-else>{{item.action_type.value}}折</div>
                             <div class="right-info">
-                                <div class="label">春节使用</div>
-                                <div class="soon">立即领取</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="pa-li">
-                        <div class="li-item">
-                            <!--<div class="left-info" wx:if="{{item.action_type.type == 'cash'}}">{{item.action_type.value}}元</div>-->
-                            <div class="left-info">8折</div>
-                            <div class="right-info">
-                                <div class="label">春节使用</div>
-                                <div class="soon">立即领取</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="pa-li">
-                        <div class="li-item">
-                            <!--<div class="left-info" wx:if="{{item.action_type.type == 'cash'}}">{{item.action_type.value}}元</div>-->
-                            <div class="left-info">8折</div>
-                            <div class="right-info">
-                                <div class="label">春节使用</div>
+                                <div class="label">{{item.title}}</div>
                                 <div class="soon">立即领取</div>
                             </div>
                         </div>
@@ -54,13 +34,13 @@
             <!--课程分类的菜单-->
             <div class="menu-box">
                 <div class="scroll-view">
-                    <div class="pa-li">
+                    <div class="pa-li" v-for="(item,index) in homedata.categories">
                         <div class="li-item">
                             <div class="top-info">
-                                数据
+                                {{item.short_name}}
                             </div>
                             <div class="bottom-info">
-                                大数据
+                                {{item.name}}
                             </div>
                         </div>
                     </div>
@@ -112,7 +92,17 @@
         name: 'index',
         data(){
             return {
-                homeDate:''
+                homedata:{
+                    banners:[
+                        {
+                            'image':''
+                        }
+                    ],
+                    categories:[],
+                    coupons:[],
+                    svipBanner:[]
+
+                }
 
 
             }
@@ -120,11 +110,14 @@
         created(){
             //请求首页数据
             this.$store.dispatch('queryHomeDate');
-            //监听从action js 里面的数据，拿到首页数据
-            EventBus.$on('homeDate',this.homeDate);
+            //监听从action js 里面的数据,触发homedata这个函数
+            EventBus.$on('gethomeDate',this.homeDate);
 
         },
         methods:{
+            homeDate(res){
+                this.homedata = res.data;
+            }
 
         }
 

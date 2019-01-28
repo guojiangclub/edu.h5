@@ -10,11 +10,15 @@ export const queryHomeDate = function ({commit,state}) {
         .then(res =>{
             res = res.data;
             //分发一个事件出去，将数据分发到页面中去
-            EventBus.$emit('homeDate',res);
+            EventBus.$emit('gethomeDate',res);
 
         },err =>{
             EventBus.$Modal.confirm({body: '服务端出错'});
     })
 
 
+}
+//获取推荐课程的课程列表
+export default queryCourseList = function ({commit,state}) {
+    
 }
