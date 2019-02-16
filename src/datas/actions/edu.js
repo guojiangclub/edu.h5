@@ -131,9 +131,7 @@ export const queryCoursesList = function ({commit, state}, data = {type: 0, cate
 				category: data.category,
 				page: data.page
 			}
-		})
-        3
-		.then(res => {
+		}).then(res => {
 			res = res.data;
 			EventBus.$Indicator.remove();
 			if (res.meta && res.meta.pagination) {

@@ -3,6 +3,7 @@
  */
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import Vant from 'vant';
 import App from './components/app.vue';
 import Routers from './router';
 import Config from './config/config'
@@ -15,6 +16,7 @@ import store from './datas/store';
 import wechat from './utils/wechat';
 
 Vue.use(VueRouter);
+Vue.use(Vant);
 Vue.use(Vlc);
 
 
@@ -22,29 +24,31 @@ Vue.use(Vlc);
 Vue.config.debug = true;
 
 if (process.env.NODE_ENV === 'development') {
-	var log = console.log;
-	console.log = function () {
-		var args = Array.from(arguments);
-		args = args.map(arg => {
-			try {
-				return JSON.parse(JSON.stringify(arg));
-			} catch (e) {
-				return arg;
-			}
-		});
+    var log = console.log;
+    console.log = function () {
+        var args = Array.from(arguments);
+        args = args.map(arg => {
+            try {
+                return JSON.parse(JSON.stringify(arg));
+            } catch (e) {
+                return arg;
+            }
+        });
 
-		log.apply(console, args);
-	};
+        log.apply(console, args);
+    };
 
-	window.vConsole = require('./static/js/vconsole.min');
-	require('./static/js/vconsole-resources.min');
-	require('./static/js/vconsole-sources.min');
+    window.vConsole = require('./static/js/vconsole.min');
+    require('./static/js/vconsole-resources.min');
+    require('./static/js/vconsole-sources.min');
 }
 
 var global;
 Vue.prototype.$Config = Config;
 Vue.prototype.$Request = Request;
 Vue.prototype.$http = Axios;
+
+Axios.defaults.headers.post["Content-type"] = "application/json"
 
 Object.keys(filters).forEach(name => {
     Vue.filter(name, filters[name]);
@@ -58,29 +62,29 @@ let router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-	var agent_code = to.query.rf;
-	if (agent_code) {
-		Cache.set(cache_keys.agent_code, agent_code, 0)
-	}
+    var agent_code = to.query.rf;
+    if (agent_code) {
+        Cache.set(cache_keys.agent_code, agent_code, 0)
+    }
 
     let title = to.meta.title || Config.doc_title;
     setPageTitle(title);
     var link = window.location.origin + '/#' + to.path;
-	var info = Cache.get(cache_keys.info);
-	if (info && info.meta && info.meta.agentCode) {
+    var info = Cache.get(cache_keys.info);
+    if (info && info.meta && info.meta.agentCode) {
 	    if (link.indexOf('?') != -1) {
 		    link = link + '&rf=' + info.meta.agentCode;
-        } else {
+    } else {
 		    link = link + '?rf=' + info.meta.agentCode;
-        }
     }
-	console.log(link);
-	wechat.update_share({
+    }
+    console.log(link);
+    wechat.update_share({
         title:title,
         desc:title,
         link: link
     });
-	global = global || globalConfigs.GLOBAL.ea
+    global = global || globalConfigs.GLOBAL.ea
     if (to) {
         if (window.ea && global.analytics) {
             let args = {
@@ -134,7 +138,7 @@ router.beforeEach((to, from, next) => {
     // }
     // window.scrollTo(0, 0);
 
-	if (to.meta.authorization) {
+    if (to.meta.authorization) {
         var target = {name: to.meta.login || 'user-login', query: {source: to.path}};
         var oauth = Cache.get(cache_keys.token);
         oauth ? next() : next(target);
@@ -154,7 +158,7 @@ window.EventBus = new Vue();
 if (process.env.NODE_ENV == 'production') {
 
 
-     global = global || globalConfigs.GLOBAL.ea
+    global = global || globalConfigs.GLOBAL.ea
     if (global) {
         let fun_name = 'ea';
 

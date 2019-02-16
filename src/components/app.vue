@@ -3,6 +3,7 @@
     // @import '../styles/common.css';
     @import "~vlc-ui/dist/styles/vlc.css";
     @import "../static/css/1px.css";
+    @import '~vant/lib/index.css';
     /*@import "../static/css/reset.css";*/
     @import "//at.alicdn.com/t/font_973221_8ks24fxe0at.css";
     /*@import 'video.js/dist/video-js.css'*/

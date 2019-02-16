@@ -34,7 +34,6 @@ module.exports = merge(webpackBaseConfig, {
 			'process.env.NODE_ENV': process.env.NODE_ENV,
 			'globalConfigs':require('./index')
 		}),
-
 		new webpack.optimize.CommonsChunkPlugin({ name: 'vendors', filename: 'js/vendor.bundle.js' }),
 		new HtmlWebpackPlugin({
 			inject: false,

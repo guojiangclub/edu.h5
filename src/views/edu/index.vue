@@ -268,8 +268,12 @@
 </template>
 
 <script type="text/ecmascript-6">
+    import { Button } from 'vant';
     export default {
     	name: 'edu-index',
+        comments: {
+            Button
+        },
     	data() {
     		return {
 
