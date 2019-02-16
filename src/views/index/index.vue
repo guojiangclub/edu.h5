@@ -95,28 +95,63 @@
                 homedata:{
                     banners:[
                         {
-                            'image':''
+                            image:''
                         }
                     ],
-                    categories:[],
-                    coupons:[],
-                    svipBanner:[]
+                    categories:[
 
-                }
+                    ],
+                    coupons:[],
+                    svipBanner:[
+                        {
+                            image:''
+                        }
+                    ]
+
+                },
+                dataList:[],//推荐课程列表
+                page:0,//页数
+                hasMore:true
 
 
             }
         },
         created(){
+            const data = {
+                page:1
+            }
             //请求首页数据
             this.$store.dispatch('queryHomeDate');
+            //请求首页中的推荐课程列表数据
+            this.$store.dispatch('queryCourseList',data);
             //监听从action js 里面的数据,触发homedata这个函数
             EventBus.$on('gethomeDate',this.homeDate);
+            //监听courseList这个事件里面的数据，触发recommendList这个函数
+            EventBus.$on('courseList',this.recommendList)
 
+        },
+        beforeDestroy(){
+          EventBus.$off('gethomeDate');
         },
         methods:{
             homeDate(res){
                 this.homedata = res.data;
+            },
+            //将所得到的推荐课程列表数据进行分页处理
+            recommendList(res){
+                var list;
+                var page = res.meta.pagination;
+                var current_page = page.current_page;
+                var total_pages = page.total_pages;
+                if(current_page == 1){
+                    list = res.data;
+                } else {
+                    list = this.dataList.concat(res.data);
+                }
+                this.dataList = list;
+                this.page = current_page;
+                this.hasMore = current_page < total_pages
+
             }
 
         }

@@ -132,6 +132,7 @@ export const queryCoursesList = function ({commit, state}, data = {type: 0, cate
 				page: data.page
 			}
 		})
+        3
 		.then(res => {
 			res = res.data;
 			EventBus.$Indicator.remove();

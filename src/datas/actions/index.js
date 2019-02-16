@@ -19,6 +19,22 @@ export const queryHomeDate = function ({commit,state}) {
 
 }
 //获取推荐课程的课程列表
-export default queryCourseList = function ({commit,state}) {
-    
+export const queryCourseList = function ({commit,state},data) {
+    EventBus.$http
+        .get(EventBus.$Config.baseUrl + 'api/edu/home/courses',{
+            params:{
+                page:data.page
+            }
+        })
+        .then(res =>{
+            res = res.data;
+            if(res.meta && res.meta.pagination){
+                EventBus.$emit('courseList',res);
+            } else {
+                EventBus.$Modal.confirm({body: '请求失败'});
+            }
+        },err =>{
+            EventBus.$Modal.confirm({body: '服务端出错'});
+        })
+
 }
