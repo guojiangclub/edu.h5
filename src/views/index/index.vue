@@ -9,7 +9,12 @@
                 </div>
                 <!--轮播图-->
                 <div class="banner">
-                    <img :src="homedata.banners[0].image" alt="">
+                    <van-swipe :autoplay="3000">
+                        <van-swipe-item v-for="(image, index) in homedata.banners" :key="index">
+                            <img :src="image.image" alt="">
+                        </van-swipe-item>
+                    </van-swipe>
+
                 </div>
             </div>
             <!--svip的广告图-->
@@ -50,31 +55,35 @@
             <div class="recommend-list">
                 <div class="title mx-1px-bottom">推荐课程</div>
                 <div class="ul-content">
-                    <div class="li-item mx-1px-bottom">
-                        <div class="left-info">
-                            <img src="http://img1.imgtn.bdimg.com/it/u=653229645,1443777604&fm=26&gp=0.jpg">
-                            <div class="limit-discount"></div>
-                        </div>
-                        <div class="right-info">
-                            <div class="name">罗熙最可爱</div>
-                            <div class="tiem-box">
-                                <div class="time">
-                                    <span class="iconfont icon-keshi"></span>
-                                    33课时
+                    <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadMore">
+                        <van-cell  v-for="(item,index) in dataList" :key="index">
+                            <div class="li-item">
+                                <div class="left-info">
+                                    <img :src="item.picture">
+                                    <div class="limit-discount" v-if="item.is_discount == 1"></div>
                                 </div>
-                                <div class="many">
-                                    99人学习
+                                <div class="right-info">
+                                    <div class="name">{{item.title}}</div>
+                                    <div class="tiem-box">
+                                        <div class="time">
+                                            <span class="iconfont icon-keshi"></span>
+                                            {{item.lesson_count}}课时
+                                        </div>
+                                        <div class="many">
+                                            {{item.student_count}}人学习
+                                        </div>
+                                    </div>
+                                    <div class="teach-box">
+                                        <div class="teacher">
+                                            <span class="iconfont icon-laoshi"></span>
+                                            {{item.teacher.name || '无名'}}老师
+                                        </div>
+                                        <div class="money">¥ {{item.display_price}}元</div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="teach-box">
-                                <div class="teacher">
-                                    <span class="iconfont icon-laoshi"></span>
-                                    黔在在老师
-                                </div>
-                                <div class="money">¥ 99元</div>
-                            </div>
-                        </div>
-                    </div>
+                        </van-cell>
+                    </van-list>
                 </div>
             </div>
         </div>
@@ -88,8 +97,14 @@
 </template>
 
 <script type="text/ecmascript-6">
+    import { List,Swipe, SwipeItem } from 'vant';
     export default {
         name: 'index',
+        component:{
+            List,
+            Swipe,
+            SwipeItem
+        },
         data(){
             return {
                 homedata:{
@@ -111,19 +126,18 @@
                 },
                 dataList:[],//推荐课程列表
                 page:0,//页数
-                hasMore:true
+                hasMore:true,
+                loading:false,
+                finished:false
 
 
             }
         },
         created(){
-            const data = {
-                page:1
-            }
             //请求首页数据
             this.$store.dispatch('queryHomeDate');
             //请求首页中的推荐课程列表数据
-            this.$store.dispatch('queryCourseList',data);
+//            this.$store.dispatch('queryCourseList',data);
             //监听从action js 里面的数据,触发homedata这个函数
             EventBus.$on('gethomeDate',this.homeDate);
             //监听courseList这个事件里面的数据，触发recommendList这个函数
@@ -150,9 +164,29 @@
                 }
                 this.dataList = list;
                 this.page = current_page;
-                this.hasMore = current_page < total_pages
+                this.hasMore = total_pages > current_page;
+                this.loading = false;
+
+
+
+            },
+            //触底分页加载更多数据
+            loadMore(){
+                const page = this.page + 1;
+                const data = {
+                    page:page
+                }
+                if(this.hasMore){
+                    this.$store.dispatch('queryCourseList',data);
+                    //加载状态结束，需要将loading变成false
+                } else {
+                    //数据全部加载完成
+                    this.finished = true;
+                }
+
 
             }
+
 
         }
 

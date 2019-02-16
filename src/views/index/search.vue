@@ -126,6 +126,9 @@
                             font-size: 12px;
                             line-height: 14px;
                             padding-bottom: 10px;
+                            span{
+                                font-size: 12px;
+                            }
                         }
                         .teach-box{
                             display: flex;

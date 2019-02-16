@@ -23,7 +23,7 @@ export const queryCourseList = function ({commit,state},data) {
     EventBus.$http
         .get(EventBus.$Config.baseUrl + 'api/edu/home/courses',{
             params:{
-                page:data.page
+                page:data.page,
             }
         })
         .then(res =>{
@@ -36,5 +36,11 @@ export const queryCourseList = function ({commit,state},data) {
         },err =>{
             EventBus.$Modal.confirm({body: '服务端出错'});
         })
+
+}
+//搜索页面的
+export const querySearch = function ({commit,state},data) {
+    EventBus.$http
+        .get()
 
 }
