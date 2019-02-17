@@ -55,7 +55,7 @@
             <div class="recommend-list">
                 <div class="title mx-1px-bottom">推荐课程</div>
                 <div class="ul-content">
-                    <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadMore">
+                    <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
                         <van-cell  v-for="(item,index) in dataList" :key="index">
                             <div class="li-item">
                                 <div class="left-info">
@@ -128,16 +128,20 @@
                 page:0,//页数
                 hasMore:true,
                 loading:false,
-                finished:false
+                finished:false,
+                immediate: false
 
 
             }
         },
         created(){
+            const data = {
+                page:1
+            }
             //请求首页数据
             this.$store.dispatch('queryHomeDate');
             //请求首页中的推荐课程列表数据
-//            this.$store.dispatch('queryCourseList',data);
+            this.$store.dispatch('queryCourseList',data);
             //监听从action js 里面的数据,触发homedata这个函数
             EventBus.$on('gethomeDate',this.homeDate);
             //监听courseList这个事件里面的数据，触发recommendList这个函数
@@ -146,6 +150,7 @@
         },
         beforeDestroy(){
           EventBus.$off('gethomeDate');
+            EventBus.$off('courseList');
         },
         methods:{
             homeDate(res){
@@ -181,6 +186,7 @@
                     //加载状态结束，需要将loading变成false
                 } else {
                     //数据全部加载完成
+                    this.loading = false;
                     this.finished = true;
                 }
 

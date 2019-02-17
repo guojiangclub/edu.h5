@@ -2,39 +2,40 @@
     <div id="search">
         <!--搜索-->
         <div class="search">
-            <input type="text" placeholder="搜索你感兴趣的课程"/>
-            <span>确认</span>
+            <input type="text" placeholder="搜索你感兴趣的课程" v-model="title"/>
+            <span @click="sureSearch">确认</span>
         </div>
         <div class="ul-content">
-            <div class="li-list">
-                <div class="item mx-1px-bottom">
-                    <div class="left-info">
-                        <img src="http://img0.imgtn.bdimg.com/it/u=586695282,1298873478&fm=26&gp=0.jpg">
-                        <div class="limit-discount"></div>
-                    </div>
-                    <div class="right-info">
-                        <div class="name">今日份挨打</div>
-                        <div class="tiem-box">
-                            <div class="time">
-                                <span class="iconfont icon-keshi"></span>
-                                89课时
+            <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
+                <van-cell  v-for="(item,index) in dataList" :key="index">
+                    <div class="li-item">
+                        <div class="left-info">
+                            <img :src="item.picture">
+                            <div class="limit-discount" v-if="item.is_discount == 1"></div>
+                        </div>
+                        <div class="right-info">
+                            <div class="name">{{item.title}}</div>
+                            <div class="tiem-box">
+                                <div class="time">
+                                    <span class="iconfont icon-keshi"></span>
+                                    {{item.lesson_count}}课时
+                                </div>
+                                <div class="many">
+                                    {{item.student_count}}人学习
+                                </div>
                             </div>
-                            <div class="many">
-                                200人学习
+                            <div class="teach-box">
+                                <div class="teacher" v-if="item.teacher">
+                                    <span class="iconfont icon-laoshi"></span>
+                                    {{item.teacher.name || '无名'}}老师
+                                </div>
+                                <div class="money">¥ {{item.display_price}}元</div>
                             </div>
                         </div>
-                        <div class="teach-box">
-                            <div class="teacher">
-                                <span iconfont icon-laoshi></span>
-                                丽丽老师
-                            </div>
-                            <div class="money">¥ 85元</div>
-                        </div>
                     </div>
-                </div>
-            </div>
+                </van-cell>
+            </van-list>
         </div>
-        <div class="no-more">没有更多数据了！！！</div>
 
     </div>
 
@@ -45,8 +46,59 @@
         name: 'search',
         data(){
             return {
+                title:'',
+                dataList:[],
+                page:0,
+                hasMore:true,
+                loading:false,
+                finished:false,
+                immediate: false
+            }
+        },
+        created(){
+            EventBus.$on('searchList',this.searchDate)
+        },
+        beforeDestroy(){
+            EventBus.$off('searchList');
+        },
+        methods:{
+            sureSearch(){
+                const data = {
+                    title:this.title,
+                    page:1
+                }
+                this.$store.dispatch('querySearch',data);
 
-
+            },
+            searchDate(res){
+                var list;
+                var page = res.meta.pagination;
+                var current_page = page.current_page;
+                var total_pages = page.total_pages;
+                if(current_page == 1){
+                    list = res.data;
+                } else {
+                    list = this.dataList.concat(res.data);
+                }
+                this.dataList = list;
+                this.page = current_page;
+                this.hasMore = total_pages > current_page;
+                this.loading = false;
+            },
+            loadMore(){
+                const page = this.page + 1;
+                const data = {
+                    title:this.title,
+                    page:page
+                }
+                if(this.hasMore){
+                    this.$store.dispatch('querySearch',data);
+                    //加载状态结束，需要将loading变成false
+                } else {
+                    //数据全部加载完成
+                    this.loading = false;
+                    this.finished = true;
+                }
             }
         }
 
@@ -88,8 +140,7 @@
         }
         .ul-content{
             background-color: #FFFFFF;
-            .li-list{
-                .item{
+                .li-item{
                     padding: 20px 15px;
                     display: flex;
                     align-items: flex-start;
@@ -137,6 +188,9 @@
                             color:#909090;
                             font-size: 12px;
                             line-height: 14px;
+                            span{
+                                font-size: 12px;
+                            }
                             .money{
                                 color: #FF2741;
                             }
@@ -151,7 +205,6 @@
                         top:0;
                         right: 0;
                     }
-                }
 
             }
         }

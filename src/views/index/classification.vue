@@ -31,36 +31,38 @@
                 <div  class="navbar-item">
                     <div class="navbar-title">最热</div>
                 </div>
-            <!--<div class="navbar-slider" style="width: {{width}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></div>-->
+            <div class="navbar-slider" :style="{width:width + 'px',transform:'translateX('+sliderOffset+'px)'}"></div>
         </div>
         <div class="ul-content">
-            <div class="li-list">
-                <div class="item mx-1px-bottom">
-                    <div class="left-info">
-                        <img src="http://img4.imgtn.bdimg.com/it/u=791348081,4225951845&fm=15&gp=0.jpg">
-                        <div class="limit-discount"></div>
-                    </div>
-                    <div class="right-info">
-                        <div class="name">要多回家看看</div>
-                        <div class="tiem-box">
-                            <div class="time">
-                                <span class="iconfont icon-keshi"></span>
-                                44课时
+            <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
+                <van-cell  v-for="(item,index) in dataList" :key="index">
+                    <div class="li-item">
+                        <div class="left-info">
+                            <img :src="item.picture">
+                            <div class="limit-discount" v-if="item.is_discount == 1"></div>
+                        </div>
+                        <div class="right-info">
+                            <div class="name">{{item.title}}</div>
+                            <div class="tiem-box">
+                                <div class="time">
+                                    <span class="iconfont icon-keshi"></span>
+                                    {{item.lesson_count}}课时
+                                </div>
+                                <div class="many">
+                                    {{item.student_count}}人学习
+                                </div>
                             </div>
-                            <div class="many">
-                                444人学习
+                            <div class="teach-box" v-if="item.tearcher">
+                                <div class="teacher">
+                                    <span class="iconfont icon-laoshi"></span>
+                                    {{item.teacher.name || '无名'}}老师
+                                </div>
+                                <div class="money">¥ {{item.display_price}}元</div>
                             </div>
                         </div>
-                        <div class="teach-box">
-                            <div class="teacher">
-                                <span iconfont icon-laoshi></span>
-                                在在老师
-                            </div>
-                            <div class="money">¥ 895元</div>
-                        </div>
                     </div>
-                </div>
-            </div>
+                </van-cell>
+            </van-list>
         </div>
 
     </div>
@@ -72,6 +74,67 @@
         name: 'classification',
         data(){
             return {
+                dataList:[],
+                isRefresh:true,
+                page:0,
+                hasMore:true,
+                loading:false,
+                finished:false,
+                immediate: false,
+                width:'',
+                sliderOffset:0
+            }
+        },
+        created(){
+            const data = {
+                type:2,
+                category:36,
+                page:1
+            }
+            this.$store.dispatch('queryClassify',data);
+            EventBus.$on('classifyList',this.classsifyDate)
+        },
+        mounted(){
+            this.width = document.body.clientWidth / 2;
+        },
+        methods:{
+            classsifyDate(res){
+                if(this.isRefresh){
+                    this.dataList =[]
+                }
+                var list;
+                var page = res.meta.pagination;
+                var current_page = page.current_page;
+                var total_pages = page.total_pages;
+                if(current_page == 1){
+                    list = res.data;
+                } else {
+                    list = this.dataList.concat(res.data);
+                }
+                this.dataList = list;
+                this.page = current_page;
+                this.hasMore = total_pages > current_page;
+                this.loading = false;
+
+
+            },
+            loadMore(){
+                this.isRefresh = false;
+                const page = this.page + 1;
+                const data = {
+                    type:2,
+                    category:36,
+                    page:page
+                }
+                if(this.hasMore){
+                    this.$store.dispatch('queryClassify',data);
+                    //加载状态结束，需要将loading变成false
+                } else {
+                    //数据全部加载完成
+                    this.loading = false;
+                    this.finished = true;
+                }
+
 
             }
         }
@@ -143,8 +206,7 @@
         }
         .ul-content{
             background-color: #FFFFFF;
-            .li-list{
-                .item{
+                .li-item{
                     padding: 20px 15px;
                     display: flex;
                     align-items: flex-start;
@@ -181,6 +243,9 @@
                             font-size: 12px;
                             line-height: 14px;
                             padding-bottom: 10px;
+                            span{
+                                font-size: 12px;
+                            }
                         }
                         .teach-box{
                             display: flex;
@@ -189,6 +254,9 @@
                             color:#909090;
                             font-size: 12px;
                             line-height: 14px;
+                            span{
+                                font-size: 12px;
+                            }
                             .money{
                                 color: #FF2741;
                             }
@@ -205,7 +273,6 @@
                     }
                 }
 
-            }
         }
 
     }
