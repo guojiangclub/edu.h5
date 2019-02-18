@@ -10,7 +10,7 @@ export default [
 
     },
     {
-        path:'/index/detail',
+        path:'/index/detail/:id',
         name:'index-detail',
         component: resolve => require(['./detail.vue'],resolve),
         meta :{
@@ -28,7 +28,7 @@ export default [
 
     },
     {
-        path:'/index/teacher',
+        path:'/index/teacher/:id',
         name:'index-teacher',
         component: resolve => require(['./teacher.vue'],resolve),
         meta :{
@@ -37,7 +37,7 @@ export default [
 
     },
     {
-        path:'/index/classification',
+        path:'/index/classification/:id',
         name:'index-classification',
         component: resolve => require(['./classification.vue'],resolve),
         meta :{

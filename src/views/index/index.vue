@@ -39,7 +39,7 @@
             <!--课程分类的菜单-->
             <div class="menu-box">
                 <div class="scroll-view">
-                    <div class="pa-li" v-for="(item,index) in homedata.categories">
+                    <div class="pa-li" v-for="(item,index) in homedata.categories" @click="jump('index-classification',item.id)">
                         <div class="li-item">
                             <div class="top-info">
                                 {{item.short_name}}
@@ -56,7 +56,7 @@
                 <div class="title mx-1px-bottom">推荐课程</div>
                 <div class="ul-content">
                     <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
-                        <van-cell  v-for="(item,index) in dataList" :key="index">
+                        <van-cell  v-for="(item,index) in dataList" :key="index" @click="jump('index-detail',item.id)">
                             <div class="li-item">
                                 <div class="left-info">
                                     <img :src="item.picture">
@@ -156,6 +156,16 @@
             homeDate(res){
                 this.homedata = res.data;
             },
+            //点击分类跳到分类页面去
+            jump(name,id){
+                this.$router.push({
+                    name:name,
+                    params:{
+                        id:id
+                    }
+                })
+            },
+            //点击跳到详情页去
             //将所得到的推荐课程列表数据进行分页处理
             recommendList(res){
                 var list;

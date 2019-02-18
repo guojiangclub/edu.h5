@@ -12,60 +12,63 @@
                 </div>
             </div>
             <div class="banner">
-                <img src="http://img4.imgtn.bdimg.com/it/u=3470668402,1358978254&fm=26&gp=0.jpg">
+                <img :src="detail.picture">
             </div>
             <div class="course-intro">
-                <div class="title">罗熙真可爱</div>
+                <div class="title">{{detail.title}}</div>
                 <div class="text">
-                    大哥我错了原谅我好嘛
+                    {{detail.subtitle}}
                 </div>
                 <div class="teach-student mx-1px-top">
-                    <div class="teacher">
+                    <div class="teacher" v-if="detail.teacher">
                         <span class="iconfont icon-laoshi"></span>
-                        黔老师
+                        {{detail.teacher.name || '无名'}}老师
                     </div>
                     <div class="student">
-                        45人学习
+                        {{detail.student_count}}人学习
                     </div>
                 </div>
             </div>
         </div>
         <!--促销详情-->
-        <div class="sales-promotion">
+        <div class="sales-promotion" v-if="detail.is_discount">
             <div class="preferential">特价优惠中</div>
             <div class="count-down">
                 仅剩 14 天 13时 38分 35秒
             </div>
-            <div class="origin-price">原价：¥88</div>
+            <div class="origin-price">原价：¥{{detail.display_price}}</div>
         </div>
-        <div class="current-coupon">
-            <div class="txt">当前课程有3张优惠券可用</div>
+        <div class="current-coupon" v-if="detail_meta.coupons && detail_meta.coupons.length" @click="changeCoupon">
+            <div class="txt">当前课程有{{detail_meta.coupons.length}}张优惠券可用</div>
             <div class="pick-up">去领取 <span class="iconfont icon-jiantou"></span></div>
         </div>
         <!--课程介绍-->
         <div class="navbar mx-1px-bottom">
-                <div  class="navbar-item activity">
+                <div  class="navbar-item" :class="activeIndex == 0 ? 'activity':''" @click="tabclick(0,$event)">
                     <div class="navbar-title">课程介绍</div>
                 </div>
-                <div  class="navbar-item">
+                <div  class="navbar-item" :class="activeIndex == 1 ? 'activity':''" @click="tabclick(1,$event)">
                     <div class="navbar-title">课程目录</div>
                 </div>
-                <div  class="navbar-item">
+                <div  class="navbar-item" :class="activeIndex == 2 ? 'activity':''" @click="tabclick(2,$event)">
                     <div class="navbar-title">通知公告</div>
                 </div>
-            <!--<div class="navbar-slider" style="width: {{width}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></div>-->
+            <div class="navbar-slider" :style="{width:width+'px', transform: 'translateX('+sliderOffset+'px)'}"></div>
         </div>
         <div class="tab-content">
             <!--当activeindex == 0 课程概述-->
-            <div class="li-content">
+            <div class="li-content" v-if="activeIndex == 0">
                 <div class="teacher-to mx-1px-bottom">
                     <div class="title">师资介绍</div>
                     <div class="teacher-detail">
-                        <div class="avatar">
-                            <img src="http://img3.imgtn.bdimg.com/it/u=483936151,891738374&fm=26&gp=0.jpg">
+                        <div class="avatar" v-if="detail.teacher && detail.teacher.avatar" @click="jump('index-teacher',detail_meta.teacher.user_id)">
+                            <img :src="detail.teacher.avatar || 'http://img1.imgtn.bdimg.com/it/u=70169729,3910397720&fm=26&gp=0.jpg'">
                         </div>
-                        <div class="text">
-                            <div class="name">在在老师</div>
+                        <div class="avatar" v-else @click="jump('index-teacher',detail_meta.teacher.user_id)">
+                            <img src="http://img1.imgtn.bdimg.com/it/u=70169729,3910397720&fm=26&gp=0.jpg">
+                        </div>
+                        <div class="text" @click="jump('index-teacher',detail_meta.teacher.user_id)">
+                            <div class="name" v-if="detail.teacher">{{detail.teacher.name || '无名'}}老师</div>
                             <div class="label">淘宝7年资深讲师淘宝7年资深讲师 国家工信淘宝7年资深讲师 国家工信 国家工信部高级电子商务师</div>
                             <div class="circle mx-1px-top">
                                 <div class="cirle-name">相关数据圈</div>
@@ -81,32 +84,33 @@
                     <div class="title">课程介绍</div>
                     <!--副文本-->
                     <div class="content-to">
+                        <div v-html="detail.about"></div>
 
                     </div>
                 </div>
             </div>
             <!--当activeindex== 1 课程目录-->
-            <div class="li-content">
+            <div class="li-content" v-if="activeIndex == 1">
                 <div class="title">
                     课程目录
-                    <span>（共68节课）</span>
+                    <span>（共{{detail.lesson_count}}节课）</span>
                 </div>
-                <div class="item-list">
-                    <div class="topic mx-1px-bottom">数据结构分析</div>
+                <div class="item-list" v-for="(item,index) in classList" :key="index">
+                    <div class="topic mx-1px-bottom"v-if="item.item_type == 'chapter'">{{item.title}}</div>
                     <div class="course-list">
-                        <div class="item mx-1px-bottom">
+                        <div class="item mx-1px-bottom" v-if="item.item_type == 'lesson'">
                             <div class="txt">
                                 <span class="iconfont icon-shipinbofang"></span>
-                                课时1： 数据结构是什么样子的
+                                课时{{item.number}}： {{item.title}}
                             </div>
-                            <div class="free-btn" v-if="true">免费试看</div>
-                            <!--<div class="the-length" >{{item.length_min}}</div>-->
+                            <div class="free-btn" v-if="item.free && !detail_meta.isMerber">免费试看</div>
+                            <div class="the-length" v-else>{{item.length_min}}</div>
                         </div>
                     </div>
                 </div>
             </div>
             <!--当activeindex== 3 时 通知公告-->
-            <div class="li-content">
+            <div class="li-content" v-if="activeIndex == 2">
                 <div>
                     <div class="notice-item">
                         <!--<div class="title">课程配套课件下载链接：</div>
@@ -129,11 +133,11 @@
 
         </div>
         <!--svip  加 免费试看-->
-        <div class="svip-buy">
-            <div class="svip">
+        <div class="svip-buy" v-if="!detail_meta.isMember">
+            <div class="svip" v-if="detail.price != 0 && detail_meta.isVip == false">
                 <img src="http://ibrand-miniprogram.oss-cn-hangzhou.aliyuncs.com/18-12-19/61152215.jpg">
                 <div class="goodness">
-                    成为svip，所选课程可省 ¥299
+                    成为svip，所选课程可省 ¥{{detail.display_price}}
                 </div>
                 <div class="soon-go">
                     立即省钱
@@ -143,15 +147,19 @@
             <div class="buy-box">
                 <div class="how-much">
                     <!--如果价格为0，显示免费-->
-                    <div class="money">免费</div>
+                    <div class="money" v-if="detail.display_price == 0">免费</div>
                     <!--如果不是免费课程，非svip 无促销，显示原价-->
-                   <!-- <div class="money" wx:if="{{detail.display_price != 0 && detail_meta.isVip == false && detail.is_discount == 0}}">{{detail.display_price}}</div>
-                    &lt;!&ndash;如果不是免费课程，非svip 有促销&ndash;&gt;
-                    <div class="money"  wx:if="{{detail.display_price != 0 && detail_meta.isVip == false && detail.is_discount == 1}}">
+                    <div class="money" v-if="detail.display_price != 0 && detail_meta.isVip == false && detail.is_discount == 0">{{detail.display_price}}</div>
+                    <!--如果不是免费课程，非svip 有促销-->
+                    <div class="money"  v-if="detail.display_price != 0 && detail_meta.isVip == false && detail.is_discount == 1">
                         ¥ {{detail.display_discount_price}}
                         <span class="origin">{{detail.display_price}}</span>
-                    </div>-->
+                    </div>
                     <!-- 非免费课程，已经是 SVIP，同时免费课程未使用完，则显示0元。原价删除线显示。-->
+                    <div class="money"  v-if="detail.display_price != 0 && detail_meta.isVip == true && detail_meta.freeCourseCount == 0">
+                        ¥ 6折后价
+                    </div>
+                    <!-- 非免费课程，已经是 SVIP，同时免费课程使用完，则显示6折后的钱。-->
                     <div class="unlock">解锁全部课时</div>
                 </div>
                 <!-- <div class="free-btn">免费试看</div>-->
@@ -159,12 +167,12 @@
             </div>
         </div>
         <!--已经买了  查看更多课程 立即学习-->
-       <!-- <div class="see-study" wx:if="{{detail_meta.isMember}}">
-            <div class="see-more btn" bindtap="jumpIndex">查看更多课程</div>
-            <div class="study-soon btn" bindtap="jumpStudy">立即学习</div>
-        </div>-->
+        <div class="see-study" v-if="detail_meta.isMember">
+            <div class="see-more btn">查看更多课程</div>
+            <div class="study-soon btn">立即学习</div>
+        </div>
         <!--联系客服-->
-        <div class="customer-service">
+        <div class="customer-service" @click="changeAttention">
             <div class="iconfont icon-lianxikefu"></div>
             <div class="text">联系
                 <div>客服</div></div>
@@ -201,15 +209,15 @@
              </div>
          </div>-->
         <!--查看选择优惠券部分-->
-        <div class="maks">
+        <div class="maks" :class="show_coupons ? 'cur' : ''">
         </div>
 
-        <div class="popup-box">
+        <div class="popup-box" :class="show_coupons ? 'cur' : ''">
             <div class="popup">
                 <div class="popup-top">
                     <div class="title">
                         优惠券
-                        <div class="close">
+                        <div class="close" @click="changeCoupon">
                             X
                         </div>
                     </div>
@@ -219,24 +227,24 @@
                         可领优惠券
                     </div>
                     <div class="coupon-box" >
-                        <div class="item active">
+                        <div class="item active" v-for="(item,index) in coupons" :key="index">
                             <div class="left-info">
-                                <div class="money">
+                                <div class="money" v-if="item.action_type.type == 'cash'">
                                     <span>¥</span>
-                                    999
+                                    {{item.action_type.value}}
                                 </div>
-                               <!-- <div class="money" wx:if="{{item.action_type.type == 'percentage'}}">
+                                <div class="money" v-if="item.action_type.type == 'percentage'">
                                     {{item.action_type.value}}
                                     <span>折</span>
-                                </div>-->
-                                <div class="label">春节大礼</div>
+                                </div>
+                                <div class="label">{{item.label}}</div>
                             </div>
                             <div class="right-info">
-                                <div class="title">满100元</div>
+                                <div class="title">{{item.title}}</div>
                                 <div class="created-at">
-                                    2018.01.10-2018.10.15
-                                    <span class="already">已领取</span>
-                                    <!--<span wx:else>点击领取</span>-->
+                                    {{item.use_start_time}}-{{item.use_end_time}}
+                                    <span class="already" v-if="item.is_receive">已领取</span>
+                                    <span v-else>点击领取</span>
                                 </div>
                             </div>
                         </div>
@@ -245,14 +253,14 @@
             </div>
         </div>
         <!--弹出客服-->
-        <div class="maks">
+        <div class="maks" :class="show_attention ? 'cur' : ''" @click="changeAttention">
 
         </div>
 
-        <div class="attention-WeChat">
+        <div class="attention-WeChat" :class="show_attention ? 'cur' : ''">
             <div class="service-box">
                 <div class="code item">
-                    <img src="http://img0.imgtn.bdimg.com/it/u=826856843,2196130321&fm=26&gp=0.jpg" alt="">
+                    <img v-if="service_info.online_service_self" :src="service_info.online_service_self.qr_code" alt="">
                     <div class="text">
                         保存二维码用微信识别添加
                     </div>
@@ -260,15 +268,15 @@
 
                 <div class="item phone">
                     <div class="phone-text">
-                        <img  src="" alt="" />
+                        <img  v-if="service_info.online_service_self" :src="service_info.online_service_self.qr_code" alt="" />
                         <div class="phone-warp">
                             <i class="iconfont icon-dianhua"></i>
-                            <div class="phone-num">service_info.online_service_self.phone}}</div>
+                            <div class="phone-num" v-if="service_info.online_service_self">{{service_info.online_service_self.phone}}</div>
                             <div>点击电话，咨询客服</div>
                         </div>
                     </div>
-                    <div>
-                        service_info.online_service_self.time
+                    <div v-if="service_info.online_service_self">
+                        {{service_info.online_service_self.time}}
                     </div>
                 </div>
             </div>
@@ -283,9 +291,96 @@
         name: 'detail',
         data(){
             return {
+                id:'',//课程id
+                detail:'',//详情页数据
+                detail_meta:'',//详情页meta数据
+                coupons:[],//优惠券
+                width:'',
+                sliderOffset:0,
+                activeIndex:0,
+                classList:[],
+                newList:[],
+                show_coupons:false,
+                service_info:'',//客服数据
+                show_attention:false,//弹出客服
 
             }
+        },
+        created(){
+            this.id = this.$route.params.id;
+            let data = {
+                id:this.id
+            }
+            this.$store.dispatch('queryDetail',data)
+            this.$store.dispatch('queryClassList',data)
+            this.$store.dispatch('querySystem')
+            EventBus.$on('detailDate',this.getDetail)
+            EventBus.$on('classList',this.getClassList)
+            EventBus.$on('serviceinfo',this.getSystem)
+
+        },
+        beforeDestroy(){
+            EventBus.$off('detailDate');
+            EventBus.$off('classList');
+            EventBus.$off('serviceinfo');
+        },
+        mounted(){
+            this.width = document.body.clientWidth / 3;
+        },
+        methods:{
+            //跳到教师详情页
+            jump(name,id){
+                this.$router.push({
+                    name:name,
+                    params:{
+                        id:id
+                    }
+                })
+            },
+            //弹出客服
+            changeAttention(){
+                this.show_attention = !this.show_attention
+            },
+            //客服数据
+            getSystem(res){
+                this.service_info =res.data.online_service_data
+            },
+            //点击弹出优惠券
+            changeCoupon(){
+                this.show_coupons = !this.show_coupons
+            },
+            //点击切换tab
+            tabclick(index,e){
+                this.activeIndex = index;
+                this.sliderOffset = e.currentTarget.offsetLeft;
+            },
+            //获取课时列表分页
+            getClassList(res){
+                var newList = [];//筛选过后的数组
+                res.data.forEach(val=>{
+                    if(val.item_type == 'lesson'){
+                        newList.push(val)
+                    }
+                });
+                this.newList = newList;
+                this.classList = res.data;
+            },
+            //获取课程详情数据
+            getDetail(res){
+                let coupons = [];
+                if(res.meta.coupons && res.meta.coupons.length){
+                    coupons = res.meta.coupons;
+                    coupons.forEach(val=>{
+                        val.is_receive = false
+                    })
+                }
+                this.detail = res.data;
+                this.detail_meta = res.meta;
+                this.coupons = coupons;
+            }
+
         }
+
 
     }
 </script>
@@ -897,8 +992,9 @@
                             margin-bottom:15px;
                             .left-info{
                                 color: #FB5054;
+                                width: 70px;
                                 .money{
-                                    font-size: 35px;
+                                    font-size: 32px;
                                     font-weight: 500;
                                     span{
                                         font-size: 14px;
@@ -911,7 +1007,7 @@
 
                             }
                             .right-info{
-                                padding-left:25px;
+                                padding-left:15px;
                                 flex: 1;
                                 .title{
                                     color: #666666;
@@ -920,6 +1016,9 @@
                                     padding-bottom: 28px;
                                 }
                                 .created-at{
+                                    white-space: nowrap;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
                                     color: #9B9B9B;
                                     font-size: 10px;
                                     line-height: 14px;

@@ -1,13 +1,13 @@
 <template>
     <div id="teacher">
         <div class="header">
-            <div class="avatar">
-                <img src="http://img3.imgtn.bdimg.com/it/u=2468332981,2896209654&fm=11&gp=0.jpg">
+            <div class="avatar" v-if="detail.user">
+                <img :src="detail.user.avatar">
             </div>
             <div class="introduce">
-                <div class="nick-name">黔在在</div>
-                <div class="label">
-                    课程：3 丨 数据圈：2
+                <div class="nick-name" v-if="detail.user">{{detail.user.user_name}}</div>
+                <div class="label" v-if="detail.members && detail.coteries">
+                    课程：{{detail.members.length}} 丨 数据圈：{{detail.coteries.length || 0}}
                 </div>
             </div>
         </div>
@@ -15,7 +15,7 @@
         <div class="teacher-info">
             <div class="title mx-1px-bottom">讲师介绍</div>
             <div class="label">
-                <div class="name">在在老师</div>
+                <div class="name" v-if="detail.user">{{detail.user.user_name}}老师</div>
                 <div class="txt">淘宝7年资深讲师 国家工信部高级电子商务师</div>
             </div>
         </div>
@@ -47,33 +47,33 @@
 
         </div>
         <!--讲师课程-->
-        <div class="teacher-course">
+        <div class="teacher-course" v-if="detail.members && detail.members.length">
             <div class="title mx-1px-bottom">
                 讲师课程
             </div>
             <div class="ul-content">
-                <div class="li-list">
+                <div class="li-list" v-for="(item,index) in detail.members" @click="jump('index-detail',item.course.id)">
                     <div class="item mx-1px-bottom">
                         <div class="left-info">
-                            <img src="http://img4.imgtn.bdimg.com/it/u=1939085593,103106475&fm=11&gp=0.jpg">
+                            <img :src="item.course.picture">
                         </div>
                         <div class="right-info">
-                            <div class="name">春节回家</div>
+                            <div class="name">{{item.course.title}}</div>
                             <div class="tiem-box">
                                 <div class="time">
                                     <span class="iconfont icon-keshi"></span>
-                                    55课时
+                                    {{item.course.lesson_count}}课时
                                 </div>
                                 <div class="many">
-                                    228人学习
+                                    {{item.course.student_count}}人学习
                                 </div>
                             </div>
                             <div class="teach-box">
                                 <div class="teacher">
                                     <span class="iconfont icon-laoshi"></span>
-                                    在在老师
+                                    {{detail.user.user_name}}老师
                                 </div>
-                                <div class="money">¥ 788元</div>
+                                <div class="money">¥ {{item.course.display_price}}元</div>
                             </div>
                         </div>
                     </div>
@@ -89,9 +89,40 @@
         name: 'teacher',
         data(){
             return {
+                teacher_id:'',
+                detail:''
 
 
             }
+        },
+        created(){
+            this.teacher_id = this.$route.params.id;
+            let data = {
+                id:this.teacher_id
+            }
+            this.$store.dispatch('querytearch',data)
+            EventBus.$on('tearcherdata',this.getTearchDetail)
+
+        },
+        beforeDestroy(){
+            EventBus.$off('tearcherdata')
+        },
+        mounted(){
+
+        },
+        methods:{
+            getTearchDetail(res){
+                this.detail = res.data
+            },
+            jump(name,id){
+                this.$router.push({
+                    name:name,
+                    params:{
+                        id:id
+                    }
+                })
+            },
+
         }
 
     }
@@ -206,6 +237,7 @@
         }
         .teacher-course{
             background-color: #FFFFFF;
+            margin-bottom: 20px;
             .title{
                 color: #4A4A4A;
                 font-size: 14px;

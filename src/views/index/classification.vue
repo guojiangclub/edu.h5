@@ -2,33 +2,18 @@
     <div id="classfication">
         <!--一级菜单-->
         <div class="classifical-menu">
-            <div class="scroll-view">
-                <div class="menu-item active">
-                    数据分析
-                </div>
-                <div class="menu-item">
-                    麻将
-                </div>
-                <div class="menu-item">
-                    吃饭
-                </div>
-                <div class="menu-item">
-                    逛街
-                </div>
-                <div class="menu-item">
-                    唱歌
-                </div>
-                <div class="menu-item">
-                    上厕所
+            <div class="scroll-view" id="kinds">
+                <div :id="'c'+item.id" class="menu-item" :class="item.id == category_id ? 'active' : ''" v-for="(item,index) in kindsDate" :key="index" @click="tabKinds(item.id,$event)">
+                    {{item.name}}
                 </div>
             </div>
         </div>
         <!--tabbar-->
         <div class="navbar mx-1px-bottom">
-                <div  class="navbar-item activity">
+                <div  class="navbar-item" :class="activeIndex == 0 ? 'activity' : ''" @click="changetab(0,$event)">
                     <div class="navbar-title">推荐</div>
                 </div>
-                <div  class="navbar-item">
+                <div  class="navbar-item" :class="activeIndex == 1 ? 'activity' : ''" @click="changetab(1,$event)">
                     <div class="navbar-title">最热</div>
                 </div>
             <div class="navbar-slider" :style="{width:width + 'px',transform:'translateX('+sliderOffset+'px)'}"></div>
@@ -74,6 +59,7 @@
         name: 'classification',
         data(){
             return {
+                category_id:'',//分类id
                 dataList:[],
                 isRefresh:true,
                 page:0,
@@ -82,22 +68,56 @@
                 finished:false,
                 immediate: false,
                 width:'',
-                sliderOffset:0
+                sliderOffset:0,
+                activeIndex:0,
+                kindsDate:[]
             }
         },
         created(){
-            const data = {
+            this.category_id = this.$route.params.id;
+            let data = {
                 type:2,
-                category:36,
+                category:this.category_id,
                 page:1
             }
             this.$store.dispatch('queryClassify',data);
+            this.$store.dispatch('queryHomeDate');
             EventBus.$on('classifyList',this.classsifyDate)
+            EventBus.$on('getKinds',this.getkindList)
+        },
+        beforeDestroy(){
+            EventBus.$off('classifyList');
+            EventBus.$off('getKinds');
         },
         mounted(){
             this.width = document.body.clientWidth / 2;
+
         },
         methods:{
+            //点击分类
+            tabKinds(id,e){
+                this.isRefresh = true;
+                this.category_id =  id;
+                this.sliderOffset = 0;
+                this.activeIndex = 0;
+                var kindsDom = document.getElementById('kinds');
+                kindsDom.scrollLeft = e.currentTarget.offsetLeft - 15;
+                let data = {
+                    type:2,
+                    category:id,
+                    page:1
+                }
+                this.$store.dispatch('queryClassify',data);
+            },
+            //获取分类种类
+            getkindList(res){
+                this.kindsDate = res.data.categories;
+                this.$nextTick(() =>{
+                    var kindsDom = document.getElementById('kinds');
+                    var activeDom = document.getElementById('c'+ this.category_id);
+                    kindsDom.scrollLeft = activeDom.offsetLeft - 15;
+                })
+            },
             classsifyDate(res){
                 if(this.isRefresh){
                     this.dataList =[]
@@ -120,10 +140,17 @@
             },
             loadMore(){
                 this.isRefresh = false;
-                const page = this.page + 1;
-                const data = {
-                    type:2,
-                    category:36,
+                let page = this.page + 1;
+                let typefy = 0;
+                if(this.activeIndex == 0){
+                    typefy = 2
+                }
+                if(this.activeIndex == 1){
+                    typefy = 1
+                }
+                let data = {
+                    type:typefy,
+                    category:this.category_id,
                     page:page
                 }
                 if(this.hasMore){
@@ -136,6 +163,27 @@
                 }
 
 
+            },
+            changetab(index,e){
+                this.isRefresh = true;
+                this.activeIndex = index;
+                this.sliderOffset = e.currentTarget.offsetLeft;
+                if(index == 0){
+                    let data = {
+                        type:2,
+                        category:this.category_id,
+                        page:1
+                    }
+                    this.$store.dispatch('queryClassify',data);
+                }
+                if(index == 1){
+                    let data = {
+                        type:1,
+                        category:this.category_id,
+                        page:1
+                    }
+                    this.$store.dispatch('queryClassify',data);
+                }
             }
         }
 

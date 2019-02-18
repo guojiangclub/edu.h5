@@ -86,8 +86,8 @@
                 this.loading = false;
             },
             loadMore(){
-                const page = this.page + 1;
-                const data = {
+                let page = this.page + 1;
+                let data = {
                     title:this.title,
                     page:page
                 }
