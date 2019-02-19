@@ -227,7 +227,7 @@
                         可领优惠券
                     </div>
                     <div class="coupon-box" >
-                        <div class="item active" v-for="(item,index) in coupons" :key="index">
+                        <div class="item active" v-for="(item,index) in coupons" :key="index" @click="receiveCoupon(item.id,item.is_receive,index)">
                             <div class="left-info">
                                 <div class="money" v-if="item.action_type.type == 'cash'">
                                     <span>¥</span>
@@ -287,6 +287,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+    import { Cache, cache_keys, exif } from '../../utils/util';
     export default {
         name: 'detail',
         data(){
@@ -303,6 +304,8 @@
                 show_coupons:false,
                 service_info:'',//客服数据
                 show_attention:false,//弹出客服
+                activeIndex:'',
+                discount_id:''
 
             }
         },
@@ -317,6 +320,7 @@
             EventBus.$on('detailDate',this.getDetail)
             EventBus.$on('classList',this.getClassList)
             EventBus.$on('serviceinfo',this.getSystem)
+            EventBus.$on('reciveCoupon',this.getCouponDate)
 
         },
         beforeDestroy(){
@@ -328,6 +332,30 @@
             this.width = document.body.clientWidth / 3;
         },
         methods:{
+            //点击领取优惠券
+            receiveCoupon(id,is_receive,index){
+                this.discount_id = id;
+                this.activeIndex = index;
+                const oauth = Cache.get(cache_keys.token);
+                if(oauth.access_token){
+                    if(is_receive){
+                        this.$toast('您已领取过该优惠券')
+                    } else {
+                        let couponDate = {
+                            discount_id:id
+                        }
+                        this.$store.dispatch('queryTakecoupon',couponDate);
+                    }
+                } else {
+                    var source = this.$route.path;
+                    this.$router.push({name: 'users-register', query: {source}});
+                }
+            },
+            //点击领取优惠券的数据处理
+            getCouponDate(res){
+                this.$toast("领取成功");
+                this.coupons[this.activeIndex].is_receive = true;
+            },
             //跳到教师详情页
             jump(name,id){
                 this.$router.push({

@@ -52,7 +52,7 @@ export const login = async function(data, url, type, callback) {
             if (type === 0) {
                 // alert('注册成功')
                 // this.$Success('注册成功');
-	            this.$Modal.confirm({body:'注册成功'})
+	            this.$dialog.alert({message:'注册成功'})
             } else if (type === 1) {
                 // alert('登录成功')
                 // this.$Success('登录成功');
@@ -85,7 +85,7 @@ export const login = async function(data, url, type, callback) {
             }
 
             if (!result.status) {
-	            this.$Modal.confirm({body:result.message || '加载错误'})
+	            this.$dialog.alert({message:result.message || '加载错误'})
                 // alert(result.message || '加载错误');
                 // this.$Error(result.message || '加载错误');
                 return;
@@ -105,9 +105,9 @@ export const login = async function(data, url, type, callback) {
         if (type === 0) {
             // alert('未知错误')
             // this.$Error('未知错误');
-	        this.$Modal.confirm({body:'未知错误'})
+	        this.$dialog.alert({message:'未知错误'})
         } else if (type === 1) {
-	        this.$Modal.confirm({body:'用户名或密码错误'})
+	        this.$dialog.alert({message:'用户名或密码错误'})
             // alert('用户名或密码错误')
             // this.$Error('用户名或密码错误');
         }
@@ -128,7 +128,7 @@ export const register = async function (callback) {
     var url = this.$Config.baseUrl + 'api/oauth/sms';
 
     await login.call(this, data, url, 0, callback);
-    EventBus.$Indicator.remove();
+    EventBus.$toast.clear();
 };
 
 export const userLogin = async function(callback) {
@@ -141,7 +141,7 @@ export const userLogin = async function(callback) {
     var url = this.$Config.baseUrl + 'api/oauth/token';
 
     await login.call(this, data, url, 1, callback);
-    EventBus.$Indicator.remove();
+    EventBus.$toast.clear();
 };
 
 export const openidLogin = async function (callback) {

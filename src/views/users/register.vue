@@ -1,6 +1,6 @@
 <template>
     <div id="user-register">
-        <!--<div class="tips">您没有填写</div>-->
+        <div class="tips" v-if="message">{{message}}</div>
         <div class="phone__warning">
             <img src="http://ibrand-miniprogram.oss-cn-hangzhou.aliyuncs.com/18-12-29/45704537.jpg">
             <!--<i class="iconfont icon-anquanjinggao"></i>-->
@@ -8,18 +8,18 @@
         <!--<div class="register_header iconfont icon-youhuiquan"></div>-->
         <div class="register_input">
             <div class="tellphone">
-                <input type="text" placeholder="手机号码"/>
+                <input type="text" placeholder="手机号码" v-model="mobile" />
             </div>
             <div class="code">
                 <div class="writecode">
-                    <input type="text" placeholder="验证码"/>
+                    <input type="text" placeholder="验证码" v-model="identifyingcode" />
                 </div>
 
-                <div class="getCode">获取验证码</div>
+                <div class="getCode" @click="getCode">{{codes.codeText}}</div>
             </div>
         </div>
         <div class="submit">
-            <button class="check">确认</button>
+            <button class="check" @click="submit">确认</button>
            <!-- <button type="default" wx:if="{{!checked}}" catchtap="submit" disabled="{{showLoading}}" loading="{{showLoading}}">确认</button>-->
         </div>
         <!--<div class="select">
@@ -29,7 +29,7 @@
             &lt;!&ndash;</checkbox-group>&ndash;&gt;
         </div>-->
         <!--弹出是否绑定老用户框框-->
-        <div class="bind_old cur">
+        <!--<div class="bind_old cur">
             <div class="paney">
                 <div class="title">绑定老用户</div>
                 <div class="content mx-1px-bottom">是否绑定已有老程序</div>
@@ -38,18 +38,200 @@
                     <div class="sure btn">确定</div>
                 </div>
             </div>
-        </div>
+        </div>-->
     </div>
 
 
 </template>
 
 <script type="text/ecmascript-6">
+    import { env, is,  Cache, cache_keys } from '../../utils/util';
+    import { userLogin, openidLogin, getOpenid } from '../../utils/oauth';
     export default {
         name: 'users-register',
         data(){
             return {
+                query: this.$route.query,
+                mobile:'',//手机号码
+                identifyingcode:'',//验证码
+                message:'',//弹出信息提示
+                codes:{
+                    total:60,
+                    codeText:"获取验证码"
+                },
+                sending:false,
+                is_new_user:'',//是否为新用户
+                form:'',//跳到那个页面去
+                source:'',//从哪个页面进来
+            }
+        },
+        created() {
+            var oauth = Cache.get(cache_keys.token);
+            if(oauth){
+                this.$router.push({name: 'users-index'})
+            }
+            EventBus.$on('codeData',this.verifyCode);
+            EventBus.$on('loginDate',this.getToken);
+            this.form = this.$route.query.from;
+            this.source = this.$route.query.source;
+            if (env.isWechat) {
+                var type = this.$route.query.type;
+                var openid = this.$route.query.openid || this.$route.query['?openid'];
 
+                if (openid && type === 'oauth') {
+
+                    // 查询该openid是否可以登录
+                    openidLogin.call(this, {
+                        onSuccess: null,
+                        onError: function () {
+                            this.$dialog.alert({message: '未能自动登录，请手动登录'});
+                        }
+                    });
+                } else {
+
+                    // 直接去取openid
+                    getOpenid.call(this);
+                    //				        next();
+                }
+            }
+        },
+        beforeRouteEnter(to, from, next) {
+            if (env.isWechat) {
+                next(that => {
+                    var type = that.$route.query.type;
+                    var openid = that.$route.query.openid || that.$route.query['?openid'];
+
+                    if (openid && type === 'oauth') {
+
+                        // 查询该openid是否可以登录
+
+                        openidLogin.call(that, {
+                            onSuccess: function () {
+                                that.$toast.clear();
+                            },
+                            onError: function () {
+                                that.$toast.clear();
+                                that.$dialog.alert({message: '未能自动登录，请手动登录'});
+                                return null
+                            }
+                        });
+
+                    } else {
+                        // 直接去取openid
+                        getOpenid.call(that);
+                    }
+                })
+            } else {
+                next();
+            }
+        },
+        beforeDestroy(){
+            EventBus.$off('codeData');
+            EventBus.$off('loginDate')
+        },
+        mounted(){
+
+        },
+        methods:{
+            //点击确认按钮
+            submit(){
+                var message = '';
+                if(!is.has(this.mobile)){
+                    message = "请输入您的手机号";
+                } else if(!is.mobile(this.mobile)){
+                    message = '手机号格式不正确，请重新输入';
+                } else if(!is.has(this.identifyingcode)){
+                    message="请填写验证码";
+                }
+                if(message){
+                    this.message = message;
+                    setTimeout(()=>{
+                        this.message = ''
+                    },3000)
+                    return
+                } else {
+                    let data = {
+                        mobile:this.mobile,
+                        code:this.identifyingcode,
+                        open_id:this.query.openid || ''
+                    }
+                    this.$store.dispatch('queryLogin',data)
+                }
+
+            },
+            getToken(res){
+                debugger
+                var result=res.data;
+                if(result.access_token){
+                    result.access_token =result.token_type + ' ' + result.access_token;
+                    result.expires_in = result.expires_in || 315360000;  // token不过期
+                    result.expires = Date.now() + (result.expires_in - 300) * 1000;
+                    Cache.set(cache_keys.token,result,0,null);
+                    if(result.is_new_user){
+                            this.is_new_user=res.data.is_new_user
+                    } else {
+                        if (this.from) {
+                            window.location.href = from;
+                        } else if (this.source) {
+                            this.$router.replace(source);
+                        } else {
+                            this.$router.push({name: 'users-index'})
+                        }
+
+                    }
+                } else {
+                    this.$dialog.alert({message: '验证码不正确'});
+                }
+
+            },
+            //随机获取一串字符串
+            randomStr(){
+              return  Math.random().toString(36).substr(2,24);
+            },
+            getCode(){
+                //如果已经点击了按钮，则将sending变为true，不能继续点击
+                if(this.sending){
+                    return
+                }
+                var message = '';
+                if(!is.has(this.mobile)){
+                    message = '请输入您的手机号'
+                } else if(!is.mobile(this.mobile)){
+                    message = '手机号格式不正确，请重新输入'
+                }
+                if(message){
+                    this.message = message;
+                    setTimeout(()=>{
+                        this.message = ''
+                    },3000)
+                    return
+                } else {
+                    var randoms = this.randomStr();
+                    this.codes.codeText = '短信发送中';
+                    this.sending = true
+                    let data = {
+                        mobile:this.mobile,
+                        access_token:randoms
+                    }
+                    this.$store.dispatch('queryCode',data)
+                }
+
+
+            },
+            verifyCode(res){
+                //成功请求到数据之后
+                var total = this.codes.total;//秒数，倒计时
+                this.codes.codeText = total + '秒后再发送';
+                //需要手动做一个倒计时
+                var timer = setInterval(()=>{
+                    total--;
+                    this.codes.codeText = total + '秒后再发送';
+                    if(total<1){
+                        this.sending = false;
+                        this.codes.codeText = '获取验证码';
+                        clearInterval(timer)
+                    }
+                },1000)
 
             }
         }

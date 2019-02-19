@@ -24,13 +24,14 @@
             <!--优惠券-->
             <div class="coupon-box">
                 <div class="scroll-view">
-                    <div class="pa-li" v-for="item in homedata.coupons">
+                    <div class="pa-li" v-for="(item,index) in homedata.coupons" :key="index" @click="receiveCoupon(item.id,item.is_receive,index)">
                         <div class="li-item">
                             <div class="left-info" v-if="item.action_type.type == 'cash'">{{item.action_type.value}}元</div>
                             <div class="left-info" v-else>{{item.action_type.value}}折</div>
                             <div class="right-info">
                                 <div class="label">{{item.title}}</div>
-                                <div class="soon">立即领取</div>
+                                <div class="soon" v-if="!item.is_receive">立即领取</div>
+                                <div class="soon" v-else>已领取</div>
                             </div>
                         </div>
                     </div>
@@ -98,6 +99,7 @@
 
 <script type="text/ecmascript-6">
     import { List,Swipe, SwipeItem } from 'vant';
+    import { Cache, cache_keys, exif } from '../../utils/util';
     export default {
         name: 'index',
         component:{
@@ -129,14 +131,17 @@
                 hasMore:true,
                 loading:false,
                 finished:false,
-                immediate: false
-
-
+                immediate: false,
+                discount_id:'',//当前领取的
+                activeIndex:'',//当前领取的优惠券的下标
             }
         },
         created(){
             const data = {
                 page:1
+            }
+            let couponDate ={
+                discount_id:this.discount_id
             }
             //请求首页数据
             this.$store.dispatch('queryHomeDate');
@@ -144,6 +149,7 @@
             this.$store.dispatch('queryCourseList',data);
             //监听从action js 里面的数据,触发homedata这个函数
             EventBus.$on('gethomeDate',this.homeDate);
+            EventBus.$on('takeCoupon',this.getCouponDate);
             //监听courseList这个事件里面的数据，触发recommendList这个函数
             EventBus.$on('courseList',this.recommendList)
 
@@ -151,9 +157,41 @@
         beforeDestroy(){
           EventBus.$off('gethomeDate');
             EventBus.$off('courseList');
+            EventBus.$off('takeCoupon');
         },
         methods:{
+            //点击领取优惠券
+            receiveCoupon(id,is_receive,index){
+                this.discount_id = id;
+                this.activeIndex = index;
+                const oauth = Cache.get(cache_keys.token);
+                if(oauth.access_token){
+                    if(is_receive){
+                        this.$toast('您已领取过该优惠券')
+                    } else {
+                        let couponDate = {
+                            discount_id:id
+                        }
+                        this.$store.dispatch('queryTakecoupon',couponDate);
+                    }
+                } else {
+                    var source = this.$route.path;
+                    this.$router.push({name: 'users-register', query: {source}});
+                }
+            },
+            //点击领取优惠券的数据处理
+            getCouponDate(res){
+                this.$toast("领取成功");
+                this.homedata.coupons[this.activeIndex].is_receive = true;
+            },
             homeDate(res){
+                let coupons = res.data.coupons;
+                if(res.data.coupons && res.data.coupons.length){
+                    coupons.forEach((val)=>{
+                        val.is_receive = false
+                    })
+                    this.homedata.coupons = coupons
+                }
                 this.homedata = res.data;
             },
             //点击分类跳到分类页面去

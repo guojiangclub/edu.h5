@@ -11,7 +11,9 @@ import question from './modules/question';
 import activity from './modules/activity';
 import edu from './modules/edu';
 import major from './modules/major';
-import index from './modules/index'
+import index from './modules/index';
+import users from './modules/users';
+console.log(users,user);
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -24,7 +26,8 @@ export default new Vuex.Store({
 		question,
 		activity,
 		edu,
-        major
+        major,
+        users
 	}
 })
 

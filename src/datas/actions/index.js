@@ -215,4 +215,34 @@ export const querytearch = function ({commit,state},data) {
         EventBus.$toast.clear()
     })
 }
+//请求领取优惠券的接口
+export const queryTakecoupon = function ({commit,state},data) {
+    const oauth = Cache.get(cache_keys.token);
+    EventBus.$toast.loading({
+        message: '加载中',
+        mask:true
+    });
+    EventBus.$http
+        .post(EventBus.$Config.baseUrl + 'api/edu/coupon/take',{
+            discount_id:data.discount_id
+        },{
+            headers:{
+                Authorization: oauth.access_token
+            }
+        }).then(res =>{
+        res = res.data;
+        if(res.status){
+            EventBus.$emit('takeCoupon',res);
+            EventBus.$emit('reciveCoupon',res);
+
+        } else {
+            EventBus.$dialog.alert({message: '请求失败'});
+        }
+
+        EventBus.$toast.clear()
+    },err=>{
+        EventBus.$dialog.alert({message: '服务端出错'});
+        EventBus.$toast.clear()
+    })
+}
 
