@@ -13,7 +13,7 @@ import edu from './modules/edu';
 import major from './modules/major';
 import index from './modules/index';
 import users from './modules/users';
-console.log(users,user);
+import recharge from './modules/recharge';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -27,7 +27,8 @@ export default new Vuex.Store({
 		activity,
 		edu,
         major,
-        users
+        users,
+        recharge
 	}
 })
 

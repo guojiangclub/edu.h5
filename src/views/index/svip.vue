@@ -4,16 +4,16 @@
             <img src="https://cdn.ibrand.cc/svip_four.png">
             <div class="discount">
                 <div class="coupons">
-                    <div class="item">
-                        <img src="http://img0.imgtn.bdimg.com/it/u=92552686,2156973452&fm=26&gp=0.jpg">
+                    <div class="item" v-for="(item,index) in plans.plans" :key="index">
+                        <img :src="item.img">
                     </div>
                 </div>
                 <div class="cut-down">
                     svip优惠剩余时间：
-                    <span>6</span>天
-                    <span>2</span>小时
-                    <span>23</span>分钟
-                    <span>18</span>秒  已有78人购买svip
+                    <span>{{endTime.day}}</span>天
+                    <span>{{endTime.hour}}</span>小时
+                    <span>{{endTime.minute}}</span>分钟
+                    <span>{{endTime.second}}</span>秒  已有{{plans.member_count_all}}人购买svip
                 </div>
             </div>
         </div>
@@ -33,83 +33,41 @@
             <div class="title">
                 <img  src="https://cdn.ibrand.cc/svip_nine.png">
             </div>
-            <div class="content">
+            <div class="content" v-if="svip_course && svip_course.machineCourses && svip_course.machineCourses.length">
                 <div class="detail">
-                    <img src="">
+                    <img :src="svip_course.machineCourses[0].associate.picture" >
                     <div class="info-box">
                         <div class="left">
-                            <span>黔在在</span>| <span>93课时</span>| <span>1081学习</span>
+                            <span>{{svip_course.machineCourses[0].associate.teacher.name || '无名'}}</span>|
+                            <span>{{svip_course.machineCourses[0].associate.lesson_count}}课时</span>|
+                            <span>{{svip_course.machineCourses[0].associate.student_count}}学习</span>
                         </div>
                         <div class="right">
-                            1599元
+                            {{svip_course.machineCourses[0].associate.display_price}}元
                         </div>
                     </div>
 
                 </div>
                 <div class="ul-list">
-                    <div class="li-item mx-1px-bottom">
+                    <div class="li-item mx-1px-bottom" v-for="(item,index) in svip_course.machineCourses" :key="index" v-if="index != 0">
                         <div class="left-info">
-                            <img src="">
+                            <img :src="item.associate.picture">
                         </div>
                         <div class="right-info">
-                            <div class="name">数据仓库精品课程【特点，数据仓库】</div>
+                            <div class="name">{{item.associate.title}}</div>
                             <div class="tiem-box">
                                 <div class="time">
-                                    93课时
+                                    {{item.associate.lesson_count}}课时
                                 </div>
                                 <div class="many">
-                                    1081人学习
+                                    {{item.associate.student_count}}人学习
                                 </div>
                             </div>
                             <div class="teach-box">
                                 <div class="teacher">
-                                    倩倩老师
+                                    {{item.associate.teacher.name || '无名'}}老师
                                 </div>
-                                <div class="money">¥ 1599元</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="li-item mx-1px-bottom">
-                        <div class="left-info">
-                            <img src="">
-                        </div>
-                        <div class="right-info">
-                            <div class="name">数据仓库精品课程【特点，数据仓库】</div>
-                            <div class="tiem-box">
-                                <div class="time">
-                                    93课时
-                                </div>
-                                <div class="many">
-                                    1081人学习
-                                </div>
-                            </div>
-                            <div class="teach-box">
-                                <div class="teacher">
-                                    倩倩老师
-                                </div>
-                                <div class="money">¥ 1599元</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="li-item mx-1px-bottom">
-                        <div class="left-info">
-                            <img src="">
-                        </div>
-                        <div class="right-info">
-                            <div class="name">数据仓库精品课程【特点，数据仓库】</div>
-                            <div class="tiem-box">
-                                <div class="time">
-                                    93课时
-                                </div>
-                                <div class="many">
-                                    1081人学习
-                                </div>
-                            </div>
-                            <div class="teach-box">
-                                <div class="teacher">
-                                    倩倩老师
-                                </div>
-                                <div class="money">¥ 1599元</div>
+                                <div class="money">¥ {{item.associate.display_price}}元</div>
                             </div>
                         </div>
                     </div>
@@ -119,83 +77,41 @@
             <div class="title">
                 <img src="https://cdn.ibrand.cc/fourteen.png">
             </div>
-            <div class="content red">
+            <div class="content red" v-if="svip_course && svip_course.businessCourses && svip_course.businessCourses.length">
                 <div class="detail">
-                    <img src="">
+                    <img :src="svip_course.businessCourses[0].associate.picture" >
                     <div class="info-box">
                         <div class="left">
-                            <span>黔在在</span>| <span>93课时</span>| <span>1081学习</span>
+                            <span>{{svip_course.businessCourses[0].associate.teacher.name || '无名'}}</span>|
+                            <span>{{svip_course.businessCourses[0].associate.lesson_count}}课时</span>|
+                            <span>{{svip_course.businessCourses[0].associate.student_count}}学习</span>
                         </div>
                         <div class="right">
-                            1599元
+                            {{svip_course.businessCourses[0].associate.display_price}}元
                         </div>
                     </div>
 
                 </div>
                 <div class="ul-list">
-                    <div class="li-item mx-1px-bottom">
+                    <div class="li-item mx-1px-bottom" v-for="(item,index) in svip_course.businessCourses" :key="index" v-if="index != 0">
                         <div class="left-info">
-                            <img src="">
+                            <img :src="item.associate.picture">
                         </div>
                         <div class="right-info">
-                            <div class="name">数据仓库精品课程【特点，数据仓库】</div>
+                            <div class="name">{{item.associate.title}}</div>
                             <div class="tiem-box">
                                 <div class="time">
-                                    93课时
+                                    {{item.associate.lesson_count}}课时
                                 </div>
                                 <div class="many">
-                                    1081人学习
+                                    {{item.associate.student_count}}人学习
                                 </div>
                             </div>
                             <div class="teach-box">
                                 <div class="teacher">
-                                    倩倩老师
+                                    {{item.associate.teacher.name || '无名'}}老师
                                 </div>
-                                <div class="money">¥ 1599元</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="li-item mx-1px-bottom">
-                        <div class="left-info">
-                            <img src="http://img2.imgtn.bdimg.com/it/u=2638228129,3580418267&fm=26&gp=0.jpg">
-                        </div>
-                        <div class="right-info">
-                            <div class="name">数据仓库精品课程【特点，数据仓库】</div>
-                            <div class="tiem-box">
-                                <div class="time">
-                                    93课时
-                                </div>
-                                <div class="many">
-                                    1081人学习
-                                </div>
-                            </div>
-                            <div class="teach-box">
-                                <div class="teacher">
-                                    倩倩老师
-                                </div>
-                                <div class="money">¥ 1599元</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="li-item mx-1px-bottom">
-                        <div class="left-info">
-                            <img src="http://img4.imgtn.bdimg.com/it/u=827312847,310420135&fm=26&gp=0.jpg">
-                        </div>
-                        <div class="right-info">
-                            <div class="name">数据仓库精品课程【特点，数据仓库】</div>
-                            <div class="tiem-box">
-                                <div class="time">
-                                    93课时
-                                </div>
-                                <div class="many">
-                                    1081人学习
-                                </div>
-                            </div>
-                            <div class="teach-box">
-                                <div class="teacher">
-                                    倩倩老师
-                                </div>
-                                <div class="money">¥ 1599元</div>
+                                <div class="money">¥ {{item.associate.display_price}}元</div>
                             </div>
                         </div>
                     </div>
@@ -205,83 +121,41 @@
             <div class="title">
                 <img src="https://cdn.ibrand.cc/svip_six.png">
             </div>
-            <div class="content yellow">
+            <div class="content yellow" v-if="svip_course && svip_course.bigdataCourses && svip_course.bigdataCourses.length">
                 <div class="detail">
-                    <img src="">
+                    <img :src="svip_course.bigdataCourses[0].associate.picture" >
                     <div class="info-box">
                         <div class="left">
-                            <span>黔在在</span>| <span>93课时</span>| <span>1081学习</span>
+                            <span>{{svip_course.bigdataCourses[0].associate.teacher.name || '无名'}}</span>|
+                            <span>{{svip_course.bigdataCourses[0].associate.lesson_count}}课时</span>|
+                            <span>{{svip_course.bigdataCourses[0].associate.student_count}}学习</span>
                         </div>
                         <div class="right">
-                            1599元
+                            {{svip_course.bigdataCourses[0].associate.display_price}}元
                         </div>
                     </div>
 
                 </div>
                 <div class="ul-list">
-                    <div class="li-item mx-1px-bottom">
+                    <div class="li-item mx-1px-bottom" v-for="(item,index) in svip_course.bigdataCourses" :key="index" v-if="index != 0">
                         <div class="left-info">
-                            <img src="http://img1.imgtn.bdimg.com/it/u=234107710,2089344651&fm=26&gp=0.jpg">
+                            <img :src="item.associate.picture">
                         </div>
                         <div class="right-info">
-                            <div class="name">数据仓库精品课程【特点，数据仓库】</div>
+                            <div class="name">{{item.associate.title}}</div>
                             <div class="tiem-box">
                                 <div class="time">
-                                    93课时
+                                    {{item.associate.lesson_count}}课时
                                 </div>
                                 <div class="many">
-                                    1081人学习
+                                    {{item.associate.student_count}}人学习
                                 </div>
                             </div>
                             <div class="teach-box">
                                 <div class="teacher">
-                                    倩倩老师
+                                    {{item.associate.teacher.name || '无名'}}老师
                                 </div>
-                                <div class="money">¥ 1599元</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="li-item mx-1px-bottom">
-                        <div class="left-info">
-                            <img src="http://img1.imgtn.bdimg.com/it/u=1406150362,1065288927&fm=26&gp=0.jpg">
-                        </div>
-                        <div class="right-info">
-                            <div class="name">数据仓库精品课程【特点，数据仓库】</div>
-                            <div class="tiem-box">
-                                <div class="time">
-                                    93课时
-                                </div>
-                                <div class="many">
-                                    1081人学习
-                                </div>
-                            </div>
-                            <div class="teach-box">
-                                <div class="teacher">
-                                    倩倩老师
-                                </div>
-                                <div class="money">¥ 1599元</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="li-item mx-1px-bottom">
-                        <div class="left-info">
-                            <img src="http://img3.imgtn.bdimg.com/it/u=697666772,1689313129&fm=26&gp=0.jpg">
-                        </div>
-                        <div class="right-info">
-                            <div class="name">数据仓库精品课程【特点，数据仓库】</div>
-                            <div class="tiem-box">
-                                <div class="time">
-                                    93课时
-                                </div>
-                                <div class="many">
-                                    1081人学习
-                                </div>
-                            </div>
-                            <div class="teach-box">
-                                <div class="teacher">
-                                    倩倩老师
-                                </div>
-                                <div class="money">¥ 1599元</div>
+                                <div class="money">¥ {{item.associate.display_price}}元</div>
                             </div>
                         </div>
                     </div>
@@ -291,163 +165,76 @@
             <div class="title">
                 <img src="https://cdn.ibrand.cc/svip_ten.png">
             </div>
-            <div class="content green">
+            <div class="content green" v-if="svip_course && svip_course.biCourses && svip_course.biCourses.length">
                 <div class="detail">
-                    <img src="">
+                    <img :src="svip_course.biCourses[0].associate.picture" >
                     <div class="info-box">
                         <div class="left">
-                            <span>黔在在</span>| <span>93课时</span>| <span>1081学习</span>
+                            <span>{{svip_course.biCourses[0].associate.teacher.name || '无名'}}</span>|
+                            <span>{{svip_course.biCourses[0].associate.lesson_count}}课时</span>|
+                            <span>{{svip_course.biCourses[0].associate.student_count}}学习</span>
                         </div>
                         <div class="right">
-                            1599元
+                            {{svip_course.biCourses[0].associate.display_price}}元
                         </div>
                     </div>
 
                 </div>
                 <div class="ul-list">
-                    <div class="li-item mx-1px-bottom">
+                    <div class="li-item mx-1px-bottom" v-for="(item,index) in svip_course.biCourses" :key="index" v-if="index != 0">
                         <div class="left-info">
-                            <img src="http://img4.imgtn.bdimg.com/it/u=715387763,521056391&fm=26&gp=0.jpg">
+                            <img :src="item.associate.picture">
                         </div>
                         <div class="right-info">
-                            <div class="name">数据仓库精品课程【特点，数据仓库】</div>
+                            <div class="name">{{item.associate.title}}</div>
                             <div class="tiem-box">
                                 <div class="time">
-                                    93课时
+                                    {{item.associate.lesson_count}}课时
                                 </div>
                                 <div class="many">
-                                    1081人学习
+                                    {{item.associate.student_count}}人学习
                                 </div>
                             </div>
                             <div class="teach-box">
                                 <div class="teacher">
-                                    倩倩老师
+                                    {{item.associate.teacher.name || '无名'}}老师
                                 </div>
-                                <div class="money">¥ 1599元</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="li-item mx-1px-bottom">
-                        <div class="left-info">
-                            <img src="http://img3.imgtn.bdimg.com/it/u=375113541,4134616006&fm=26&gp=0.jpg">
-                        </div>
-                        <div class="right-info">
-                            <div class="name">数据仓库精品课程【特点，数据仓库】</div>
-                            <div class="tiem-box">
-                                <div class="time">
-                                    93课时
-                                </div>
-                                <div class="many">
-                                    1081人学习
-                                </div>
-                            </div>
-                            <div class="teach-box">
-                                <div class="teacher">
-                                    倩倩老师
-                                </div>
-                                <div class="money">¥ 1599元</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="li-item mx-1px-bottom">
-                        <div class="left-info">
-                            <img src="http://img1.imgtn.bdimg.com/it/u=2724800741,1643196228&fm=26&gp=0.jpg">
-                        </div>
-                        <div class="right-info">
-                            <div class="name">数据仓库精品课程【特点，数据仓库】</div>
-                            <div class="tiem-box">
-                                <div class="time">
-                                    93课时
-                                </div>
-                                <div class="many">
-                                    1081人学习
-                                </div>
-                            </div>
-                            <div class="teach-box">
-                                <div class="teacher">
-                                    倩倩老师
-                                </div>
-                                <div class="money">¥ 1599元</div>
+                                <div class="money">¥ {{item.associate.display_price}}元</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
             </div>
-            <div class="content sales">
+            <div class="content sales" v-if="svip_course && svip_course.otherCourses && svip_course.otherCourses.length">
                 <div class="topic">
                     <div class="goodness">SVIP会员可6折购买其他课程</div>
                     <div class="txt">学院涵盖数据系列的课程：从基础的数据库知识，到商业智能解决方案，到数据挖掘，等系列</div>
                 </div>
                 <div class="ul-list">
-                    <div class="li-item mx-1px-bottom">
+                    <div class="li-item mx-1px-bottom" v-for="(item,index) in svip_course.otherCourses" :key="index">
                         <div class="left-info">
-                            <img src="http://img4.imgtn.bdimg.com/it/u=1538269232,701359202&fm=26&gp=0.jpg">
+                            <img :src="item.associate.picture">
                         </div>
                         <div class="right-info">
-                            <div class="name">数据仓库精品课程【特点，数据仓库】</div>
+                            <div class="name">{{item.associate.title}}</div>
                             <div class="tiem-box">
                                 <div class="time">
-                                    93课时
+                                    {{item.associate.lesson_count}}课时
                                 </div>
                                 <div class="many">
-                                    1081人学习
+                                    {{item.associate.student_count}}人学习
                                 </div>
                             </div>
                             <div class="teach-box">
                                 <div class="teacher">
-                                    倩倩老师
+                                    {{item.associate.teacher.name || '无名'}}老师
                                 </div>
-                                <div class="money">¥ 1599元</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="li-item mx-1px-bottom">
-                        <div class="left-info">
-                            <img src="http://img1.imgtn.bdimg.com/it/u=64055785,314513952&fm=26&gp=0.jpg">
-                        </div>
-                        <div class="right-info">
-                            <div class="name">数据仓库精品课程【特点，数据仓库】</div>
-                            <div class="tiem-box">
-                                <div class="time">
-                                    93课时
-                                </div>
-                                <div class="many">
-                                    1081人学习
-                                </div>
-                            </div>
-                            <div class="teach-box">
-                                <div class="teacher">
-                                    倩倩老师
-                                </div>
-                                <div class="money">¥ 1599元</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="li-item mx-1px-bottom">
-                        <div class="left-info">
-                            <img src="http://img4.imgtn.bdimg.com/it/u=3594457034,3798535164&fm=26&gp=0.jpg">
-                        </div>
-                        <div class="right-info">
-                            <div class="name">数据仓库精品课程【特点，数据仓库】</div>
-                            <div class="tiem-box">
-                                <div class="time">
-                                    93课时
-                                </div>
-                                <div class="many">
-                                    1081人学习
-                                </div>
-                            </div>
-                            <div class="teach-box">
-                                <div class="teacher">
-                                    倩倩老师
-                                </div>
-                                <div class="money">¥ 1599元</div>
+                                <div class="money">¥ {{item.associate.display_price}}元</div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
         <div class="special">
@@ -461,16 +248,16 @@
         </div>
         <div class="discount">
             <div class="coupons">
-                <div class="item">
-                    <img src="http://img3.imgtn.bdimg.com/it/u=2145064882,1440719837&fm=26&gp=0.jpg">
+                <div class="item" v-for="(item,index) in plans.plans" :key="index">
+                    <img :src="item.img">
                 </div>
             </div>
             <div class="cut-down">
                 svip优惠剩余时间：
-                <span>3</span>天
-                <span>7</span>小时
-                <span>8</span>分钟
-                <span>28</span>秒  已有78人购买svip
+                <span>{{endTime.day}}</span>天
+                <span>{{endTime.hour}}</span>小时
+                <span>{{endTime.minute}}</span>分钟
+                <span>{{endTime.second}}</span>秒  已有{{plans.member_count_all}}人购买svip
             </div>
         </div>
         <div class="special">
@@ -484,11 +271,11 @@
             <div class="left-item">
                 <div class="info">
                     <span class="iconfont icon-shouye"></span>
-                    <div class="txt">首页</div>
+                    <div class="txt" @click="jumpIndex">首页</div>
                 </div>
             </div>
-            <div class="right-item">您已购买SVIP</div>
-            <!--<div class="right-item" wx:else bindtap="buySvip" data-id="2">立即购买SVIP</div>-->
+            <div class="right-item" v-if="plans && plans.isVip">您已购买SVIP</div>
+            <div class="right-item" v-else>立即购买SVIP</div>
         </div>
         <div class="black-mask"></div>
 
@@ -498,13 +285,109 @@
 </template>
 
 <script type="text/ecmascript-6">
+    import { Cache, cache_keys, exif } from '../../utils/util';
     export default {
         name: 'svip',
         data(){
             return {
+                plans:'',
+                order_no:'',
+                openid:'',
+                plan_id:'',
+                endTime: {
+                    interval: '',
+                    day: 0,
+                    hour: 0,
+                    minute: 0,
+                    second:0,
+                    count: 0
+                },
+                endtype:0,
+                endmessage:'',
+                timer:'',
+                is_black:false,
+                svip_course:''
+
 
             }
+        },
+        created(){
+            this.$store.dispatch('querySvip');
+            this.$store.dispatch('querySvipCourse');
+            EventBus.$on('svipPlans',this.getSvipPlans)
+            EventBus.$on('svipCourse',this.getSvipCourse)
+
+        },
+        beforeDestroy(){
+            EventBus.$off('svipPlans')
+            EventBus.$off('svipCourse')
+
+        },
+        mounted(){
+
+        },
+        methods:{
+            //获取svip课程推广位
+            getSvipCourse(res){
+                this.svip_course = res.data;
+            },
+            jumpIndex(){
+              this.$router.push({
+                  name:'index-index'
+              })
+            },
+            //处理套餐数据
+            getSvipPlans(res){
+                this.plans = res.data;
+                this.timer = setInterval(this.countTime, 1000)
+            },
+            //倒计时
+            countTime(){
+                var d = 86400000,
+                    h = 3600000,
+                    n = 60000,
+                    end = this.plans.end_time,
+                    server = this.plans.server_time,
+                    // \D ：匹配除数字从0-9以外的任一字符  匹配一个非数字字符，也可以使用字符簇[^0-9]或[^\d]来表示
+                    arr = String(end).split(/\D/),
+                    newArr = String(server).split(/\D/);
+                newArr = newArr.map(Number); //遍历数组的每一项，都变成数字
+                arr = arr.map(Number);
+                //转换的时候 月份需要减一  因为 月份是从0 - 11 ，gettime
+                //new Date 的参数 百度 ，这是中国标准时间  逗号
+                var serverTime = new Date(newArr[0], newArr[1] - 1, newArr[2], newArr[3], newArr[4], newArr[5]).getTime();
+                var endTime = new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]).getTime();
+                //计算 服务器时间跟结束时间 的间隔
+                var timeDiff = endTime - serverTime;
+                var allTime = this.endTime.count + 1000;
+                this.endTime.count =  allTime;
+                // this.endTime.count += 1000;
+                var interval = timeDiff - this.endTime.count;
+                if (interval < 0) {
+//		        	活动结束
+                    //do somethimg
+                    clearInterval(this.timer);
+
+                } else {
+                    var day = Math.floor(interval / d);
+                    Math.floor(interval -= day * d);
+                    var hour = Math.floor(interval / h);
+                    Math.floor(interval -= hour * h);
+                    var minute = Math.floor(interval / n);
+                    var second = Math.floor(interval % n / 1000);
+                    this.endTime.day =  day;
+                    this.endTime.hour = hour;
+                    this.endTime.minute =  minute;
+                    this.endTime.second = second
+                }
+
+
+
+            }
+
         }
+
+
 
     }
 </script>

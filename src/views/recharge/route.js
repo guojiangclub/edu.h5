@@ -3,12 +3,11 @@
  */
 export default [
     {
-        path:'/recharge/pay',
+        path:'/recharge/pay/:id',
         name:'recharge-pay',
         component: resolve => require(['./pay.vue'],resolve),
         meta :{
             title:'支付页面',
-            depth:10
         }
     },
     {

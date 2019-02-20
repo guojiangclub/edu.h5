@@ -6,49 +6,115 @@
                     <span>*</span>
                     真实姓名：
                 </div>
-                <input type="text"/>
+                <input type="text" v-model="name"/>
             </div>
             <div class="item mx-1px-bottom">
                 <div class="option">
                     <span>*</span>
                     手机号码：
                 </div>
-                <input type="text" />
+                <input type="text" v-model="mobile"/>
             </div>
             <div class="item mx-1px-bottom">
                 <div class="option">
                     <span>*</span>
                     微信账号：
                 </div>
-                <input type="text"/>
+                <input type="text" v-model="weixin"/>
             </div>
             <div class="item mx-1px-bottom">
                 <div class="option">
                     <span>*</span>
                     所在公司：
                 </div>
-                <input type="text" />
+                <input type="text" v-model="company"/>
             </div>
             <div class="item mx-1px-bottom">
                 <div class="option">
                     <span>*</span>
                     公司职位：
                 </div>
-                <input type="text" />
+                <input type="text" v-model="job"/>
             </div>
         </div>
-        <div class="save" >保存</div>
+        <div class="save" @click="saveInfo">保存</div>
     </div>
 
 </template>
 
 <script type="text/ecmascript-6">
+    import { Cache, cache_keys, exif,is } from '../../utils/util';
     export default {
         name: 'studentinfo',
         data(){
             return {
+                name:'',
+                mobile:'',
+                weixin:'',
+                company:'',
+                job:'',
+                userInfo:''
 
             }
+        },
+        created(){
+            EventBus.$on('updateInfo',this.getUpdateInfo);
+
+        },
+        beforeDestroy(){
+            EventBus.$off('updateInfo')
+        },
+        mounted(){
+            //获取支付页面缓存的数据
+            var info = Cache.get(cache_keys.order_info);
+            if(info.userDetails){
+                this.userInfo = info.userDetails
+            }
+
+        },
+        methods:{
+            //更新数据的处理
+            getUpdateInfo(res){
+                var info = Cache.get(cache_keys.order_info);
+                info.userDetails = res.data;
+                Cache.set(cache_keys.order_info,info,0);
+                //返回上一页
+                window.history.back(-1);
+
+            },
+            //点击保存按钮
+            saveInfo(){
+                var message = '';
+                if(!is.has(this.name)){
+                    message = '请填写真实姓名'
+                } else if(!is.has(this.mobile)){
+                    message = '请填写手机号码'
+                } else if(!is.mobile(this.mobile)){
+                    message = '手机号码格式不正确'
+                } else if(!is.has(this.weixin)){
+                    message = '请填写微信号'
+                } else if(!is.has(this.company)){
+                    message = '请填写公司名称'
+                } else if(!is.has(this.job)){
+                    message = '请填写工作职位'
+                }
+                if(message){
+                    this.$dialog.alert({
+                        message: message
+                    });
+                } else {
+                    let data = {
+                        name:this.name,
+                        mobile:this.mobile,
+                        weixin:this.weixin,
+                        company:this.company,
+                        job:this.job
+                    }
+                    this.$store.dispatch('queryUpateInfo',data)
+                }
+
+            }
+
         }
 
     }

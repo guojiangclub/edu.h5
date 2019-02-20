@@ -6,5 +6,7 @@ export default function (cache) {
 	    search_history: cache + 'search_history',  // 搜索记录储存
         edu_detail: 'edu_detail', //课程支付储存
         agent_code: 'agent_code',//rf
+        order_info: 'order_info',
+        old_order_info:'old_order_info'
     }
 }

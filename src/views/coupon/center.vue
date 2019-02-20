@@ -1,21 +1,21 @@
 <template>
     <div id="center">
         <div class="content">
-            <div class="item active">
+            <div class="item" :class="index == activeIndex ? 'active' : ''" v-for="(item,index) in coupons" :key="index" @click="change(index,item.id)">
                 <div class="left-info">
-                    <div class="money">
+                    <div class="money" v-if="item.discount.action_type.type == 'cash' ">
                         <span>¥</span>
-                        782.00
+                        {{item.discount.action_type.value}}
                     </div>
-                   <!-- <div class="money" wx:if="{{item.discount.action_type.type == 'percentage'}}">
+                    <div class="money" v-if="item.discount.action_type.type == 'percentage' ">
                         {{item.discount.action_type.value}}
                         <span>折</span>
-                    </div>-->
-                    <div class="label">欢迎光临</div>
+                    </div>
+                    <div class="label">{{item.discount.label}}</div>
                 </div>
                 <div class="right-info">
-                    <div class="title">美特好超市</div>
-                    <div class="created-at">2018-2019</div>
+                    <div class="title">{{item.discount.title}}</div>
+                    <div class="created-at">{{item.discount.use_start_time}}-{{item.discount.use_end_time}}</div>
                 </div>
             </div>
         </div>
@@ -24,14 +24,45 @@
 </template>
 
 <script type="text/ecmascript-6">
+    import { Cache, cache_keys, exif } from '../../utils/util';
     export default {
         name: 'coupon-center',
         data(){
             return {
-
-
+                coupons:'',//优惠券
+                activeIndex:''
             }
+        },
+        created(){
+
+        },
+        beforeDestroy(){
+
+        },
+        mounted(){
+            var order_info = Cache.get(cache_keys.order_info);
+            this.coupons = order_info.coupons;
+            var bestCouponID = order_info.bestCouponID;
+            var coupons = order_info.coupons;
+            coupons.forEach((val,index)=>{
+                if (val.id == bestCouponID){
+                        this.activeIndex = index
+                }
+            })
+        },
+        methods:{
+            change(index,id){
+                this.activeIndex = index;
+                var info = Cache.get(cache_keys.order_info);
+                info.bestCouponID = id;
+                Cache.set(cache_keys.order_info,info,0)
+                //返回上一页
+                window.history.back(-1);
+            }
+
         }
+
+
 
     }
 </script>

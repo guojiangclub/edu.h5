@@ -156,14 +156,17 @@
                         <span class="origin">{{detail.display_price}}</span>
                     </div>
                     <!-- 非免费课程，已经是 SVIP，同时免费课程未使用完，则显示0元。原价删除线显示。-->
-                    <div class="money"  v-if="detail.display_price != 0 && detail_meta.isVip == true && detail_meta.freeCourseCount == 0">
-                        ¥ 6折后价
+                    <div class="money"  v-if="detail.display_price != 0 && detail_meta.isVip == true && detail_meta.freeCourseCount != 0">
+                        ¥ 0
                     </div>
                     <!-- 非免费课程，已经是 SVIP，同时免费课程使用完，则显示6折后的钱。-->
+                    <div class="money"  v-if="detail.display_price != 0 && detail_meta.isVip == true && detail_meta.freeCourseCount == 0">
+                        ¥ {{svipPrice}}
+                    </div>
                     <div class="unlock">解锁全部课时</div>
                 </div>
                 <!-- <div class="free-btn">免费试看</div>-->
-                <div class="buy-course">购买课程</div>
+                <div class="buy-course" @click="purchase">购买课程</div>
             </div>
         </div>
         <!--已经买了  查看更多课程 立即学习-->
@@ -305,7 +308,8 @@
                 service_info:'',//客服数据
                 show_attention:false,//弹出客服
                 activeIndex:'',
-                discount_id:''
+                discount_id:'',
+                svipPrice:''
 
             }
         },
@@ -321,17 +325,47 @@
             EventBus.$on('classList',this.getClassList)
             EventBus.$on('serviceinfo',this.getSystem)
             EventBus.$on('reciveCoupon',this.getCouponDate)
+            EventBus.$on('createOrder',this.getOrderData)
 
         },
         beforeDestroy(){
             EventBus.$off('detailDate');
             EventBus.$off('classList');
             EventBus.$off('serviceinfo');
+            EventBus.$off('createOrder');
         },
         mounted(){
             this.width = document.body.clientWidth / 3;
         },
         methods:{
+            //处理创建订单之后的数据
+            getOrderData(res){
+                if(res.data.needPay){
+                    Cache.set(cache_keys.order_info,res.data,0);
+                    Cache.set(cache_keys.old_order_info,res.data,0);
+                    this.$router.push({name: 'recharge-pay', params: {id:this.id}});
+
+                } else {
+                    var order_no = res.data.order.sn;
+                    this.$router.push({name: 'recharge-success', query: {order_no:order_no}});
+                }
+
+            },
+            //购买课程的逻辑
+            purchase(){
+              let oauth = Cache.get(cache_keys.token);
+              if(oauth.access_token){
+                  //创建临时订单
+                  let data = {
+                      course_id:this.id
+                  }
+                  this.$store.dispatch('queryOrder',data)
+
+              } else {
+                  var source = this.$route.path;
+                  this.$router.push({name: 'users-register', query: {source}});
+              }
+            },
             //点击领取优惠券
             receiveCoupon(id,is_receive,index){
                 this.discount_id = id;
@@ -396,6 +430,12 @@
             //获取课程详情数据
             getDetail(res){
                 let coupons = [];
+                if(this.detail.vipMember){
+                    let value_vip = this.detail.vipMember.plan.actions.course_discount_percentage;
+                    var s_money = this.detail.course.price;
+                    var off_money = s_money * [(100 - value_vip) /100];
+                    this.svipPrice =(off_money/100).toFixed(2);
+                }
                 if(res.meta.coupons && res.meta.coupons.length){
                     coupons = res.meta.coupons;
                     coupons.forEach(val=>{

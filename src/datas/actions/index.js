@@ -128,8 +128,14 @@ export const queryDetail = function ({commit,state},data) {
         message: '加载中',
         mask:true
     });
+    var oauth = Cache.get(cache_keys.token);
+    var access_token = oauth ? oauth.access_token : '';
     EventBus.$http
-        .get(EventBus.$Config.baseUrl + 'api/edu/course/'+data.id)
+        .get(EventBus.$Config.baseUrl + 'api/edu/course/'+data.id,{
+            headers:{
+                Authorization: access_token
+            }
+        })
         .then(res =>{
         res = res.data;
             if (res.status){
@@ -245,4 +251,125 @@ export const queryTakecoupon = function ({commit,state},data) {
         EventBus.$toast.clear()
     })
 }
+//购买课程，创建课程临时订单，必须登录后才可以请求该接口
+export const queryOrder = function ({commit,state},data) {
+    const oauth = Cache.get(cache_keys.token);
+    EventBus.$toast.loading({
+        message: '加载中',
+        mask:true
+    });
+    EventBus.$http
+        .post(EventBus.$Config.baseUrl + 'api/edu/course/order/create',{
+            course_id:data.course_id
+        },{
+            headers:{
+                Authorization: oauth.access_token
+            }
+        }).then(res =>{
+        res = res.data;
+        if(res.status){
+            EventBus.$emit('createOrder',res);
+
+        } else {
+            EventBus.$dialog.alert({message: '请求失败'});
+        }
+
+        EventBus.$toast.clear()
+    },err=>{
+        EventBus.$dialog.alert({message: '服务端出错'});
+        EventBus.$toast.clear()
+    })
+
+
+}
+//更新用户信息
+export const queryUpateInfo = function ({commit,state},data) {
+    const oauth = Cache.get(cache_keys.token);
+    EventBus.$toast.loading({
+        message: '加载中',
+        mask:true
+    });
+    EventBus.$http
+        .post(EventBus.$Config.baseUrl + 'api/edu/users/update/details',{
+            name:data.name,
+            mobile:data.mobile,
+            weixin:data.weixin,
+            company:data.company,
+            job:data.job
+        },{
+            headers:{
+                Authorization: oauth.access_token
+            }
+        }).then(res =>{
+        res = res.data;
+        if(res.status){
+            EventBus.$emit('updateInfo',res);
+
+        } else {
+            EventBus.$dialog.alert({message: '请求失败'});
+        }
+
+        EventBus.$toast.clear()
+    },err=>{
+        EventBus.$dialog.alert({message: '服务端出错'});
+        EventBus.$toast.clear()
+    })
+
+
+
+}
+//获取svip页面 svip套餐
+export const querySvip = function ({commit,state}) {
+    EventBus.$toast.loading({
+        message: '加载中',
+        mask:true
+    });
+    var oauth = Cache.get(cache_keys.token);
+    var access_token = oauth ? oauth.access_token : '';
+    EventBus.$http
+        .get(EventBus.$Config.baseUrl + 'api/vip/get/plans',{
+            headers:{
+                Authorization: access_token
+            }
+        })
+        .then(res =>{
+            res = res.data;
+            if (res.status){
+                EventBus.$emit('svipPlans',res)
+            }else {
+                EventBus.$dialog.alert({message: '请求失败'});
+            }
+            EventBus.$toast.clear()
+        },err=>{
+            EventBus.$dialog.alert({message: '服务端出错'});
+            EventBus.$toast.clear()
+        })
+
+}
+//获取svip页面 相关课程推广位
+export const querySvipCourse = function ({commit,state}) {
+    EventBus.$toast.loading({
+        message: '加载中',
+        mask:true
+    });
+    EventBus.$http
+        .get(EventBus.$Config.baseUrl + 'api/edu/advert/svip/course',{
+
+        })
+        .then(res =>{
+            res = res.data;
+            if (res.status){
+                EventBus.$emit('svipCourse',res)
+            }else {
+                EventBus.$dialog.alert({message: '请求失败'});
+            }
+            EventBus.$toast.clear()
+        },err=>{
+            EventBus.$dialog.alert({message: '服务端出错'});
+            EventBus.$toast.clear()
+        })
+
+}
+
+
 
