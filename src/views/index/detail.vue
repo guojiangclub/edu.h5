@@ -3,7 +3,7 @@
         <div class="header">
             <div class="share-home">
                 <div class="home">
-                    <span class="iconfont icon-shouye"></span>
+                    <span class="iconfont icon-shouye" @clik="jumpIndex"></span>
                     首页
                 </div>
                 <div class="share">
@@ -98,7 +98,7 @@
                 <div class="item-list" v-for="(item,index) in classList" :key="index">
                     <div class="topic mx-1px-bottom"v-if="item.item_type == 'chapter'">{{item.title}}</div>
                     <div class="course-list">
-                        <div class="item mx-1px-bottom" v-if="item.item_type == 'lesson'">
+                        <div class="item mx-1px-bottom" v-if="item.item_type == 'lesson'" @click="jumpLesson(item.id,item.free)">
                             <div class="txt">
                                 <span class="iconfont icon-shipinbofang"></span>
                                 课时{{item.number}}： {{item.title}}
@@ -111,24 +111,24 @@
             </div>
             <!--当activeindex== 3 时 通知公告-->
             <div class="li-content" v-if="activeIndex == 2">
-                <div>
-                    <div class="notice-item">
-                        <!--<div class="title">课程配套课件下载链接：</div>
-                        <div class="content">https://pan.baidu.com/share/init?surl=9os6Cxw1NkuqtF76yFvYyg </div>-->
-                        <div class="content">
-
-                        </div>
-                        <div class="teacher-time mx-1px-bottom">
-                            <div class="teacher">
-                                <span class="iconfont icon-laoshi"></span>
-                                在在老师
+                <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
+                    <van-cell v-for="(item,index) in announcement" :key="index">
+                        <div class="notice-item">
+                            <div class="content">
+                                <div v-html="item.content"></div>
                             </div>
-                            <div class="time">2019年8月21号</div>
+                            <div class="teacher-time mx-1px-bottom">
+                                <div class="teacher">
+                                    <span class="iconfont icon-laoshi"></span>
+                                    {{item.course.teacher.name || '无名'}}老师
+                                </div>
+                                <div class="time">{{item.created_at}}</div>
+                            </div>
+                            <div class="from">来自：{{item.course.title}}</div>
                         </div>
-                        <div class="from">来自：数据分析</div>
-                    </div>
-                </div>
-                <!--<div class="only-see" wx:if="{{!announcement.length}}">只有课程学员才能查看课程公告</div>-->
+                    </van-cell>
+                </van-list>
+                <div class="only-see" v-if="!announcement.length">只有课程学员才能查看课程公告</div>
             </div>
 
         </div>
@@ -171,8 +171,8 @@
         </div>
         <!--已经买了  查看更多课程 立即学习-->
         <div class="see-study" v-if="detail_meta.isMember">
-            <div class="see-more btn">查看更多课程</div>
-            <div class="study-soon btn">立即学习</div>
+            <div class="see-more btn" @click="jumpIndex">查看更多课程</div>
+            <div class="study-soon btn" @click="jumpStudy">立即学习</div>
         </div>
         <!--联系客服-->
         <div class="customer-service" @click="changeAttention">
@@ -291,8 +291,12 @@
 
 <script type="text/ecmascript-6">
     import { Cache, cache_keys, exif } from '../../utils/util';
+    import { List } from 'vant';
     export default {
         name: 'detail',
+        component:{
+            List
+        },
         data(){
             return {
                 id:'',//课程id
@@ -309,8 +313,14 @@
                 show_attention:false,//弹出客服
                 activeIndex:'',
                 discount_id:'',
-                svipPrice:''
-
+                svipPrice:'',
+                announcement:[],
+                anpage:0,
+                anmore:true,
+                loading:false,
+                finished:false,
+                immediate:false,
+                init:true
             }
         },
         created(){
@@ -326,6 +336,7 @@
             EventBus.$on('serviceinfo',this.getSystem)
             EventBus.$on('reciveCoupon',this.getCouponDate)
             EventBus.$on('createOrder',this.getOrderData)
+            EventBus.$on('noticeData',this.getNotice)
 
         },
         beforeDestroy(){
@@ -333,11 +344,47 @@
             EventBus.$off('classList');
             EventBus.$off('serviceinfo');
             EventBus.$off('createOrder');
+            EventBus.$off('noticeData');
         },
         mounted(){
             this.width = document.body.clientWidth / 3;
         },
         methods:{
+            //触底加载更多公告
+            loadMore(){
+                var page = this.anpage + 1;
+                var data = {
+                    id:this.id,
+                    page:page
+                }
+                if(this.anmore){
+                    this.$store.dispatch('queryNotice',data);
+                    //加载状态结束，需要将loading变成false
+                } else {
+                    //数据全部加载完成
+                    this.loading = false;
+                    this.finished = true;
+                }
+
+            },
+            //得到公告数据之后分页数据处理
+            getNotice(res){
+                var list;
+                var page = res.meta.pagination;
+                var current_page = page.current_page;
+                var total_pages = page.total_pages;
+                if(current_page == 1){
+                    list = res.data;
+                } else {
+                    list = this.announcement.concat(res.data);
+                }
+                this.announcement = list;
+                this.anpage = current_page;
+                this.anmore = total_pages > current_page;
+                this.loading = false;
+                this.init = false;
+
+            },
             //处理创建订单之后的数据
             getOrderData(res){
                 if(res.data.needPay){
@@ -390,6 +437,13 @@
                 this.$toast("领取成功");
                 this.coupons[this.activeIndex].is_receive = true;
             },
+            //跳到首页
+            jumpIndex(){
+                this.$router.push({
+                    name:'index-index'
+                })
+
+            },
             //跳到教师详情页
             jump(name,id){
                 this.$router.push({
@@ -398,6 +452,54 @@
                         id:id
                     }
                 })
+            },
+            //跳到课时详情页
+            jumpLesson(id,free){
+                let oauth = Cache.get(cache_keys.token);
+                let token = oauth.access_token;
+                if(token){
+                    //第一种情况,已经购买了课程，则直接去课时详情页
+                    if(this.detail_meta.isMember){
+                        this.$router.push({
+                            name:'index-lessons',
+                            params:{
+                                course_id:this.id, //课程id
+                                id:id//课时id
+                            }
+                        })
+                    } else { // 第二种情况，并没有购买课程
+                        //但是是免费课程
+                        if(free){
+                            this.$router.push({
+                                name:'index-lessons',
+                                params:{
+                                    course_id:this.id, //课程id
+                                    id:id//课时id
+                                }
+                            })
+                        } else {
+                            this.$dialog.alert({
+                                message: '请先购买课程'
+                            });
+                        }
+
+                    }
+                } else {
+                    var source = this.$route.path;
+                    this.$router.push({name: 'users-register', query: {source}});
+                }
+
+            },
+            //点击立即学习
+            jumpStudy(){
+                this.$router.push({
+                    name:'index-lessons',
+                    params:{
+                        course_id:this.id, //课程id
+                        id:this.newList[0].id//课时id
+                    }
+                })
+
             },
             //弹出客服
             changeAttention(){
@@ -415,6 +517,20 @@
             tabclick(index,e){
                 this.activeIndex = index;
                 this.sliderOffset = e.currentTarget.offsetLeft;
+                if(index == 2){
+                    let oauth = Cache.get(cache_keys.token);
+                    let token = oauth.access_token;
+                    if(this.detail_meta.isMember && token && this.init){
+                        let data = {
+                            id:this.id,
+                            page:1
+                        }
+                        this.$store.dispatch('queryNotice',data)
+
+                    } else {
+                        return
+                    }
+                }
             },
             //获取课时列表分页
             getClassList(res){

@@ -55,7 +55,7 @@ export default [
 
     },
     {
-        path:'/index/lessons',
+        path:'/index/lessons/:course_id/:id',
         name:'index-lessons',
         component: resolve => require(['./lessons.vue'],resolve),
         meta :{

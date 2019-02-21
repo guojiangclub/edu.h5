@@ -140,6 +140,7 @@ export const queryDetail = function ({commit,state},data) {
         res = res.data;
             if (res.status){
                 EventBus.$emit('detailDate',res)
+                EventBus.$emit('detailData',res)
             }else {
                 EventBus.$dialog.alert({message: '请求失败'});
             }
@@ -163,6 +164,7 @@ export const queryClassList = function ({commit,state},data) {
         res = res.data;
         if(res.status){
             EventBus.$emit('classList',res);
+            EventBus.$emit('classListDate',res);
         } else {
             EventBus.$dialog.alert({message: '请求失败'});
         }
@@ -370,6 +372,66 @@ export const querySvipCourse = function ({commit,state}) {
         })
 
 }
+//请求详情页通知公告详情接口
+export const queryNotice = function ({commit,state},data) {
+    let oauth = Cache.get(cache_keys.token);
+    EventBus.$toast.loading({
+        message: '加载中',
+        mask:true
+    });
+    EventBus.$http
+        .get(EventBus.$Config.baseUrl + 'api/edu/course/'+data.id+'/announcement',{
+            params:{
+                page:data.page
+            },
+            headers:{
+                Authorization:oauth.access_token
+            }
 
+        })
+        .then(res =>{
+            res = res.data;
+            if (res.status){
+                if(res.meta && res.meta.pagination){
+                    EventBus.$emit('noticeData',res)
+                }
+            }else {
+                EventBus.$dialog.alert({message: '请求失败'});
+            }
+            EventBus.$toast.clear()
+        },err=>{
+            EventBus.$dialog.alert({message: '服务端出错'});
+            EventBus.$toast.clear()
+        })
+
+}
+//课时详情页获取 课时详情
+export const queryLessons = function ({commit,state},data) {
+    EventBus.$toast.loading({
+        message: '加载中',
+        mask:true
+    });
+    var oauth = Cache.get(cache_keys.token);
+    var access_token = oauth.access_token;
+    EventBus.$http
+        .get(EventBus.$Config.baseUrl + 'api/edu/course/lesson/'+data.id,{
+            headers:{
+                Authorization: access_token
+            }
+        })
+        .then(res =>{
+            res = res.data;
+            if (res.status){
+                EventBus.$emit('lessonsDate',res)
+            }else {
+                EventBus.$dialog.alert({message: '请求失败'});
+            }
+            EventBus.$toast.clear()
+        },err=>{
+            EventBus.$dialog.alert({message: '服务端出错'});
+            EventBus.$toast.clear()
+        })
+
+}
 
 

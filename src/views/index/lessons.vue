@@ -1,32 +1,32 @@
 <template>
     <div id="lessons">
         <div class="video-box">
-            <video src=""></video>
+            <video :src="detail.media_uri"></video>
         </div>
         <div class="course-introduce">
             <div class="time-length mx-1px-bottom">
                 <div class="topic">
-                    课时2：离开我的日子你别来无恙
+                    课时{{detail.number}}：{{detail.title}}
                 </div>
                 <!-- <div class="already-percent">
                      已观看 20%
                  </div>-->
             </div>
-            <div class="category">
-                <div class="txt">我最亲爱的</div>
+            <div class="category" v-if="course_detail.data">
+                <div class="txt">{{course_detail.data.title}}</div>
                 <div class="see-detail">查看详情</div>
             </div>
         </div>
         <div class="ul-content">
-            <div class="item-list">
-                <div class="topic mx-1px-bottom">没我的日子</div>
+            <div class="item-list" v-for="(item,index) in classList" :key="index">
+                <div class="topic mx-1px-bottom" v-if="item.item_type == 'chapter'">{{item.title}}</div>
                 <div class="course-list">
-                    <div class="item mx-1px-bottom activeitem">
+                    <div class="item mx-1px-bottom" :class="item.id == id ? 'activeitem' : ''" v-if="item.item_type == 'lesson'">
                         <div class="txt">
                             <span class="iconfont icon-shipinbofang"></span>
-                            课时1： 第一天
+                            课时{{item.number}}： {{item.title}}
                         </div>
-                        <div class="the-length">12：44</div>
+                        <div class="the-length">{{item.length_min}}</div>
                     </div>
                 </div>
             </div>
@@ -40,9 +40,66 @@
         name: 'lessons',
         data(){
             return {
-
+                id:'', //课时id
+                detail:'',
+                classList:'',
+                course_id:'',//课程id
+                course_detail:'',
+                activeVal:'',
+                newList:[]
             }
+        },
+        created(){
+            this.id = this.$route.params.id;
+            this.course_id = this.$route.params.course_id;
+            let data = {
+                id:this.id
+            }
+            let cdata = {
+                id:this.course_id
+            }
+            let ddata = {
+                id:this.course_id
+            }
+            this.$store.dispatch('queryLessons',data);
+            this.$store.dispatch('queryClassList',cdata);
+            this.$store.dispatch('queryDetail',ddata);
+            EventBus.$on('lessonsDate',this.getLessonsDetail)
+            EventBus.$on('classListDate',this.getLessonsList)
+            EventBus.$on('detailData',this.getcourseDetail)
+
+        },
+        beforeDestroy(){
+            EventBus.$off('lessonsDate')
+            EventBus.$off('getLessonsList')
+            EventBus.$off('detailData')
+
+        },
+        mounted(){
+
+
+        },
+        methods:{
+            getcourseDetail(res){
+                this.course_detail = res
+            },
+            getLessonsDetail(res){
+                this.detail = res.data
+            },
+            getLessonsList(res){
+                var newList = [];//筛选过后的数组
+                res.data.forEach(val=>{
+                    if(val.item_type == 'lesson'){
+                        newList.push(val)
+                    }
+                });
+                this.classList = res.data;
+                this.newList = newList
+            }
+
         }
+
+
 
     }
 </script>
@@ -86,11 +143,17 @@
                 justify-content: space-between;
                 padding:15px 0 0 0;
                 .txt{
+                    flex: 1;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
                     color: #4A4A4A;
                     font-size: 13px;
                     line-height: 18px;
                 }
                 .see-detail{
+                    width: 68px;
+                    box-sizing:border-box;
                     padding: 5px 8px;
                     border-radius:4px;
                     border: 1px solid #D7D7D7;
