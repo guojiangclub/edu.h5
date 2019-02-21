@@ -14,6 +14,7 @@ import major from './modules/major';
 import index from './modules/index';
 import users from './modules/users';
 import recharge from './modules/recharge';
+import coupon from './modules/coupon';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -28,7 +29,8 @@ export default new Vuex.Store({
 		edu,
         major,
         users,
-        recharge
+        recharge,
+        coupon
 	}
 })
 

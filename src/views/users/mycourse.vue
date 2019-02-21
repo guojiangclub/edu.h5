@@ -2,64 +2,67 @@
 
     <div id="my_course">
         <div class="navbar mx-1px-bottom">
-                <div  class="navbar-item  activity">
+                <div  class="navbar-item" :class="activeIndex == 0 ? 'activity' : ''" @click="tabClick(0,$event)">
                     <div class="navbar-title">学习课程</div>
                 </div>
-                <div  class="navbar-item">
+                <div  class="navbar-item" :class="activeIndex == 1 ? 'activity' : ''" @click="tabClick(1,$event)">
                     <div class="navbar-title">通知公告</div>
                 </div>
-            <!--<div class="navbar-slider" style="width: {{width}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px)"></div>-->
+            <div class="navbar-slider" :style="{width:width + 'px', transform: 'translateX('+ sliderOffset +'px)'}"></div>
         </div>
         <div class="ul-content">
-            <div>
-                <div class="li-list">
-                    <div class="item mx-1px-bottom">
-                        <div class="left-info">
-                            <img src="http://img4.imgtn.bdimg.com/it/u=957635406,1686445000&fm=26&gp=0.jpg">
-                        </div>
-                        <div class="right-info">
-                            <div class="name">item.course.title</div>
-                            <div class="tiem-box">
-                                <div class="time">
-                                    <span class="iconfont icon-keshi"></span>
-                                    8课时
+            <div v-if="activeIndex == 0">
+                <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
+                    <van-cell v-for="(item,index) in dataList" :key="index">
+                        <div class="li-list">
+                            <div class="item" @click="jumpDetail(item.course.id)">
+                                <div class="left-info">
+                                    <img :src="item.course.picture">
                                 </div>
-                                <div class="many">
-                                    88人学习
+                                <div class="right-info">
+                                    <div class="name">{{item.course.title}}</div>
+                                    <div class="tiem-box">
+                                        <div class="time">
+                                            <span class="iconfont icon-keshi"></span>
+                                            {{item.course.lesson_count}}课时
+                                        </div>
+                                        <div class="many">
+                                            {{item.course.student_count}}人学习
+                                        </div>
+                                    </div>
+                                    <div class="teach-box">
+                                        <div class="teacher">
+                                            <span class="iconfont icon-laoshi"></span>
+                                            {{item.course.teacher.name || '无名'}}老师
+                                        </div>
+                                        <div class="money">已加入</div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="teach-box">
+                        </div>
+                    </van-cell>
+                </van-list>
+            </div>
+            <div class="li-list" v-if="activeIndex == 1">
+                <van-list v-model="anloading" :finished="anfinished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
+                    <van-cell v-for="(item,index) in announcement" :key="index">
+                        <div class="notice-item">
+                            <div class="content">
+                                <div v-html="item.content"></div>
+                            </div>
+                            <div class="teacher-time mx-1px-bottom">
                                 <div class="teacher">
                                     <span class="iconfont icon-laoshi"></span>
-                                    在在老师
+                                    {{item.course.teacher.name || '无名'}}老师
                                 </div>
-                                <div class="money">已加入</div>
+                                <div class="time">{{item.created_at}}</div>
                             </div>
+                            <div class="from">来自：{{item.course.title}}</div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="li-list">
-                <div>
-                    <div class="notice-item">
-                        <!--<div class="title">课程配套课件下载链接：</div>
-                        <div class="content">https://pan.baidu.com/share/init?surl=9os6Cxw1NkuqtF76yFvYyg </div>-->
-                        <div class="content">
-                           <!-- <wxparser rich-text="{{item.content}}" />-->
-                        </div>
-                        <div class="teacher-time mx-1px-bottom">
-                            <div class="teacher">
-                                <span class="iconfont icon-laoshi"></span>
-                               老老师
-                            </div>
-                            <div class="time">item.created_at</div>
-                        </div>
-                        <div class="from">来自：item.course.title</div>
-                    </div>
-                </div>
+                    </van-cell>
+                </van-list>
             </div>
         </div>
-        <div class="black-mask"></div>
     </div>
 
 
@@ -68,14 +71,138 @@
 </template>
 
 <script type="text/ecmascript-6">
+    import { List } from 'vant';
+    import { Cache, cache_keys, exif } from '../../utils/util';
     export default {
         name: 'users-mycourse',
+        component:{
+            List
+        },
         data(){
             return {
-
-
+                width:'',
+                sliderOffset:'',
+                activeIndex:0,
+                dataList:[],
+                page:0,
+                more:true,
+                init:false,
+                loading:false,
+                finished:false,
+                announcement:[],
+                anpage:0,
+                anmore:true,
+                aninit:false,
+                anloading:false,
+                anfinished:false,
+                immediate:false
             }
+        },
+        created(){
+            let data = {
+                page:1
+            }
+            this.$store.dispatch('queryMycourseList',data)
+            EventBus.$on('myCourseList',this.getMycourseList)
+            EventBus.$on('mynoteList',this.getMynoteList)
+
+        },
+        beforeDestroy(){
+            EventBus.$off('myCourseList');
+            EventBus.$off('mynoteList');
+
+        },
+        mounted(){
+            this.width = document.body.clientWidth/2;
+            this.sliderOffset = 0
+        },
+        methods:{
+            jumpDetail(id){
+                this.$router.push({
+                    name:'index-detail',
+                    params:{
+                        id:id
+                    }
+                })
+            },
+            //加载更多
+            loadMore(){
+                if(this.activeIndex == 0){
+                    let page = this.page + 1;
+                    let cdata = {
+                        page:page
+                    }
+                    if (this.more) {
+                        this.$store.dispatch('queryMycourseList',cdata)
+                    } else {
+                        this.loading = false;
+                        this.finished = true;
+                    }
+                } else {
+                    let anpage = this.anpage + 1;
+                    let ndata = {
+                        page:anpage
+                    }
+                    if(this.anmore){
+                        this.$store.dispatch('queryMynoteList',ndata)
+                    } else {
+                        this.anloading = false;
+                        this.anfinished = true;
+                    }
+                }
+
+            },
+            tabClick(index,e){
+                this.activeIndex = index;
+                this.sliderOffset = e.currentTarget.offsetLeft;
+                let data = {
+                    page:1
+                }
+                if(!this.init){
+                    this.$store.dispatch('queryMycourseList',data)
+                }
+                if(index == 1){
+                    if(!this.aninit){
+                        this.$store.dispatch('queryMynoteList',data)
+                    }
+                }
+            },
+            getMynoteList(res){
+                var list;
+                var page = res.meta.pagination;
+                var current_page = page.current_page;
+                var total_pages = page.total_pages;
+                if(current_page == 1){
+                    list = res.data;
+                } else {
+                    list = this.announcement.concat(res.data);
+                }
+                this.announcement = list;
+                this.anpage = current_page;
+                this.anmore = current_page < total_pages;
+                this.aninit = true;
+                this.anloading = false;
+            },
+            //处理我的课程列表
+            getMycourseList(res){
+                var list;
+                var page = res.meta.pagination;
+                var current_page = page.current_page;
+                var total_pages = page.total_pages;
+                if(current_page == 1){
+                    list = res.data;
+                } else {
+                    list = this.dataList.concat(res.data);
+                }
+                this.dataList = list;
+                this.page = current_page;
+                this.more = current_page < total_pages;
+                this.init = true;
+                this.loading = false;
+            }
+
         }
+
 
     }
 </script>

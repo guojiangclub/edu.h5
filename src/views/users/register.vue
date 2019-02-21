@@ -155,12 +155,11 @@
                         code:this.identifyingcode,
                         open_id:this.query.openid || ''
                     }
-                    this.$store.dispatch('queryLogin',data)
+                    this.$store.dispatch('queryLoginNew',data)
                 }
 
             },
             getToken(res){
-                debugger
                 var result=res.data;
                 if(result.access_token){
                     result.access_token =result.token_type + ' ' + result.access_token;

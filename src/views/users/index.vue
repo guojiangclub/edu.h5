@@ -1,16 +1,16 @@
 <template>
     <div id="personal-center">
             <div class="top-bg">
-                <div class="header">
-                    <div class="avatar">
-                        <img src="http://img5.imgtn.bdimg.com/it/u=2987747399,99299574&fm=11&gp=0.jpg" alt="">
+                <div class="header" v-if="token">
+                    <div class="avatar" v-if="info.user">
+                        <img :src="info.user.avatar" alt="">
                     </div>
                     <div class="info">
-                        <div class="nick-name">
-                            可爱的我
+                        <div class="nick-name" v-if="info.user && info.user.user_info_filled">
+                            {{info.user.nick_name || '无名'}}
                         </div>
                     </div>
-                    <!--<button wx:if="{{!info.user.user_info_filled && token && init}}" class="user-btn" open-type="getUserInfo" bindgetuserinfo="bindUserInfo">
+                   <!-- <button v-if="!info.user.user_info_filled && token && init" class="user-btn">
                         <div class="phone-text">点击完善个人信息</div>
                     </button>-->
                     <div class="svip">
@@ -23,9 +23,9 @@
                         </div>
                     </div>
                 </div>
-               <!-- <div class="header" data-url="pages/user/index/main" bindtap="jumpPath" wx:else>
+                <div class="header" v-else @click="jumpPath('users-register')">
                     <div class="txt">注册/登录</div>
-                </div>-->
+                </div>
             </div>
             <div class="contnet">
                 <!--<div class="balance-point">
@@ -41,7 +41,7 @@
                     </div>
                 </div>-->
                 <div class="balance-point">
-                    <div class="item">
+                    <div class="item" @click="jumpPath('coupon-index')">
                         <div class="iconfont icon-youhuiquan"></div>
                         <div class="txt">我的优惠券</div>
                         <div class="iconfont icon-jiantou"></div>
@@ -55,12 +55,12 @@
                     </div>
                 </div>
                 <div class="balance-point">
-                    <div class="item">
+                    <div class="item" @click="changeService">
                         <div class="iconfont icon-lianxiwomen"></div>
                         <div class="txt">联系我们</div>
                         <div class="iconfont icon-jiantou"></div>
                     </div>
-                    <div class="item">
+                    <div class="item"  @click="jumpPath('users-setting')">
                         <div class="iconfont icon-shezhi"></div>
                         <div class="txt">设置</div>
                         <div class="iconfont icon-jiantou"></div>
@@ -68,14 +68,14 @@
                 </div>
             </div>
             <!--弹出客服-->
-            <div class="maks">
+            <div class="maks" :class="show_attention ? 'cur' : ''" @click="changeService">
 
             </div>
 
-            <div class="attention-WeChat">
-                <div class="service-box">
+            <div class="attention-WeChat" :class="show_attention ? 'cur' : ''">
+                <div class="service-box" v-if="service_info.online_service_self">
                     <div class="code item">
-                        <img src="http://img1.imgtn.bdimg.com/it/u=3358168381,4074144718&fm=26&gp=0.jpg" alt="" />
+                        <img :src="service_info.online_service_self.qr_code" alt="" />
                         <div class="text">
                             保存二维码用微信识别添加
                         </div>
@@ -83,15 +83,15 @@
 
                     <div class="item phone">
                         <div class="phone-text">
-                            <img src="" alt="" />
+                            <img :src="service_info.online_service_self.qr_code" alt="" />
                             <div class="phone-warp">
                                 <i class="iconfont icon-dianhua"></i>
-                                <div class="phone-num">45700742947</div>
+                                <div class="phone-num">{{service_info.online_service_self.phone}}</div>
                                 <div>点击电话，咨询客服</div>
                             </div>
                         </div>
                         <div>
-                            2018年
+                            {{service_info.online_service_self.time}}
                         </div>
                     </div>
                 </div>
@@ -107,14 +107,62 @@
 </template>
 
 <script type="text/ecmascript-6">
+    import { Cache, cache_keys, exif } from '../../utils/util';
     export default {
         name: 'users-index',
         data(){
             return {
-
-
+                info:'',
+                token:'',
+                init: false,
+                discounts: '',
+                show_attention:false,
+                service_info:''
             }
+        },
+        created(){
+            EventBus.$on('myUserInfo',this.getUserInfo);
+            EventBus.$on('myserviceinfo',this.getMyservInfo);
+            this.$store.dispatch('querySystem');
+            var oauth =Cache.get(cache_keys.token);
+            if(oauth.access_token){
+                this.token = oauth.access_token
+                this.$store.dispatch('queryMyinfo')
+            }
+
+        },
+        beforeDestroy(){
+            EventBus.$off('myUserInfo');
+            EventBus.$off('myserviceinfo');
+        },
+        mounted(){
+
+        },
+        methods:{
+            getMyservInfo(res){
+                this.service_info = res.data.online_service_data
+            },
+            changeService(){
+                this.show_attention = !this.show_attention
+            },
+            jumpPath(name){
+                var source = this.$route.path;
+                this.$router.push({
+                    name:name,
+                    query:{
+                        source
+                    }
+                })
+            },
+            getUserInfo(res){
+                this.info = res.data;
+                this.init = res.true;
+            }
+
         }
+
+
+
 
     }
 </script>

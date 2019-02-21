@@ -188,6 +188,7 @@ export const querySystem = function ({commit,state}) {
             //分发一个事件出去，将数据分发到页面中去
             if(res.status){
                 EventBus.$emit('serviceinfo',res);
+                EventBus.$emit('myserviceinfo',res);
             } else {
                 EventBus.$dialog.alert({message: '请求失败'});
             }
