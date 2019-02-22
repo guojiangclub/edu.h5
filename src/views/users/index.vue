@@ -96,6 +96,26 @@
                     </div>
                 </div>
             </div>
+        <!--tabbar-->
+        <van-tabbar v-model="active" active-color="#004E9D" @change="jumpTab">
+            <van-tabbar-item>
+                <span>首页</span>
+                <img src="https://cdn.ibrand.cc/icon_index.png" alt="" slot="icon">
+            </van-tabbar-item>
+            <van-tabbar-item>
+                <span>我的课程</span>
+                <img src="https://cdn.ibrand.cc/icon_course.png" alt="" slot="icon">
+            </van-tabbar-item>
+            <van-tabbar-item>
+                <span>SVIP</span>
+                <img src="https://cdn.ibrand.cc/icon_svip.png" alt="" slot="icon">
+            </van-tabbar-item>
+            <van-tabbar-item>
+                <span>个人中心</span>
+                <img :src="props.active ? icon.active : icon.normal" alt="" slot="icon"
+                     slot-scope="props">
+            </van-tabbar-item>
+        </van-tabbar>
       <!--  <div class="ibrand" bindtap="jumpWeb">
             <div class="iconfont icon-dibu logo"></div>
             <div class="txt">www.ibrand.cc</div>
@@ -112,6 +132,11 @@
         name: 'users-index',
         data(){
             return {
+                active:3,
+                icon: {
+                    normal: 'https://cdn.ibrand.cc/icon_user.png',
+                    active: 'https://cdn.ibrand.cc/icon_user_HL.png'
+                },
                 info:'',
                 token:'',
                 init: false,
@@ -125,7 +150,7 @@
             EventBus.$on('myserviceinfo',this.getMyservInfo);
             this.$store.dispatch('querySystem');
             var oauth =Cache.get(cache_keys.token);
-            if(oauth.access_token){
+            if(oauth && oauth.access_token){
                 this.token = oauth.access_token
                 this.$store.dispatch('queryMyinfo')
             }
@@ -139,6 +164,23 @@
 
         },
         methods:{
+            jumpTab(index){
+                if(index == 3){
+                    return
+                } else if (index == 0){
+                    this.$router.push({
+                        name:'index-index'
+                    })
+                } else if(index == 2){
+                    this.$router.push({
+                        name:'index-svip'
+                    })
+                } else if(index == 1){
+                    this.$router.push({
+                        name:'users-mycourse'
+                    })
+                }
+            },
             getMyservInfo(res){
                 this.service_info = res.data.online_service_data
             },

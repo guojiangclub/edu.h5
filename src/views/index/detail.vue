@@ -2,8 +2,8 @@
     <div id="detail">
         <div class="header">
             <div class="share-home">
-                <div class="home">
-                    <span class="iconfont icon-shouye" @clik="jumpIndex"></span>
+                <div class="home" @click="jumpIndex">
+                    <span class="iconfont icon-shouye" ></span>
                     首页
                 </div>
                 <div class="share">
@@ -320,7 +320,15 @@
                 loading:false,
                 finished:false,
                 immediate:false,
-                init:true
+                init:true,
+                endTime: {
+                    interval: '',
+                    day: 0,
+                    hour: 0,
+                    minute: 0,
+                    second:0,
+                    count: 0
+                },
             }
         },
         created(){
@@ -350,6 +358,50 @@
             this.width = document.body.clientWidth / 3;
         },
         methods:{
+            //倒计时
+            countTime(){
+                var d = 86400000,
+                    h = 3600000,
+                    n = 60000,
+                    end = this.detail.discount_end_time,
+                    server = this.detail_meta.serverTime,
+                    // \D ：匹配除数字从0-9以外的任一字符  匹配一个非数字字符，也可以使用字符簇[^0-9]或[^\d]来表示
+                    arr = String(end).split(/\D/),
+                    newArr = String(server).split(/\D/);
+                newArr = newArr.map(Number); //遍历数组的每一项，都变成数字
+                arr = arr.map(Number);
+                //转换的时候 月份需要减一  因为 月份是从0 - 11 ，gettime
+                //new Date 的参数 百度 ，这是中国标准时间  逗号
+                var serverTime = new Date(newArr[0], newArr[1] - 1, newArr[2], newArr[3], newArr[4], newArr[5]).getTime();
+                var endTime = new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]).getTime();
+                //计算 服务器时间跟结束时间 的间隔
+                var timeDiff = endTime - serverTime;
+                var allTime = this.endTime.count + 1000;
+                this.endTime.count =  allTime;
+                // this.endTime.count += 1000;
+                var interval = timeDiff - this.endTime.count;
+                if (interval < 0) {
+//		        	活动结束
+                    //do somethimg
+                    clearInterval(this.timer);
+
+                } else {
+                    var day = Math.floor(interval / d);
+                    Math.floor(interval -= day * d);
+                    var hour = Math.floor(interval / h);
+                    Math.floor(interval -= hour * h);
+                    var minute = Math.floor(interval / n);
+                    var second = Math.floor(interval % n / 1000);
+                    this.endTime.day =  day;
+                    this.endTime.hour = hour;
+                    this.endTime.minute =  minute;
+                    this.endTime.second = second
+                }
+
+
+
+            },
+
             //触底加载更多公告
             loadMore(){
                 var page = this.anpage + 1;
@@ -561,6 +613,9 @@
                 this.detail = res.data;
                 this.detail_meta = res.meta;
                 this.coupons = coupons;
+                if(res.data.is_discount){
+                    this.timer = setInterval(this.countTime, 1000)
+                }
             }
 
         }

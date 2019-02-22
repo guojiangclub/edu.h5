@@ -149,3 +149,54 @@ export const queryMyinfo = function ({commit,state}) {
         })
 
 }
+//微信环境下获取openid
+export const queryWxOpenId = function ({commit,state},data) {
+    let oauth = Cache.get(cache_keys.token);
+    EventBus.$toast.loading({
+        message: '加载中',
+        mask:true
+    });
+    EventBus.$http
+        .get(EventBus.$Config.baseUrl + 'api/oauth/getRedirectUrl',{
+            params:{
+                redirect_url:data.redirect_url
+            }
+        })
+        .then(res =>{
+            res = res.data;
+            if (res.status){
+                EventBus.$emit('redirectUrl',res)
+            }else {
+                EventBus.$dialog.alert({message: '请求失败'});
+            }
+            EventBus.$toast.clear()
+        },err=>{
+            EventBus.$dialog.alert({message: '服务端出错'});
+            EventBus.$toast.clear()
+        })
+
+}
+//微信环境下快捷登录
+export const queryquicklogin = function ({commit,state},data) {
+    EventBus.$toast.loading({
+        message: '加载中',
+        mask:true
+    });
+    EventBus.$http
+        .post(EventBus.$Config.baseUrl + 'api/oauth/quicklogin',{
+            open_id:data.open_id
+        })
+        .then(res =>{
+            res = res.data;
+            if (res.status){
+                EventBus.$emit('quickLoginData',res)
+            }else {
+                EventBus.$dialog.alert({message: '请求失败'});
+            }
+            EventBus.$toast.clear()
+        },err=>{
+            EventBus.$dialog.alert({message: '服务端出错'});
+            EventBus.$toast.clear()
+        })
+
+}

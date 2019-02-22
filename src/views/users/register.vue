@@ -63,6 +63,7 @@
                 is_new_user:'',//是否为新用户
                 form:'',//跳到那个页面去
                 source:'',//从哪个页面进来
+                redirectUrl:''
             }
         },
         created() {
@@ -75,64 +76,68 @@
             this.form = this.$route.query.from;
             this.source = this.$route.query.source;
             if (env.isWechat) {
-                var type = this.$route.query.type;
                 var openid = this.$route.query.openid || this.$route.query['?openid'];
 
-                if (openid && type === 'oauth') {
-
+                if (openid) {
                     // 查询该openid是否可以登录
-                    openidLogin.call(this, {
+                   /* openidLogin.call(this, {
                         onSuccess: null,
                         onError: function () {
                             this.$dialog.alert({message: '未能自动登录，请手动登录'});
                         }
-                    });
+                    });*/
                 } else {
 
                     // 直接去取openid
-                    getOpenid.call(this);
+                   /* getOpenid.call(this);*/
                     //				        next();
                 }
             }
-        },
-        beforeRouteEnter(to, from, next) {
-            if (env.isWechat) {
-                next(that => {
-                    var type = that.$route.query.type;
-                    var openid = that.$route.query.openid || that.$route.query['?openid'];
-
-                    if (openid && type === 'oauth') {
-
-                        // 查询该openid是否可以登录
-
-                        openidLogin.call(that, {
-                            onSuccess: function () {
-                                that.$toast.clear();
-                            },
-                            onError: function () {
-                                that.$toast.clear();
-                                that.$dialog.alert({message: '未能自动登录，请手动登录'});
-                                return null
-                            }
-                        });
-
-                    } else {
-                        // 直接去取openid
-                        getOpenid.call(that);
-                    }
-                })
-            } else {
-                next();
-            }
-        },
-        beforeDestroy(){
-            EventBus.$off('codeData');
-            EventBus.$off('loginDate')
         },
         mounted(){
 
         },
         methods:{
+            getUrl() {
+                let url = window.location.href;
+                if (url.indexOf('?') != -1) {
+                    url = url + '&'
+                }
+//                url = this.$global.baseUrl + 'oauth/wxlogin?redirect_url=' + encodeURIComponent(window.location.origin + pathname + url + '&');
+
+                return url
+            },
+
+            //获取到快捷登录的数据
+            getLoginData(res){
+                if(res.data.access_token){
+                    var result=res.data;
+                    result.access_token =result.token_type + ' ' + result.access_token;
+                    result.expires_in = result.expires_in || 315360000;  // token不过期
+                    result.expires = Date.now() + (result.expires_in - 300) * 1000;
+                    Cache.set(cache_keys.token,result,0,null);
+                    if(result.is_new_user){
+                        this.is_new_user=res.data.is_new_user
+                    } else {
+                        if (this.from) {
+                            window.location.href = from;
+                        } else if (this.source) {
+                            this.$router.replace(this.source);
+                        } else {
+                            this.$router.push({name: 'users-index'})
+                        }
+
+                    }
+                } else {
+                    this.$dialog.alert({message: '未能自动登录，请手动登录'});
+                }
+
+            },
+            //获取到openid的时候数据处理
+            getOpenId(res){
+                //微信环境会跳到这个页面去，然后后端拿到openid会跳回来
+                window.location.href = res.data.url
+            },
             //点击确认按钮
             submit(){
                 var message = '';
@@ -167,7 +172,7 @@
                     result.expires = Date.now() + (result.expires_in - 300) * 1000;
                     Cache.set(cache_keys.token,result,0,null);
                     if(result.is_new_user){
-                            this.is_new_user=res.data.is_new_user
+                        this.is_new_user=res.data.is_new_user
                     } else {
                         if (this.from) {
                             window.location.href = from;
@@ -185,7 +190,7 @@
             },
             //随机获取一串字符串
             randomStr(){
-              return  Math.random().toString(36).substr(2,24);
+                return  Math.random().toString(36).substr(2,24);
             },
             getCode(){
                 //如果已经点击了按钮，则将sending变为true，不能继续点击
@@ -233,6 +238,38 @@
                 },1000)
 
             }
+        },
+        beforeRouteEnter(to, from, next) {
+            if (env.isWechat) {
+                next(vm => { //vm 为当前vue实例
+                    // 查询该openid是否可以登录
+                    var openid = vm.$route.query.openid || vm.$route.query['?openid'];
+                    if (openid) {
+                        let data = {
+                            open_id:openid
+                        }
+                        vm.$store.dispatch('queryquicklogin',data)
+                        EventBus.$on('quickLoginData',vm.getLoginData)
+
+                    } else {
+                        //如果没有openid，去拿openid
+                        let data = {
+                            //当前H5页面url
+                            redirect_url:vm.getUrl()
+                        }
+                        vm.$store.dispatch('queryWxOpenId',data)
+                        EventBus.$on('redirectUrl',vm.getOpenId)
+                    }
+                })
+            } else {
+                next();
+            }
+        },
+        beforeDestroy(){
+            EventBus.$off('codeData');
+            EventBus.$off('loginDate');
+            EventBus.$off('redirectUrl');
+            EventBus.$off('quickLoginData')
         }
 
     }

@@ -4,7 +4,7 @@
             <!--头部-->
             <div class="header">
                 <!--搜索-->
-                <div class="search">
+                <div class="search" @click="jumpSearch">
                     <input type="text" placeholder="搜索你感兴趣的课程" disabled="true" >
                 </div>
                 <!--轮播图-->
@@ -88,6 +88,26 @@
                 </div>
             </div>
         </div>
+        <!--tabbar-->
+        <van-tabbar v-model="active" active-color="#004E9D" @change="jumpTab">
+            <van-tabbar-item>
+                <span>首页</span>
+                <img :src="props.active ? icon.active : icon.normal" alt="" slot="icon"
+                     slot-scope="props">
+            </van-tabbar-item>
+            <van-tabbar-item>
+                <span>我的课程</span>
+                <img src="https://cdn.ibrand.cc/icon_course.png" alt="" slot="icon">
+            </van-tabbar-item>
+            <van-tabbar-item>
+                <span>SVIP</span>
+                <img src="https://cdn.ibrand.cc/icon_svip.png" alt="" slot="icon">
+            </van-tabbar-item>
+            <van-tabbar-item>
+                <span>个人中心</span>
+                <img src="https://cdn.ibrand.cc/icon_user.png" alt="" slot="icon">
+            </van-tabbar-item>
+        </van-tabbar>
         <!--<div class="ibrand" bindtap="jumpWeb">
             <div class="iconfont icon-dibu logo"></div>
             <div class="txt">www.ibrand.cc</div>
@@ -98,17 +118,25 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import { List,Swipe, SwipeItem } from 'vant';
+    import { List,Swipe, SwipeItem,NavBar,Tabbar, TabbarItem  } from 'vant';
     import { Cache, cache_keys, exif } from '../../utils/util';
     export default {
         name: 'index',
         component:{
             List,
             Swipe,
-            SwipeItem
+            SwipeItem,
+            Tabbar,
+            TabbarItem,
+            NavBar
         },
         data(){
             return {
+                active:0,
+                icon: {
+                    normal: 'https://cdn.ibrand.cc/icon_index.png',
+                    active: 'https://cdn.ibrand.cc/icon_index_HL.png'
+                },
                 homedata:{
                     banners:[
                         {
@@ -160,6 +188,23 @@
             EventBus.$off('takeCoupon');
         },
         methods:{
+            jumpTab(index){
+                if(index == 0){
+                    return
+                } else if (index == 1){
+                    this.$router.push({
+                        name:'users-mycourse'
+                    })
+                } else if(index == 2){
+                    this.$router.push({
+                        name:'index-svip'
+                    })
+                } else if(index == 3){
+                    this.$router.push({
+                        name:'users-index'
+                    })
+                }
+            },
             //点击领取优惠券
             receiveCoupon(id,is_receive,index){
                 this.discount_id = id;
@@ -223,6 +268,11 @@
 
 
             },
+            jumpSearch(){
+              this.$router.push({
+                  name:'index-search'
+              })
+            },
             //触底分页加载更多数据
             loadMore(){
                 const page = this.page + 1;
@@ -256,6 +306,12 @@
         overflow: auto;
         background-color:#F3F3F3;
         padding-bottom:70px;
+        .van-nav-bar{
+            background-color:#004E9D;
+        }
+        .van-nav-bar__title{
+            color: #ffffff;
+        }
         .header{
             margin-bottom: 10px;
             .search{
