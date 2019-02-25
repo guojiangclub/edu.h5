@@ -1,5 +1,11 @@
 <template>
     <div id="detail">
+        <van-nav-bar
+            :title='this.detail.title'
+            left-arrow
+            @click-left="onClickLeft"
+            v-if="is_navbar"
+        />
         <div class="header">
             <div class="share-home">
                 <div class="home" @click="jumpIndex">
@@ -111,7 +117,7 @@
             </div>
             <!--当activeindex== 3 时 通知公告-->
             <div class="li-content" v-if="activeIndex == 2">
-                <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
+                <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate" v-if="announcement.length">
                     <van-cell v-for="(item,index) in announcement" :key="index">
                         <div class="notice-item">
                             <div class="content">
@@ -290,15 +296,17 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import { Cache, cache_keys, exif } from '../../utils/util';
-    import { List } from 'vant';
+    import { Cache, cache_keys, exif ,env,setPageTitle} from '../../utils/util';
+    import { List, NavBar } from 'vant';
     export default {
         name: 'detail',
         component:{
-            List
+            List,
+            NavBar
         },
         data(){
             return {
+                is_navbar:true,
                 id:'',//课程id
                 detail:'',//详情页数据
                 detail_meta:'',//详情页meta数据
@@ -358,6 +366,10 @@
             this.width = document.body.clientWidth / 3;
         },
         methods:{
+            //onClickLeft
+            onClickLeft(){
+                window.history.back(-1)
+            },
             //倒计时
             countTime(){
                 var d = 86400000,
@@ -404,19 +416,22 @@
 
             //触底加载更多公告
             loadMore(){
-                var page = this.anpage + 1;
-                var data = {
-                    id:this.id,
-                    page:page
+                if(this.detail_meta.isMember){
+                    var page = this.anpage + 1;
+                    var data = {
+                        id:this.id,
+                        page:page
+                    }
+                    if(this.anmore){
+                        this.$store.dispatch('queryNotice',data);
+                        //加载状态结束，需要将loading变成false
+                    } else {
+                        //数据全部加载完成
+                        this.loading = false;
+                        this.finished = true;
+                    }
                 }
-                if(this.anmore){
-                    this.$store.dispatch('queryNotice',data);
-                    //加载状态结束，需要将loading变成false
-                } else {
-                    //数据全部加载完成
-                    this.loading = false;
-                    this.finished = true;
-                }
+
 
             },
             //得到公告数据之后分页数据处理
@@ -453,7 +468,7 @@
             //购买课程的逻辑
             purchase(){
               let oauth = Cache.get(cache_keys.token);
-              if(oauth.access_token){
+              if(oauth && oauth.access_token){
                   //创建临时订单
                   let data = {
                       course_id:this.id
@@ -470,7 +485,7 @@
                 this.discount_id = id;
                 this.activeIndex = index;
                 const oauth = Cache.get(cache_keys.token);
-                if(oauth.access_token){
+                if(oauth && oauth.access_token){
                     if(is_receive){
                         this.$toast('您已领取过该优惠券')
                     } else {
@@ -508,8 +523,7 @@
             //跳到课时详情页
             jumpLesson(id,free){
                 let oauth = Cache.get(cache_keys.token);
-                let token = oauth.access_token;
-                if(token){
+                if(oauth && oauth.access_token){
                     //第一种情况,已经购买了课程，则直接去课时详情页
                     if(this.detail_meta.isMember){
                         this.$router.push({
@@ -571,8 +585,7 @@
                 this.sliderOffset = e.currentTarget.offsetLeft;
                 if(index == 2){
                     let oauth = Cache.get(cache_keys.token);
-                    let token = oauth.access_token;
-                    if(this.detail_meta.isMember && token && this.init){
+                    if(this.detail_meta.isMember && oauth && oauth.access_token && this.init){
                         let data = {
                             id:this.id,
                             page:1
@@ -616,6 +629,10 @@
                 if(res.data.is_discount){
                     this.timer = setInterval(this.countTime, 1000)
                 }
+                if(env.isWechat){
+                    this.is_navbar = false;
+                    setPageTitle(res.data.title)
+                }
             }
 
         }
@@ -633,6 +650,18 @@
         height: 100%;
         background-color:#F3F3F3;
         overflow: auto;
+        .van-nav-bar{
+            background-color:#004E9D;
+            .van-icon{
+                color: #ffffff;
+            }
+        }
+        .van-nav-bar__title{
+            color: #ffffff;
+        }
+        .van-hairline--bottom::after {
+            border-bottom-width: 0px;
+        }
         .header {
             background-color: #FFFFFF;
             margin-bottom: 10px;

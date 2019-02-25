@@ -1,52 +1,54 @@
 <template>
     <div id="success">
-        <div class="header">
-            <div class="title">支付成功</div>
-            <!--<div class="topic">本次支付使用20积分，使用10元余额</div>-->
-            <div class="btn-box">
-                <div class="study btn">去学习</div>
-                <div class="home btn">回首页</div>
-            </div>
-        </div>
-        <div class="course">
-            <div class="title">课程详情</div>
-            <div class="li-item mx-1px-bottom">
-                <div class="left-info">
-                    <img src="http://img5.imgtn.bdimg.com/it/u=1071806770,1583582755&fm=26&gp=0.jpg">
-                </div>
-                <div class="right-info">
-                    <div class="name">在在你好</div>
-                    <div class="teach-box">
-                        <div class="money">¥ 78元</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="teacher">
-            <div class="title">课程讲师数据圈</div>
-            <div class="cirle-list">
-                <div class="item mx-1px-bottom">
-                    <div class="logo">
-                        <img src="https://wx3.sinaimg.cn/mw690/006ABCf7gy1fycfk2jk7sj30jx0kewq0.jpg">
-                    </div>
-                    <div class="text">
-                        <div class="name">罗熙表情包</div>
-                        <div class="owner">黔在在</div>
-                    </div>
-                    <div class="iconfont icon-jiantou"></div>
-                </div>
-                <div class="item mx-1px-bottom">
-                    <div class="logo">
-                        <img src="https://wx4.sinaimg.cn/mw690/006ABCf7gy1fycfk0sy7yj30jw0jxtim.jpg">
-                    </div>
-                    <div class="text">
-                        <div class="name">不要生气</div>
-                        <div class="owner">黔在在</div>
-                    </div>
-                    <div class="iconfont icon-jiantou"></div>
-                </div>
-            </div>
-        </div>
+       <div v-if="init">
+           <div class="header">
+               <div class="title">支付成功</div>
+               <!--<div class="topic">本次支付使用20积分，使用10元余额</div>-->
+               <div class="btn-box">
+                   <div class="study btn">去学习</div>
+                   <div class="home btn">回首页</div>
+               </div>
+           </div>
+           <div class="course" v-if="paid_info.order">
+               <div class="title">课程详情</div>
+               <div class="li-item mx-1px-bottom">
+                   <div class="left-info">
+                       <img :src="paid_info.order.course.picture">
+                   </div>
+                   <div class="right-info">
+                       <div class="name">{{paid_info.order.course.title}}</div>
+                       <div class="teach-box">
+                           <div class="money">¥ {{paid_info.order.course.display_price}}元</div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+           <div class="teacher">
+               <div class="title">课程讲师数据圈</div>
+               <div class="cirle-list">
+                   <div class="item mx-1px-bottom">
+                       <div class="logo">
+                           <img src="https://wx3.sinaimg.cn/mw690/006ABCf7gy1fycfk2jk7sj30jx0kewq0.jpg">
+                       </div>
+                       <div class="text">
+                           <div class="name">罗熙表情包</div>
+                           <div class="owner">黔在在</div>
+                       </div>
+                       <div class="iconfont icon-jiantou"></div>
+                   </div>
+                   <div class="item mx-1px-bottom">
+                       <div class="logo">
+                           <img src="https://wx4.sinaimg.cn/mw690/006ABCf7gy1fycfk0sy7yj30jw0jxtim.jpg">
+                       </div>
+                       <div class="text">
+                           <div class="name">不要生气</div>
+                           <div class="owner">黔在在</div>
+                       </div>
+                       <div class="iconfont icon-jiantou"></div>
+                   </div>
+               </div>
+           </div>
+       </div>
 
     </div>
 
@@ -57,10 +59,40 @@
         name: 'recharge-success',
         data(){
             return {
+                order_no:'',
+                paid_info:'',
+                init:false
+            }
+        },
+        created(){
+            let order_no = this.$route.query.order_no;
+            if(order_no){
+                let data = {
+                    order_no:order_no
+                }
+                this.$store.dispatch('queryOrderPaid',data)
+                EventBus.$on('paidOrder',this.getOrderInfo);
+            } else {
+                this.$dialog.alert('非法进入')
+            }
+        },
+        beforeDestroy(){
+            EventBus.$off('paidOrder')
+        },
+        mounted(){
 
+        },
+        methods:{
+            getOrderInfo(res){
+                if(res.data.order.status == 'paid'){
+                    this.paid_info = res.data;
+                    this.init = true;
+                }
 
             }
+
         }
+
 
     }
 </script>

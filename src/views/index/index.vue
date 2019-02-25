@@ -210,7 +210,7 @@
                 this.discount_id = id;
                 this.activeIndex = index;
                 const oauth = Cache.get(cache_keys.token);
-                if(oauth.access_token){
+                if(oauth && oauth.access_token){
                     if(is_receive){
                         this.$toast('您已领取过该优惠券')
                     } else {

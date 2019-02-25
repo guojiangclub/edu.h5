@@ -274,7 +274,7 @@ export const queryOrder = function ({commit,state},data) {
             EventBus.$emit('createOrder',res);
 
         } else {
-            EventBus.$dialog.alert({message: '请求失败'});
+            EventBus.$dialog.alert({message: res.message||'请求失败'});
         }
 
         EventBus.$toast.clear()

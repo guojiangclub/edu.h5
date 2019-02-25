@@ -200,3 +200,33 @@ export const queryquicklogin = function ({commit,state},data) {
         })
 
 }
+//请求绑定绑定老用户的接口
+export const queryOldAccount = function ({commit,state},data) {
+    let oauth = Cache.get(cache_keys.token);
+    EventBus.$toast.loading({
+        message: '加载中',
+        mask:true
+    });
+    EventBus.$http
+        .post(EventBus.$Config.baseUrl + 'api/oauth/bindOldAccount',{
+            username:data.username,
+            password:data.password
+        },{
+            headers:{
+                Authorization: oauth.access_token
+            }
+        })
+        .then(res =>{
+            res = res.data;
+            if (res.status){
+                EventBus.$emit('oldAccountDate',res)
+            }else {
+                EventBus.$dialog.alert({message: '请求失败'});
+            }
+            EventBus.$toast.clear()
+        },err=>{
+            EventBus.$dialog.alert({message: '服务端出错'});
+            EventBus.$toast.clear()
+        })
+
+}

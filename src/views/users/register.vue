@@ -1,5 +1,11 @@
 <template>
     <div id="user-register">
+        <van-nav-bar
+            title='登录页面'
+            left-arrow
+            @click-left="onClickLeft"
+            v-if="is_navbar"
+        />
         <div class="tips" v-if="message">{{message}}</div>
         <div class="phone__warning">
             <img src="http://ibrand-miniprogram.oss-cn-hangzhou.aliyuncs.com/18-12-29/45704537.jpg">
@@ -29,16 +35,16 @@
             &lt;!&ndash;</checkbox-group>&ndash;&gt;
         </div>-->
         <!--弹出是否绑定老用户框框-->
-        <!--<div class="bind_old cur">
+        <div class="bind_old" :class="is_new_user ? 'cur' : ''">
             <div class="paney">
                 <div class="title">绑定老用户</div>
                 <div class="content mx-1px-bottom">是否绑定已有老程序</div>
                 <div class="btn-box">
-                    <div class="cancle btn">取消</div>
-                    <div class="sure btn">确定</div>
+                    <div class="cancle btn" @click="cancleBind">取消</div>
+                    <div class="sure btn" @click="sureBind">确定</div>
                 </div>
             </div>
-        </div>-->
+        </div>
     </div>
 
 
@@ -51,6 +57,7 @@
         name: 'users-register',
         data(){
             return {
+                is_navbar:true,
                 query: this.$route.query,
                 mobile:'',//手机号码
                 identifyingcode:'',//验证码
@@ -67,6 +74,9 @@
             }
         },
         created() {
+            if(env.isWechat){
+                this.is_navbar = false
+            }
             var oauth = Cache.get(cache_keys.token);
             if(oauth){
                 this.$router.push({name: 'users-index'})
@@ -98,6 +108,26 @@
 
         },
         methods:{
+            onClickLeft(){
+              window.history.back(-1)
+            },
+            //取消绑定老用户
+            cancleBind(){
+                if(this.from){
+                    window.location.href = this.from
+                } else if(this.source){
+                    this.$router.replace(this.source)
+                } else {
+                    this.$router.push({name: 'users-index'})
+                }
+                this.is_new_user = false
+
+            },
+            //点击确认按钮
+            sureBind(){
+                this.$router.push({name: 'users-oldlogin'});
+                this.is_new_user = false
+            },
             getUrl() {
                 let url = window.location.href;
                 if (url.indexOf('?') != -1) {
@@ -110,6 +140,7 @@
 
             //获取到快捷登录的数据
             getLoginData(res){
+                console.log('数据呀',res);
                 if(res.data.access_token){
                     var result=res.data;
                     result.access_token =result.token_type + ' ' + result.access_token;
@@ -120,7 +151,7 @@
                         this.is_new_user=res.data.is_new_user
                     } else {
                         if (this.from) {
-                            window.location.href = from;
+                            window.location.href = this.from;
                         } else if (this.source) {
                             this.$router.replace(this.source);
                         } else {
@@ -155,10 +186,11 @@
                     },3000)
                     return
                 } else {
+                    var openid = this.$route.query.openid || this.$route.query['?openid'];
                     let data = {
                         mobile:this.mobile,
                         code:this.identifyingcode,
-                        open_id:this.query.openid || ''
+                        open_id:openid || ''
                     }
                     this.$store.dispatch('queryLoginNew',data)
                 }
@@ -177,7 +209,7 @@
                         if (this.from) {
                             window.location.href = from;
                         } else if (this.source) {
-                            this.$router.replace(source);
+                            this.$router.replace(this.source);
                         } else {
                             this.$router.push({name: 'users-index'})
                         }
@@ -252,6 +284,7 @@
                         EventBus.$on('quickLoginData',vm.getLoginData)
 
                     } else {
+                        console.log("没有自动");
                         //如果没有openid，去拿openid
                         let data = {
                             //当前H5页面url
@@ -286,6 +319,19 @@
         margin-top: 50px;
         height: 100%;
         overflow: auto;
+
+        .van-nav-bar{
+            background-color:#004E9D;
+            .van-icon{
+                color: #ffffff;
+            }
+        }
+        .van-nav-bar__title{
+            color: #ffffff;
+        }
+        .van-hairline--bottom::after {
+            border-bottom-width: 0px;
+        }
 
         .tips{
             position: fixed;

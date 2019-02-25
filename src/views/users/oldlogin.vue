@@ -9,14 +9,14 @@
         <div class="content">
             <div class="item mx-1px-bottom">
                 <span class="iconfont icon-laoshi"></span>
-                <input type="text" placeholder="手机/用户名/邮箱" >
+                <input type="text" placeholder="手机/用户名/邮箱" v-model="username">
             </div>
             <div class="item mx-1px-bottom">
                 <span class="iconfont icon-suo"></span>
-                <input type="password" placeholder="请输入账号密码" >
+                <input type="password" placeholder="请输入账号密码" v-model="password">
             </div>
         </div>
-        <div class="binding-btn">绑定</div>
+        <div class="binding-btn" @click="bindBtn">绑定</div>
 
     </div>
 
@@ -25,14 +25,62 @@
 </template>
 
 <script type="text/ecmascript-6">
+    import { env, is,  Cache, cache_keys } from '../../utils/util';
+    import { userLogin, openidLogin, getOpenid } from '../../utils/oauth';
     export default {
         name: 'users-oldlogin',
         data(){
             return {
+                username:'',
+                password:''
+            }
+        },
+        created(){
+            EventBus.$on('oldAccountDate',this.getOldAccount)
 
+        },
+        beforeDestroy(){
+            EventBus.$off('oldAccountDate')
+        },
+        mounted(){
+
+        },
+        methods:{
+            //点击绑定按钮
+            bindBtn(){
+                var message = ''  ;
+                if(!is.has(this.username)){
+                    message = '账号不能为空'
+                } else if(!is.has(this.password)){
+                    message = '密码不能为空'
+                }
+                if(message){
+                    this.$dialog.alert({
+                        message:message
+                    })
+                } else {
+                    this.$store.dispatch('queryOldAccount')
+                }
+
+            },
+            getOldAccount(res){
+                if(res.data.access_token){
+                    var result=res.data;
+                    result.access_token =result.token_type + ' ' + result.access_token;
+                    result.expires_in = result.expires_in || 315360000;  // token不过期
+                    result.expires = Date.now() + (result.expires_in - 300) * 1000;
+                    Cache.set(cache_keys.token,result,0,null);
+                    this.$router.push({name: 'users-index'})
+                } else {
+                    this.$dialog.alert({
+                        message:res.message || '请求失败，请重试'
+                    })
+                }
 
             }
+
         }
+
 
     }
 </script>

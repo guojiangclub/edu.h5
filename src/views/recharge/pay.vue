@@ -111,7 +111,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import { Cache, cache_keys, exif } from '../../utils/util';
+    import { env, is,  Cache, cache_keys } from '../../utils/util';
     import { Checkbox, CheckboxGroup } from 'vant';
     export default {
         name: 'recharge-pay',
@@ -135,10 +135,16 @@
             }
         },
         created(){
-
+            if(Cache.get(cache_keys.order_info)){
+                EventBus.$on('chargeOrder',this.getCharge)
+            } else {
+                this.$router.push({
+                    name:'index-index'
+                })
+            }
         },
         beforeDestroy(){
-
+            EventBus.$off('chargeOrder')
         },
         mounted(){
             //获取一开始存的订单信息的 优惠券和最优的优惠圈
@@ -195,8 +201,49 @@
 
         },
         methods:{
+            //处理charge数据接口
+            getCharge(res){
+                    if(res.data.redirectUrl){
+                        window.location.href = res.data.redirectUrl;
+                       /* Cache.clear(cache_keys.order_info);
+                        Cache.clear(cache_keys.old_order_info);*/
+                        window.close();
+                    } else {
+                        this.$dialog.alert({
+                            message:res.message || '发起支付失败'
+                        })
+                    }
+
+            },
             //去付款点击的事件
             goPay(){
+                if(this.is_perfect){
+                    //请求charege接口
+                    let channel = '';
+                    let origin = window.location.origin;
+                    let pathname = window.location.pathname;
+                    if(env.isWechat){
+                        channel = 'wx_pub'
+                    } else {
+                        channel = 'alipay_wap'
+                    }
+                    let data = {
+                        order_no:this.info.order.sn,
+                        coupon_id:this.select_coupon.id,
+                        channel:channel,
+                        note:this.note,
+                        extra:{
+                            successUrl:origin + pathname + '#'+ '/recharge/success?order_no='+this.info.order.sn,
+                            failUrl:origin + pathname + '#'+ '/recharge/success?order_no='+this.info.order.sn
+                        }
+                    }
+                    this.$store.dispatch('queryOrderChare',data)
+                } else {
+                    this.$dialog.alert({
+                        message:'请您先填写学员信息'
+                    })
+                }
+
 
             },
             //切换优惠券
