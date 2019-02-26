@@ -1,5 +1,11 @@
 <template>
     <div id="teacher">
+        <van-nav-bar
+            title='教师详情页'
+            left-arrow
+            @click-left="onClickLeft"
+            v-if="is_navbar"
+        />
         <div class="header">
             <div class="avatar" v-if="detail.user">
                 <img :src="detail.user.avatar">
@@ -85,17 +91,27 @@
 </template>
 
 <script type="text/ecmascript-6">
+    import { Cache, cache_keys, exif ,env} from '../../utils/util';
+    import { List,NavBar } from 'vant';
     export default {
+        component:{
+            List,
+            NavBar
+        },
         name: 'teacher',
         data(){
             return {
                 teacher_id:'',
-                detail:''
+                detail:'',
+                is_navbar:true
 
 
             }
         },
         created(){
+            if(env.isWechat){
+                this.is_navbar = false
+            }
             this.teacher_id = this.$route.params.id;
             let data = {
                 id:this.teacher_id
@@ -111,6 +127,9 @@
 
         },
         methods:{
+            onClickLeft(){
+                window.history.back(-1);
+            },
             getTearchDetail(res){
                 this.detail = res.data
             },
@@ -136,6 +155,21 @@
         height: 100%;
         background-color:#F3F3F3;
         overflow: auto;
+        .van-nav-bar{
+            background-color:#004E9D;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            .van-icon{
+                color: #ffffff;
+            }
+        }
+        .van-nav-bar__title{
+            color: #ffffff;
+        }
+        .van-hairline--bottom::after {
+            border-bottom-width: 0px;
+        }
         .header{
             background-color:#004E9D;
             padding:30px 15px;

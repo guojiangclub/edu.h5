@@ -1,5 +1,11 @@
 <template>
     <div id="setting">
+        <van-nav-bar
+            title='个人设置'
+            left-arrow
+            @click-left="onClickLeft"
+            v-if="is_navbar"
+        />
         <div class="content">
             <div class="item mx-1px-bottom">
                 <div class="option">修改手机号</div>
@@ -13,13 +19,30 @@
 </template>
 
 <script type="text/ecmascript-6">
+    import { List,NavBar } from 'vant';
+    import { Cache, cache_keys, exif ,env} from '../../utils/util';
     export default {
+        component:{
+            List,
+            NavBar
+        },
         name: 'users-setting',
         data(){
             return {
+                is_navbar:true,
 
 
             }
+        },
+        created(){
+            if(env.isWechat){
+                this.is_navbar = false
+            }
+        },
+        methods:{
+            onClickLeft(){
+                window.history.back(-1)
+            },
         }
 
     }
@@ -33,6 +56,21 @@
         height: 100%;
         overflow: auto;
         background-color: #f3f3f3;
+        .van-nav-bar{
+            background-color:#004E9D;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            .van-icon{
+                color: #ffffff;
+            }
+        }
+        .van-nav-bar__title{
+            color: #ffffff;
+        }
+        .van-hairline--bottom::after {
+            border-bottom-width: 0px;
+        }
         .content{
             background-color:#fff;
             margin-top: 10px;

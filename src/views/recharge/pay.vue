@@ -1,126 +1,136 @@
 <template>
-    <div id="pay">
-        <div class="header-detail" >
-            <div class="item mx-1px-bottom"  v-if="info.course">
-                <div class="left-info">
-                    <img :src="info.course.picture">
-                </div>
-                <div class="right-info">
-                    <div class="name">{{info.course.title}}</div>
-                    <!--<div class="tiem-box">
-                        <div class="time">
-                            <span></span>
-                            37课时
+       <div id="pay">
+           <van-nav-bar
+               title='付款页面'
+               left-arrow
+               @click-left="onClickLeft"
+               v-if="is_navbar"
+           />
+           <div class="header-detail" >
+               <div class="item mx-1px-bottom"  v-if="info.course">
+                   <div class="left-info">
+                       <img :src="info.course.picture">
+                   </div>
+                   <div class="right-info">
+                       <div class="name">{{info.course.title}}</div>
+                       <!--<div class="tiem-box">
+                           <div class="time">
+                               <span></span>
+                               37课时
+                           </div>
+                           <div class="many">
+                               96人学习
+                           </div>
+                       </div>-->
+                       <div class="teach-box">
+                           <!--<div class="teacher">
+                               <span></span>
+                               在在老师
+                           </div>-->
+                           <div class="money" v-if="info.course">¥ {{info.course.display_price}}元</div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+           <div class="content">
+               <div class="li-item">
+                   <div class="title">学员信息</div>
+                   <div class="infomation" @click="perfectUser">
+                       <div class="name" v-if="is_perfect && info.userDetails">{{info.userDetails.name}}</div>
+                       <div class="name" v-else>请填写学员信息</div>
+                       <div class="iconfont icon-jiantou"></div>
+                   </div>
+               </div>
+               <div class="li-item" v-if="info.order && info.order.total != 0">
+                   <div class="title">优惠信息</div>
+                   <div class="infomation" v-if="info && info.isVip">
+                       <div class="name">SVIP优惠</div>
+                       <div class="txt">优惠 {{svip_price}}元</div>
+                       <div class="check">
+                           <van-checkbox v-model="user_vip" checked-color="#004E9D" @change="changeVip"></van-checkbox>
+                       </div>
+                   </div>
+                   <div class="introduce mx-1px-bottom" v-if="info && info.isVip">免费购买课程剩余可使用{{info.freeCourseCount}}门</div>
+                   <div class="infomation" v-if="info.isVip == false">
+                       <div class="name">SVIP优惠</div>
+                       <div class="txt">勾选加入</div>
+                       <div class="check">
+                           <van-checkbox v-model="buy_svip" checked-color="#004E9D"></van-checkbox>
+                       </div>
+                   </div>
+                   <div class="introduce mx-1px-bottom" v-if="info && info.isVip == false">成为svip，所选课程可免费购买</div>
+                   <div class="infomation mx-1px-bottom" @click="changeCoupon">
+                       <div class="name">优惠券：</div>
+                       <div class="txt" v-if="select_coupon">{{select_coupon.discount.label}}</div>
+                       <div class="iconfont icon-jiantou"></div>
+                   </div>
+                   <!-- <div class="infomation">
+                        <div class="name">使用积分</div>
+                        <div class="txt">使用2500积分，抵扣¥25</div>
+                        <div class="check">
+                            <checkbox-group>
+                                <label>
+                                    <checkbox color="#fff"></checkbox>
+                                </label>
+                            </checkbox-group>
                         </div>
-                        <div class="many">
-                            96人学习
-                        </div>
-                    </div>-->
-                    <div class="teach-box">
-                        <!--<div class="teacher">
-                            <span></span>
-                            在在老师
-                        </div>-->
-                        <div class="money" v-if="info.course">¥ {{info.course.display_price}}元</div>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="content">
-            <div class="li-item">
-                <div class="title">学员信息</div>
-                <div class="infomation" @click="perfectUser">
-                    <div class="name" v-if="is_perfect && info.userDetails">{{info.userDetails.name}}</div>
-                    <div class="name" v-else>请填写学员信息</div>
-                    <div class="iconfont icon-jiantou"></div>
-                </div>
-            </div>
-            <div class="li-item" v-if="info.order && info.order.total != 0">
-                <div class="title">优惠信息</div>
-                <div class="infomation" v-if="info && info.isVip">
-                    <div class="name">SVIP优惠</div>
-                    <div class="txt">优惠 {{svip_price}}元</div>
-                    <div class="check">
-                        <van-checkbox v-model="user_vip" checked-color="#004E9D" @change="changeVip"></van-checkbox>
-                    </div>
-                </div>
-                <div class="introduce mx-1px-bottom" v-if="info && info.isVip">免费购买课程剩余可使用{{info.freeCourseCount}}门</div>
-                <div class="infomation" v-if="info.isVip == false">
-                    <div class="name">SVIP优惠</div>
-                    <div class="txt">勾选加入</div>
-                    <div class="check">
-                        <van-checkbox v-model="buy_svip" checked-color="#004E9D"></van-checkbox>
-                    </div>
-                </div>
-                <div class="introduce mx-1px-bottom" v-if="info && info.isVip == false">成为svip，所选课程可免费购买</div>
-                <div class="infomation mx-1px-bottom" @click="changeCoupon">
-                    <div class="name">优惠券：</div>
-                    <div class="txt" v-if="select_coupon">{{select_coupon.discount.label}}</div>
-                    <div class="iconfont icon-jiantou"></div>
-                </div>
-                <!-- <div class="infomation">
-                     <div class="name">使用积分</div>
-                     <div class="txt">使用2500积分，抵扣¥25</div>
-                     <div class="check">
-                         <checkbox-group>
-                             <label>
-                                 <checkbox color="#fff"></checkbox>
-                             </label>
-                         </checkbox-group>
-                     </div>
-                 </div>
-                 <div class="introduce mx-1px-bottom">当前可用积分 2541 分</div>-->
-            </div>
-            <!--<div class="li-item">
-                <div class="title">支付方式</div>
-                <div class="infomation">
-                    <div class="name"><span class="iconfont"></span>余额支付</div>
-                    <div class="check">
-                        <checkbox-group>
-                            <label>
-                                <checkbox color="#fff"></checkbox>
-                            </label>
-                        </checkbox-group>
-                    </div>
-                </div>
-            </div>-->
-            <div class="li-item">
-                <div class="title">备注信息</div>
-                <div class="note">
-                    <div class="box mx-1px-top-bottom">
+                    <div class="introduce mx-1px-bottom">当前可用积分 2541 分</div>-->
+               </div>
+               <!--<div class="li-item">
+                   <div class="title">支付方式</div>
+                   <div class="infomation">
+                       <div class="name"><span class="iconfont"></span>余额支付</div>
+                       <div class="check">
+                           <checkbox-group>
+                               <label>
+                                   <checkbox color="#fff"></checkbox>
+                               </label>
+                           </checkbox-group>
+                       </div>
+                   </div>
+               </div>-->
+               <div class="li-item">
+                   <div class="title">备注信息</div>
+                   <div class="note">
+                       <div class="box mx-1px-top-bottom">
                     <textarea name="" id="" v-model="note">
 
                     </textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="pay-btn">
-            <div class="money" v-if="select_coupon || user_vip">
-                应付：<span>¥ {{amount}}</span>
-            </div>
-            <div class="money" v-else>
-                应付：<span v-if="info.course">¥ {{info.course.display_price}}</span>
-            </div>
-            <div class="go-pay" @click="goPay">
-                去付款
-            </div>
-        </div>
-    </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+           <div class="pay-btn">
+               <div class="money" v-if="select_coupon || user_vip">
+                   应付：<span>¥ {{amount}}</span>
+               </div>
+               <div class="money" v-else>
+                   应付：<span v-if="info.course">¥ {{info.course.display_price}}</span>
+               </div>
+               <div class="go-pay" @click="goPay">
+                   去付款
+               </div>
+           </div>
+       </div>
 
 </template>
 
 <script type="text/ecmascript-6">
     import { env, is,  Cache, cache_keys } from '../../utils/util';
-    import { Checkbox, CheckboxGroup } from 'vant';
+    import { Checkbox, CheckboxGroup,List, NavBar} from 'vant';
     export default {
         name: 'recharge-pay',
         component:{
             Checkbox,
-            CheckboxGroup
+            CheckboxGroup,
+            NavBar,
+            List
+
         },
         data(){
             return {
+                is_navbar:true,
                 info:'',
                 select_coupon:'',
                 amount:'',//元
@@ -135,6 +145,9 @@
             }
         },
         created(){
+            if(env.isWechat){
+                this.is_navbar = false;
+            }
             if(Cache.get(cache_keys.order_info)){
                 EventBus.$on('chargeOrder',this.getCharge)
             } else {
@@ -201,13 +214,15 @@
 
         },
         methods:{
+            onClickLeft(){
+                window.history.back(-1)
+            },
             //处理charge数据接口
             getCharge(res){
                     if(res.data.redirectUrl){
                         window.location.href = res.data.redirectUrl;
-                       /* Cache.clear(cache_keys.order_info);
-                        Cache.clear(cache_keys.old_order_info);*/
-                        window.close();
+                        Cache.remove(cache_keys.order_info);
+                        Cache.remove(cache_keys.old_order_info);
                     } else {
                         this.$dialog.alert({
                             message:res.message || '发起支付失败'
@@ -370,6 +385,21 @@
         height: 100%;
         overflow: auto;
         background-color:#F3F3F3;
+        .van-nav-bar{
+            background-color:#004E9D;
+            .van-icon{
+                color: #ffffff;
+            }
+        }
+        .van-nav-bar+div{
+            padding-top: 46px !important;
+        }
+        .van-nav-bar__title{
+            color: #ffffff;
+        }
+        .van-hairline--bottom::after {
+            border-bottom-width: 0px;
+        }
         .header-detail{
             background-color: #FFFFFF;
             margin-top: 10px;

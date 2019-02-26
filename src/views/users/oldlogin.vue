@@ -1,5 +1,11 @@
 <template>
     <div id="oldlogin">
+        <van-nav-bar
+            title='老用户登录'
+            left-arrow
+            @click-left="onClickLeft"
+            v-if="is_navbar"
+        />
         <div class="header">
             <div class="logo">
                 <img src="http://ibrand-miniprogram.oss-cn-hangzhou.aliyuncs.com/18-12-29/45704537.jpg">
@@ -27,15 +33,24 @@
 <script type="text/ecmascript-6">
     import { env, is,  Cache, cache_keys } from '../../utils/util';
     import { userLogin, openidLogin, getOpenid } from '../../utils/oauth';
+    import { List,NavBar } from 'vant';
     export default {
+        component:{
+            List,
+            NavBar
+        },
         name: 'users-oldlogin',
         data(){
             return {
                 username:'',
-                password:''
+                password:'',
+                is_navbar:true
             }
         },
         created(){
+            if(env.isWechat){
+                this.is_navbar = false
+            }
             EventBus.$on('oldAccountDate',this.getOldAccount)
 
         },
@@ -46,6 +61,9 @@
 
         },
         methods:{
+            onClickLeft(){
+                window.history.back(-1)
+            },
             //点击绑定按钮
             bindBtn(){
                 var message = ''  ;
@@ -92,6 +110,24 @@
     #oldlogin{
         height: 100%;
         overflow: auto;
+        .van-nav-bar{
+            background-color:#004E9D;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            .van-icon{
+                color: #ffffff;
+            }
+        }
+        .van-nav-bar+div{
+            padding-top: 90px !important;
+        }
+        .van-nav-bar__title{
+            color: #ffffff;
+        }
+        .van-hairline--bottom::after {
+            border-bottom-width: 0px;
+        }
         .header{
             padding:44px 0 33px 0;
             .logo{

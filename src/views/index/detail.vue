@@ -652,6 +652,9 @@
         overflow: auto;
         .van-nav-bar{
             background-color:#004E9D;
+            position: fixed;
+            top: 0;
+            width: 100%;
             .van-icon{
                 color: #ffffff;
             }

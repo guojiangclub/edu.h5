@@ -1,5 +1,11 @@
 <template>
     <div id="coupon-index">
+        <van-nav-bar
+            title='我的优惠券'
+            left-arrow
+            @click-left="onClickLeft"
+            v-if="is_navbar"
+        />
         <div class="navbar mx-1px-bottom">
                 <div class="navbar-item" :class="index == activeIndex ? 'activity' : ''" v-for="(item,index) in tabList" :key="index" @click="tabClick(index,$event)">
                     <div class="navbar-title">{{item.title}}</div>
@@ -104,15 +110,17 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import { List } from 'vant';
-    import { Cache, cache_keys, exif } from '../../utils/util';
+    import { List,NavBar } from 'vant';
+    import { Cache, cache_keys, exif,env } from '../../utils/util';
     export default {
         name: 'coupon-index',
         component:{
-            List
+            List,
+            NavBar
         },
         data(){
             return {
+                is_navbar:true,
                 activeIndex: 0,
                 sliderOffset: 0,
                 width: 0,
@@ -158,6 +166,9 @@
                 type:'valid',
                 page:1
             }
+            if(env.isWechat){
+                this.is_navbar = false
+            }
             this.$store.dispatch('queryCouponList',data);
             EventBus.$on('couponList',this.getCouponList)
 
@@ -170,6 +181,9 @@
             this.sliderOffset = 0
         },
         methods:{
+            onClickLeft(){
+                window.history.back(-1)
+            },
             //加载更多
             loadMore(){
                 let page = this.tabList[this.activeIndex].page + 1;
@@ -249,9 +263,24 @@
         height: 100%;
         overflow: auto;
         background-color:#F3F3F3;
-        .navbar {
+        .van-nav-bar{
+            background-color:#004E9D;
             position: fixed;
             top: 0;
+            width: 100%;
+            .van-icon{
+                color: #ffffff;
+            }
+        }
+        .van-nav-bar__title{
+            color: #ffffff;
+        }
+        .van-hairline--bottom::after {
+            border-bottom-width: 0px;
+        }
+        .navbar {
+            position: fixed;
+            top: 46px;
             width: 100%;
             display: flex;
             z-index: 20;
@@ -283,7 +312,7 @@
         }
         .coupon-content{
             padding:10px 15px 15px 15px;
-            margin-top: 50px;
+            margin-top: 96px;
             .van-cell{
                 margin-bottom:15px;
             }

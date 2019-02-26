@@ -1,6 +1,12 @@
 <template>
     <div id="success">
        <div v-if="init">
+           <van-nav-bar
+               title='付款成功页面'
+               left-arrow
+               @click-left="onClickLeft"
+               v-if="is_navbar"
+           />
            <div class="header">
                <div class="title">支付成功</div>
                <!--<div class="topic">本次支付使用20积分，使用10元余额</div>-->
@@ -55,16 +61,26 @@
 </template>
 
 <script type="text/ecmascript-6">
+    import { Cache, cache_keys, exif ,env} from '../../utils/util';
+    import { List,NavBar } from 'vant';
     export default {
+        component:{
+            List,
+            NavBar
+        },
         name: 'recharge-success',
         data(){
             return {
                 order_no:'',
                 paid_info:'',
-                init:false
+                init:false,
+                is_navbar:true,
             }
         },
         created(){
+            if(env.isWechat){
+                this.is_navbar = false
+            }
             let order_no = this.$route.query.order_no;
             if(order_no){
                 let data = {
@@ -83,6 +99,11 @@
 
         },
         methods:{
+            onClickLeft(){
+                this.$router.push({
+                    name:'index-index'
+                })
+            },
             getOrderInfo(res){
                 if(res.data.order.status == 'paid'){
                     this.paid_info = res.data;
@@ -105,6 +126,24 @@
         height: 100%;
         overflow: auto;
         background-color:#F3F3F3;
+        .van-nav-bar{
+            background-color:#004E9D;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            .van-icon{
+                color: #ffffff;
+            }
+        }
+        .van-nav-bar+div{
+            padding-top: 66px !important;
+        }
+        .van-nav-bar__title{
+            color: #ffffff;
+        }
+        .van-hairline--bottom::after {
+            border-bottom-width: 0px;
+        }
         .header{
             background-color: #FFFFFF;
             padding: 20px 0 30px 0;

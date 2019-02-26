@@ -1,5 +1,11 @@
 <template>
     <div id="classfication">
+        <van-nav-bar
+            title='分类页面'
+            left-arrow
+            @click-left="onClickLeft"
+            v-if="is_navbar"
+        />
         <!--一级菜单-->
         <div class="classifical-menu">
             <div class="scroll-view" id="kinds">
@@ -20,7 +26,7 @@
         </div>
         <div class="ul-content">
             <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
-                <van-cell  v-for="(item,index) in dataList" :key="index">
+                <van-cell  v-for="(item,index) in dataList" :key="index" @click="jump(item.id)">
                     <div class="li-item">
                         <div class="left-info">
                             <img :src="item.picture">
@@ -37,8 +43,8 @@
                                     {{item.student_count}}人学习
                                 </div>
                             </div>
-                            <div class="teach-box" v-if="item.tearcher">
-                                <div class="teacher">
+                            <div class="teach-box">
+                                <div class="teacher" v-if="item.tearcher">
                                     <span class="iconfont icon-laoshi"></span>
                                     {{item.teacher.name || '无名'}}老师
                                 </div>
@@ -55,10 +61,17 @@
 </template>
 
 <script type="text/ecmascript-6">
+    import { Cache, cache_keys, exif ,env} from '../../utils/util';
+    import { List,NavBar } from 'vant';
     export default {
+        component:{
+            List,
+            NavBar
+        },
         name: 'classification',
         data(){
             return {
+                is_navbar:true,
                 category_id:'',//分类id
                 dataList:[],
                 isRefresh:true,
@@ -74,6 +87,9 @@
             }
         },
         created(){
+            if(env.isWechat){
+                this.is_navbar = false
+            }
             this.category_id = this.$route.params.id;
             let data = {
                 type:2,
@@ -94,6 +110,17 @@
 
         },
         methods:{
+            jump(id){
+                this.$router.push({
+                    name:'index-detail',
+                    params:{
+                        id:id
+                    }
+                })
+            },
+            onClickLeft(){
+              window.history.back(-1)
+            },
             //点击分类
             tabKinds(id,e){
                 this.isRefresh = true;
@@ -199,6 +226,24 @@
         height: 100%;
         overflow: auto;
         background-color:#F3F3F3;
+        .van-nav-bar{
+            background-color:#004E9D;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            .van-icon{
+                color: #ffffff;
+            }
+        }
+        .van-nav-bar + div {
+            padding-top: 66px!important;
+        }
+        .van-nav-bar__title{
+            color: #ffffff;
+        }
+        .van-hairline--bottom::after {
+            border-bottom-width: 0px;
+        }
         .classifical-menu{
             background-color: #FFFFFF;
             padding:20px 0px 10px 15px;

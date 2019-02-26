@@ -39,6 +39,15 @@
         background-color: #ffffff;
         z-index: 0;
     }
+    .van-nav-bar {
+        background-color: #004E9D;
+        position: fixed;
+        top: 0;
+        width: 100%;
+    }
+    .van-nav-bar + div {
+        padding-top: 46px!important;
+    }
 
 </style>
 <template>

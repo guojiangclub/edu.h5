@@ -1,5 +1,11 @@
 <template>
     <div id="center">
+        <van-nav-bar
+            title='可用优惠券列表'
+            left-arrow
+            @click-left="onClickLeft"
+            v-if="is_navbar"
+        />
         <div class="content">
             <div class="item" :class="index == activeIndex ? 'active' : ''" v-for="(item,index) in coupons" :key="index" @click="change(index,item.id)">
                 <div class="left-info">
@@ -24,16 +30,26 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import { Cache, cache_keys, exif } from '../../utils/util';
+    import { Cache, cache_keys, exif,env} from '../../utils/util';
+    import { List,NavBar } from 'vant';
     export default {
+        component:{
+            List,
+            NavBar
+        },
         name: 'coupon-center',
         data(){
             return {
                 coupons:'',//优惠券
-                activeIndex:''
+                activeIndex:'',
+                is_navbar:true,
             }
         },
         created(){
+            if(env.isWechat){
+                this.is_navbar = false
+            }
+
 
         },
         beforeDestroy(){
@@ -51,6 +67,9 @@
             })
         },
         methods:{
+            onClickLeft(){
+                window.history.back(-1)
+            },
             change(index,id){
                 this.activeIndex = index;
                 var info = Cache.get(cache_keys.order_info);
@@ -75,6 +94,21 @@
         height: 100%;
         overflow: auto;
         background-color:#F3F3F3;
+        .van-nav-bar{
+            background-color:#004E9D;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            .van-icon{
+                color: #ffffff;
+            }
+        }
+        .van-nav-bar__title{
+            color: #ffffff;
+        }
+        .van-hairline--bottom::after {
+            border-bottom-width: 0px;
+        }
 
         .content{
             padding: 15px;

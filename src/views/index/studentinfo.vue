@@ -1,5 +1,11 @@
 <template>
     <div id="student-info">
+        <van-nav-bar
+            title='学员信息'
+            left-arrow
+            @click-left="onClickLeft"
+            v-if="is_navbar"
+        />
         <div class="infomation-content">
             <div class="item mx-1px-bottom">
                 <div class="option">
@@ -43,8 +49,13 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import { Cache, cache_keys, exif,is } from '../../utils/util';
+    import { Cache, cache_keys, exif,is ,env} from '../../utils/util';
+    import { List,NavBar } from 'vant';
     export default {
+        component:{
+            List,
+            NavBar
+        },
         name: 'studentinfo',
         data(){
             return {
@@ -53,11 +64,15 @@
                 weixin:'',
                 company:'',
                 job:'',
-                userInfo:''
+                userInfo:'',
+                is_navbar:true
 
             }
         },
         created(){
+            if(env.isWechat){
+                this.is_navbar = false
+            }
             EventBus.$on('updateInfo',this.getUpdateInfo);
 
         },
@@ -73,6 +88,9 @@
 
         },
         methods:{
+            onClickLeft(){
+                window.history.back(-1);
+            },
             //更新数据的处理
             getUpdateInfo(res){
                 var info = Cache.get(cache_keys.order_info);
@@ -127,6 +145,21 @@
     #student-info{
         height: 100%;
         background-color:#F3F3F3;
+        .van-nav-bar{
+            background-color:#004E9D;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            .van-icon{
+                color: #ffffff;
+            }
+        }
+        .van-nav-bar__title{
+            color: #ffffff;
+        }
+        .van-hairline--bottom::after {
+            border-bottom-width: 0px;
+        }
         .infomation-content{
             margin-top:15px;
             background-color: #FFFFFF;

@@ -351,26 +351,31 @@ export const querySvip = function ({commit,state}) {
 }
 //获取svip页面 相关课程推广位
 export const querySvipCourse = function ({commit,state}) {
-    EventBus.$toast.loading({
+    /*EventBus.$toast.loading({
         message: '加载中',
         mask:true
-    });
+    });*/
     EventBus.$http
-        .get(EventBus.$Config.baseUrl + 'api/edu/advert/svip/course',{
-
-        })
+        .get(EventBus.$Config.baseUrl + 'api/edu/advert/svip/course')
         .then(res =>{
-            res = res.data;
-            if (res.status){
+            // res = res.data;
+            console.log('这个是',res);
+            /*if (res.status){
                 EventBus.$emit('svipCourse',res)
+                console.log('成功');
             }else {
                 EventBus.$dialog.alert({message: '请求失败'});
-            }
+                console.log('失败');
+            }*/
             EventBus.$toast.clear()
         },err=>{
+            console.log(err);
+            console.log(123456);
             EventBus.$dialog.alert({message: '服务端出错'});
             EventBus.$toast.clear()
-        })
+        }).then(ree => {
+        console.log(ree);
+    })
 
 }
 //请求详情页通知公告详情接口
@@ -432,6 +437,102 @@ export const queryLessons = function ({commit,state},data) {
             EventBus.$dialog.alert({message: '服务端出错'});
             EventBus.$toast.clear()
         })
+
+}
+//购买svip，创建svip临时订单，必须登录后才可以请求该接口
+export const querySvipOrder = function ({commit,state},data) {
+    const oauth = Cache.get(cache_keys.token);
+    EventBus.$toast.loading({
+        message: '加载中',
+        mask:true
+    });
+    EventBus.$http
+        .post(EventBus.$Config.baseUrl + 'api/vip/order/create',{
+            plan_id:data.plan_id
+        },{
+            headers:{
+                Authorization: oauth.access_token
+            }
+        }).then(res =>{
+        res = res.data;
+        if(res.status){
+            EventBus.$emit('createSvipOrder',res);
+
+        } else {
+            EventBus.$dialog.alert({message: res.message||'请求失败'});
+        }
+
+        EventBus.$toast.clear()
+    },err=>{
+        EventBus.$dialog.alert({message: '服务端出错'});
+        EventBus.$toast.clear()
+    })
+
+
+}
+//请求支付的charge接口
+export const querySvipOrderChare = function ({commit,state},data) {
+    const oauth = Cache.get(cache_keys.token);
+    EventBus.$toast.loading({
+        message: '加载中',
+        mask:true
+    });
+    EventBus.$http
+        .post(EventBus.$Config.baseUrl + 'api/vip/order/charge',{
+            order_no:data.order_no,
+            channel:data.channel,
+            extra:data.extra
+        },{
+            headers:{
+                Authorization: oauth.access_token
+            }
+        }).then(res =>{
+        res = res.data;
+        if(res.status){
+            EventBus.$emit('chargeSvipOrder',res);
+
+        } else {
+            EventBus.$dialog.alert({message:res.message|| '请求失败'});
+        }
+
+        EventBus.$toast.clear()
+    },err=>{
+        EventBus.$dialog.alert({message: '服务端出错'});
+        EventBus.$toast.clear()
+    })
+
+
+}
+//请求svip支付成功接口
+export const queryOrdersvipPaid = function ({commit,state},data) {
+    const oauth = Cache.get(cache_keys.token);
+    EventBus.$toast.loading({
+        message: '加载中',
+        mask:true
+    });
+    EventBus.$https
+        .post(EventBus.$Config.baseUrl + 'api/vip/order/paid',{
+            order_no:data.order_no
+        },{
+            headers:{
+                Authorization: oauth.access_token
+            }
+        }).then(res =>{
+        res = res.data;
+        if(res.status){
+            EventBus.$emit('paidSvipOrder',res);
+        } else {
+            console.log(res);
+            EventBus.$dialog.alert({message: res.message || '请求失败'});
+        }
+
+        EventBus.$toast.clear()
+    },err=>{
+        console.log(7897987);
+        EventBus.$dialog.alert({message: '服务端出错'});
+        EventBus.$toast.clear()
+    })
+
 
 }
 

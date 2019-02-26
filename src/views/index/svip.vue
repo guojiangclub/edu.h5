@@ -4,7 +4,7 @@
             <img src="https://cdn.ibrand.cc/svip_four.png">
             <div class="discount">
                 <div class="coupons">
-                    <div class="item" v-for="(item,index) in plans.plans" :key="index">
+                    <div class="item" v-for="(item,index) in plans.plans" :key="index" @click="buySvip(item.id)" >
                         <img :src="item.img">
                     </div>
                 </div>
@@ -248,7 +248,7 @@
         </div>
         <div class="discount">
             <div class="coupons">
-                <div class="item" v-for="(item,index) in plans.plans" :key="index">
+                <div class="item" v-for="(item,index) in plans.plans" :key="index" @click="buySvip(item.id)">
                     <img :src="item.img">
                 </div>
             </div>
@@ -275,7 +275,7 @@
                 </div>
             </div>
             <div class="right-item" v-if="plans && plans.isVip">您已购买SVIP</div>
-            <div class="right-item" v-else>立即购买SVIP</div>
+            <div class="right-item" v-else @click="buySvip(2)">立即购买SVIP</div>
         </div>
         <div class="black-mask"></div>
 
@@ -285,7 +285,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import { Cache, cache_keys, exif } from '../../utils/util';
+    import { Cache, cache_keys, exif,env } from '../../utils/util';
     export default {
         name: 'svip',
         data(){
@@ -306,27 +306,99 @@
                 endmessage:'',
                 timer:'',
                 is_black:false,
-                svip_course:''
+                svip_course:'',
+                query_orderNo:''
 
 
             }
         },
         created(){
+            this.query_orderNo = this.$route.query.order_no;
+            if(this.query_orderNo){
+                let data = {
+                    order_no: this.query_orderNo
+                }
+                this.$store.dispatch('queryOrdersvipPaid',data);
+            }
             this.$store.dispatch('querySvip');
-            this.$store.dispatch('querySvipCourse');
+            this.getSvipCoursen();
+
+//            this.$store.dispatch('querySvipCourse');
             EventBus.$on('svipPlans',this.getSvipPlans)
             EventBus.$on('svipCourse',this.getSvipCourse)
+            EventBus.$on('createSvipOrder',this.getSvipOrder)
+            EventBus.$on('chargeSvipOrder',this.getSvipCharge)
+            EventBus.$on('paidSvipOrder',this.getSvipPiad)
 
         },
         beforeDestroy(){
             EventBus.$off('svipPlans')
             EventBus.$off('svipCourse')
+            EventBus.$off('createSvipOrder')
+            EventBus.$off('chargeSvipOrder')
+            EventBus.$off('paidSvipOrder')
 
         },
         mounted(){
 
         },
         methods:{
+            getSvipCoursen(){
+                this.$http
+                    .get(this.$Config.baseUrl + 'api/edu/advert/svip/course')
+                    .then(res=>{
+                        console.log('这个是',res);
+                    },err=>{
+                        console.log(err);
+                        console.log(123456);
+                        this.$dialog.alert({message: '服务端出错'});
+                    })
+            },
+            //检验是否支付成功接口
+            getSvipPiad(res){
+                if(res.data.order.status == 2){
+                    this.$dialog.alert({
+                        message:'购买成功'
+                    })
+                    this.$store.dispatch('querySvip')
+                } else {
+                    this.$dialog.alert({
+                        message:'服务器开了小差，请重试'
+                    })
+                }
+            },
+            //charge接口处理数据
+            getSvipCharge(res){
+                if(res.data.redirectUrl){
+                    window.location.href = res.data.redirectUrl;
+                    window.close();
+                } else {
+                    this.$dialog.alert({
+                        message:res.message || '发起支付失败'
+                    })
+                }
+            },
+            getSvipOrder(res){
+                if(res.data.order && res.data.order.order_no){
+                    let channel = '';
+                    let pathname = window.location.pathname;//返回 URL 的路径名。
+                    let origin = window.location.origin;
+                    if(env.isWechat){
+                        channel = 'wx_pub'
+                    } else {
+                        channel = 'alipay_wap'
+                    }
+                    let data = {
+                        order_no:res.data.order.order_no,
+                        channel:channel,
+                        extra:{
+                            successUrl:origin+pathname+"#"+'/index/svip?order_no='+res.data.order.order_no,
+                            failUrl:origin+pathname+"#"+'/index/svip?order_no='+res.data.order.order_no
+                        }
+                    }
+                   this.$store.dispatch('querySvipOrderChare',data)
+                }
+            },
             //获取svip课程推广位
             getSvipCourse(res){
                 this.svip_course = res.data;
@@ -383,6 +455,23 @@
 
 
 
+            },
+            buySvip(plan_id){
+                let oauth = Cache.get(cache_keys.token)
+               if(oauth && oauth.access_token){
+                   let data = {
+                       plan_id:plan_id
+                   }
+                   this.$store.dispatch('querySvipOrder',data);
+               } else {
+                   let source = this.$route.path;
+                   this.push({
+                       name:'users-register',
+                       query:{
+                           source:source
+                       }
+                   })
+               }
             }
 
         }

@@ -6,45 +6,47 @@
             @click-left="onClickLeft"
             v-if="is_navbar"
         />
-        <div class="tips" v-if="message">{{message}}</div>
-        <div class="phone__warning">
-            <img src="http://ibrand-miniprogram.oss-cn-hangzhou.aliyuncs.com/18-12-29/45704537.jpg">
-            <!--<i class="iconfont icon-anquanjinggao"></i>-->
-        </div>
-        <!--<div class="register_header iconfont icon-youhuiquan"></div>-->
-        <div class="register_input">
-            <div class="tellphone">
-                <input type="text" placeholder="手机号码" v-model="mobile" />
-            </div>
-            <div class="code">
-                <div class="writecode">
-                    <input type="text" placeholder="验证码" v-model="identifyingcode" />
-                </div>
+       <div class="content">
+           <div class="tips" v-if="message">{{message}}</div>
+           <div class="phone__warning">
+               <img src="http://ibrand-miniprogram.oss-cn-hangzhou.aliyuncs.com/18-12-29/45704537.jpg">
+               <!--<i class="iconfont icon-anquanjinggao"></i>-->
+           </div>
+           <!--<div class="register_header iconfont icon-youhuiquan"></div>-->
+           <div class="register_input">
+               <div class="tellphone">
+                   <input type="text" placeholder="手机号码" v-model="mobile" />
+               </div>
+               <div class="code">
+                   <div class="writecode">
+                       <input type="text" placeholder="验证码" v-model="identifyingcode" />
+                   </div>
 
-                <div class="getCode" @click="getCode">{{codes.codeText}}</div>
-            </div>
-        </div>
-        <div class="submit">
-            <button class="check" @click="submit">确认</button>
-           <!-- <button type="default" wx:if="{{!checked}}" catchtap="submit" disabled="{{showLoading}}" loading="{{showLoading}}">确认</button>-->
-        </div>
-        <!--<div class="select">
-            &lt;!&ndash;<checkbox-group bindchange="changeChecked">&ndash;&gt;
-            <checkbox bindtap="changeChecked" color="#fff" checked="{{checked}}" />
-            <text> 同意本小程序用户协议</text>
-            &lt;!&ndash;</checkbox-group>&ndash;&gt;
-        </div>-->
-        <!--弹出是否绑定老用户框框-->
-        <div class="bind_old" :class="is_new_user ? 'cur' : ''">
-            <div class="paney">
-                <div class="title">绑定老用户</div>
-                <div class="content mx-1px-bottom">是否绑定已有老程序</div>
-                <div class="btn-box">
-                    <div class="cancle btn" @click="cancleBind">取消</div>
-                    <div class="sure btn" @click="sureBind">确定</div>
-                </div>
-            </div>
-        </div>
+                   <div class="getCode" @click="getCode">{{codes.codeText}}</div>
+               </div>
+           </div>
+           <div class="submit">
+               <button class="check" @click="submit">确认</button>
+               <!-- <button type="default" wx:if="{{!checked}}" catchtap="submit" disabled="{{showLoading}}" loading="{{showLoading}}">确认</button>-->
+           </div>
+           <!--<div class="select">
+               &lt;!&ndash;<checkbox-group bindchange="changeChecked">&ndash;&gt;
+               <checkbox bindtap="changeChecked" color="#fff" checked="{{checked}}" />
+               <text> 同意本小程序用户协议</text>
+               &lt;!&ndash;</checkbox-group>&ndash;&gt;
+           </div>-->
+           <!--弹出是否绑定老用户框框-->
+           <div class="bind_old" :class="is_new_user ? 'cur' : ''">
+               <div class="paney">
+                   <div class="title">绑定老用户</div>
+                   <div class="content mx-1px-bottom">是否绑定已有老程序</div>
+                   <div class="btn-box">
+                       <div class="cancle btn" @click="cancleBind">取消</div>
+                       <div class="sure btn" @click="sureBind">确定</div>
+                   </div>
+               </div>
+           </div>
+       </div>
     </div>
 
 
@@ -53,7 +55,12 @@
 <script type="text/ecmascript-6">
     import { env, is,  Cache, cache_keys } from '../../utils/util';
     import { userLogin, openidLogin, getOpenid } from '../../utils/oauth';
+    import { List, NavBar } from 'vant';
     export default {
+        component:{
+            List,
+            NavBar
+        },
         name: 'users-register',
         data(){
             return {
@@ -315,13 +322,17 @@
     #user-register{
         font-size: 16px;
         background-color: #ffffff;
-        padding: 0 15px;
-        margin-top: 50px;
         height: 100%;
         overflow: auto;
+        .content{
+            padding: 0 15px;
+        }
 
         .van-nav-bar{
             background-color:#004E9D;
+            position: fixed;
+            top: 0;
+            width: 100%;
             .van-icon{
                 color: #ffffff;
             }
@@ -335,7 +346,7 @@
 
         .tips{
             position: fixed;
-            top: 0;
+            top: 46px;
             left: 0;
             right: 0;
             text-align: center;

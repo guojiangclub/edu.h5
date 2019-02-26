@@ -308,6 +308,9 @@
         padding-bottom:70px;
         .van-nav-bar{
             background-color:#004E9D;
+            position: fixed;
+            top: 0;
+            width: 100%;
         }
         .van-nav-bar__title{
             color: #ffffff;

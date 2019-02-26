@@ -92,7 +92,7 @@
 
 <script type="text/ecmascript-6">
     import { List } from 'vant';
-    import { Cache, cache_keys, exif } from '../../utils/util';
+    import { Cache, cache_keys, exif ,env } from '../../utils/util';
     export default {
         name: 'users-mycourse',
         component:{
@@ -124,12 +124,23 @@
             }
         },
         created(){
-            let data = {
-                page:1
-            }
-            this.$store.dispatch('queryMycourseList',data)
-            EventBus.$on('myCourseList',this.getMycourseList)
-            EventBus.$on('mynoteList',this.getMynoteList)
+            let  oauth = Cache.get(cache_keys.token);
+           if(oauth && oauth.access_token){
+               let data = {
+                   page:1
+               }
+               this.$store.dispatch('queryMycourseList',data)
+               EventBus.$on('myCourseList',this.getMycourseList)
+               EventBus.$on('mynoteList',this.getMynoteList)
+           } else {
+               let source = this.$route.path;
+               this.$router.push({
+                   name:'users-register',
+                   query:{
+                       source:source
+                   }
+               })
+           }
 
         },
         beforeDestroy(){

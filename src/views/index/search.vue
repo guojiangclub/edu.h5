@@ -1,5 +1,11 @@
 <template>
     <div id="search">
+        <van-nav-bar
+            title='搜索页面'
+            left-arrow
+            @click-left="onClickLeft"
+            v-if="is_navbar"
+        />
         <!--搜索-->
         <div class="search">
             <input type="text" placeholder="搜索你感兴趣的课程" v-model="title"/>
@@ -7,7 +13,7 @@
         </div>
         <div class="ul-content">
             <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
-                <van-cell  v-for="(item,index) in dataList" :key="index">
+                <van-cell  v-for="(item,index) in dataList" :key="index" @click="jump(item.id)">
                     <div class="li-item">
                         <div class="left-info">
                             <img :src="item.picture">
@@ -42,7 +48,13 @@
 </template>
 
 <script type="text/ecmascript-6">
+    import { Cache, cache_keys, exif ,env} from '../../utils/util';
+    import { List,NavBar } from 'vant';
     export default {
+        component:{
+            List,
+            NavBar
+        },
         name: 'search',
         data(){
             return {
@@ -52,16 +64,31 @@
                 hasMore:true,
                 loading:false,
                 finished:false,
-                immediate: false
+                immediate: false,
+                is_navbar:true
             }
         },
         created(){
+            if(env.isWechat){
+                this.is_navbar = false
+            }
             EventBus.$on('searchList',this.searchDate)
         },
         beforeDestroy(){
             EventBus.$off('searchList');
         },
         methods:{
+            onClickLeft(){
+              window.history.back(-1);
+            },
+            jump(id){
+                this.$router.push({
+                    name:'index-detail',
+                    params:{
+                        id:id
+                    }
+                })
+            },
             sureSearch(){
                 const data = {
                     title:this.title,
@@ -113,6 +140,21 @@
          height: 100%;
         background-color:#F3F3F3;
         overflow: auto;
+        .van-nav-bar{
+            background-color:#004E9D;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            .van-icon{
+                color: #ffffff;
+            }
+        }
+        .van-nav-bar__title{
+            color: #ffffff;
+        }
+        .van-hairline--bottom::after {
+            border-bottom-width: 0px;
+        }
         .search{
             padding:8px 15px;
             background-color: #004E9D;
