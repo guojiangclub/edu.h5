@@ -268,6 +268,7 @@
         height: 100%;
         overflow: auto;
         background-color: #f3f3f3;
+        padding-bottom: 60px;
         .navbar {
             width: 100%;
             display: flex;

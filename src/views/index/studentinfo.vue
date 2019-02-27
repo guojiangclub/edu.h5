@@ -83,7 +83,12 @@
             //获取支付页面缓存的数据
             var info = Cache.get(cache_keys.order_info);
             if(info.userDetails){
-                this.userInfo = info.userDetails
+                this.userInfo = info.userDetails;
+                this.name = this.userInfo.name;
+                this.mobile = this.userInfo.mobile;
+                this.weixin = this.userInfo.weixin;
+                this.company = this.userInfo.company;
+                this.job = this.userInfo.job
             }
 
         },

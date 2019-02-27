@@ -11,7 +11,7 @@
             <input type="text" placeholder="搜索你感兴趣的课程" v-model="title"/>
             <span @click="sureSearch">确认</span>
         </div>
-        <div class="ul-content">
+        <div class="ul-content" v-if="dataList.length">
             <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
                 <van-cell  v-for="(item,index) in dataList" :key="index" @click="jump(item.id)">
                     <div class="li-item">
@@ -42,6 +42,7 @@
                 </van-cell>
             </van-list>
         </div>
+        <div class="no-more" v-else>暂无数据</div>
 
     </div>
 
@@ -81,6 +82,13 @@
             onClickLeft(){
               window.history.back(-1);
             },
+            //初始化数据
+           initData(){
+               this.hasMore = true;
+               this.loading=false;
+               this.finished=false;
+               this.immediate= false;
+           },
             jump(id){
                 this.$router.push({
                     name:'index-detail',
@@ -90,12 +98,12 @@
                 })
             },
             sureSearch(){
+                this.initData();
                 const data = {
                     title:this.title,
                     page:1
                 }
                 this.$store.dispatch('querySearch',data);
-
             },
             searchDate(res){
                 var list;

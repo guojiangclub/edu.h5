@@ -13,7 +13,7 @@
                    <!-- <button v-if="!info.user.user_info_filled && token && init" class="user-btn">
                         <div class="phone-text">点击完善个人信息</div>
                     </button>-->
-                    <div class="svip">
+                    <div class="svip" @click="jumpSvip">
                         <div class="gift">
                             <span class="iconfont icon-gift"></span>
                         </div>
@@ -47,13 +47,13 @@
                         <div class="iconfont icon-jiantou"></div>
                     </div>
                 </div>
-                <div class="balance-point">
+                <!--<div class="balance-point">
                     <div class="item">
                         <div class="iconfont icon-jiangshi"></div>
                         <div class="txt">成为讲师</div>
                         <div class="iconfont icon-jiantou"></div>
                     </div>
-                </div>
+                </div>-->
                 <div class="balance-point">
                     <div class="item" @click="changeService">
                         <div class="iconfont icon-lianxiwomen"></div>
@@ -181,6 +181,11 @@
                     })
                 }
             },
+            jumpSvip(){
+                this.$router.push({
+                    name:'index-svip'
+                })
+            },
             getMyservInfo(res){
                 this.service_info = res.data.online_service_data
             },
@@ -189,12 +194,29 @@
             },
             jumpPath(name){
                 var source = this.$route.path;
-                this.$router.push({
-                    name:name,
-                    query:{
-                        source
+                if(name == 'users-register'){
+                    this.$router.push({
+                        name:name,
+                        query:{
+                            source
+                        }
+                    })
+                } else {
+                    let oauth = Cache.get(cache_keys.token);
+                    if(oauth && oauth.access_token){
+                        this.$router.push({
+                            name:name
+                        })
+                    } else {
+                        this.$router.push({
+                            name:'users-register',
+                            query:{
+                                source
+                            }
+                        })
                     }
-                })
+
+                }
             },
             getUserInfo(res){
                 this.info = res.data;

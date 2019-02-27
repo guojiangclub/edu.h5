@@ -51,14 +51,14 @@
                        </div>
                    </div>
                    <div class="introduce mx-1px-bottom" v-if="info && info.isVip">免费购买课程剩余可使用{{info.freeCourseCount}}门</div>
-                   <div class="infomation" v-if="info.isVip == false">
+                  <!-- <div class="infomation" v-if="info.isVip == false">
                        <div class="name">SVIP优惠</div>
                        <div class="txt">勾选加入</div>
                        <div class="check">
                            <van-checkbox v-model="buy_svip" checked-color="#004E9D"></van-checkbox>
                        </div>
                    </div>
-                   <div class="introduce mx-1px-bottom" v-if="info && info.isVip == false">成为svip，所选课程可免费购买</div>
+                   <div class="introduce mx-1px-bottom" v-if="info && info.isVip == false">成为svip，所选课程可免费购买</div>-->
                    <div class="infomation mx-1px-bottom" @click="changeCoupon">
                        <div class="name">优惠券：</div>
                        <div class="txt" v-if="select_coupon">{{select_coupon.discount.label}}</div>

@@ -7,12 +7,12 @@
             v-if="is_navbar"
         />
         <div class="content">
-            <div class="item mx-1px-bottom">
+            <div class="item mx-1px-bottom" @click="jump">
                 <div class="option">修改手机号</div>
                 <div class="iconfont icon-jiantou"></div>
             </div>
         </div>
-        <div class="exit-btn">退出登录</div>
+        <div class="exit-btn" @click="signOut">退出登录</div>
 
     </div>
 
@@ -43,6 +43,19 @@
             onClickLeft(){
                 window.history.back(-1)
             },
+            //退出登录
+            signOut(){
+                //清除token
+                Cache.remove(cache_keys.token);
+                this.$router.push({
+                    name:'index-index'
+                })
+            },
+            jump(){
+              this.$router.push({
+                  name:'users-modify'
+              })
+            },
         }
 
     }
@@ -64,6 +77,9 @@
             .van-icon{
                 color: #ffffff;
             }
+        }
+        .van-nav-bar + div{
+            padding-top: 36px!important;
         }
         .van-nav-bar__title{
             color: #ffffff;
@@ -90,6 +106,7 @@
             }
 
         }
+
         .exit-btn{
             position: fixed;
             bottom: 30px;

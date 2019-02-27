@@ -3,7 +3,7 @@
  */
 export default [
     {
-        path:'/recharge/pay/:id',
+        path:'/pay/:id',
         name:'recharge-pay',
         component: resolve => require(['./pay.vue'],resolve),
         meta :{
@@ -11,7 +11,7 @@ export default [
         }
     },
     {
-        path:'/recharge/success',
+        path:'/success',
         name:'recharge-success',
         component: resolve => require(['./success.vue'],resolve),
         meta :{

@@ -110,6 +110,12 @@
 
         },
         methods:{
+            //初始化数据
+            init(){
+                this.finished = false;
+                this.immediate = false;
+                this.loading = false
+            },
             jump(id){
                 this.$router.push({
                     name:'index-detail',
@@ -123,6 +129,7 @@
             },
             //点击分类
             tabKinds(id,e){
+                this.init();
                 this.isRefresh = true;
                 this.category_id =  id;
                 this.sliderOffset = 0;
@@ -192,6 +199,7 @@
 
             },
             changetab(index,e){
+                this.init();
                 this.isRefresh = true;
                 this.activeIndex = index;
                 this.sliderOffset = e.currentTarget.offsetLeft;

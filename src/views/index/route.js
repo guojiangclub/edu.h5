@@ -1,6 +1,6 @@
 export default [
     {
-        path:'/index/index',
+        path:'/index',
         name:'index-index',
         component: resolve => require(['./index.vue'],resolve),
         meta :{
@@ -10,7 +10,7 @@ export default [
 
     },
     {
-        path:'/index/detail/:id',
+        path:'/detail/:id',
         name:'index-detail',
         component: resolve => require(['./detail.vue'],resolve),
         meta :{
@@ -19,7 +19,7 @@ export default [
 
     },
     {
-        path:'/index/search',
+        path:'/search',
         name:'index-search',
         component: resolve => require(['./search.vue'],resolve),
         meta :{
@@ -28,7 +28,7 @@ export default [
 
     },
     {
-        path:'/index/teacher/:id',
+        path:'/teacher/:id',
         name:'index-teacher',
         component: resolve => require(['./teacher.vue'],resolve),
         meta :{
@@ -37,7 +37,7 @@ export default [
 
     },
     {
-        path:'/index/classification/:id',
+        path:'/classification/:id',
         name:'index-classification',
         component: resolve => require(['./classification.vue'],resolve),
         meta :{
@@ -46,7 +46,7 @@ export default [
 
     },
     {
-        path:'/index/studentinfo',
+        path:'/studentinfo',
         name:'index-studentinfo',
         component: resolve => require(['./studentinfo.vue'],resolve),
         meta :{
@@ -55,7 +55,7 @@ export default [
 
     },
     {
-        path:'/index/lessons/:course_id/:id',
+        path:'/lessons/:course_id/:id',
         name:'index-lessons',
         component: resolve => require(['./lessons.vue'],resolve),
         meta :{
@@ -64,7 +64,7 @@ export default [
 
     },
     {
-        path:'/index/svip',
+        path:'/svip',
         name:'index-svip',
         component: resolve => require(['./svip.vue'],resolve),
         meta :{

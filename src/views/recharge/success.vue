@@ -11,13 +11,13 @@
                <div class="title">支付成功</div>
                <!--<div class="topic">本次支付使用20积分，使用10元余额</div>-->
                <div class="btn-box">
-                   <div class="study btn">去学习</div>
-                   <div class="home btn">回首页</div>
+                   <div class="study btn"  v-if="paid_info.order" @click="jumpDeatil(paid_info.order.course.id)">去学习</div>
+                   <div class="home btn" @click="jumpIndex">回首页</div>
                </div>
            </div>
            <div class="course" v-if="paid_info.order">
                <div class="title">课程详情</div>
-               <div class="li-item mx-1px-bottom">
+               <div class="li-item mx-1px-bottom" @click="jumpDeatil(paid_info.order.course.id)">
                    <div class="left-info">
                        <img :src="paid_info.order.course.picture">
                    </div>
@@ -110,6 +110,19 @@
                     this.init = true;
                 }
 
+            },
+            jumpDeatil(course_id){
+                this.$router.push({
+                    name:'index-detail',
+                    params:{
+                        id:course_id
+                    }
+                })
+            },
+            jumpIndex(){
+                this.$router.push({
+                    name:'index-index'
+                })
             }
 
         }

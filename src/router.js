@@ -6,19 +6,11 @@
 var routes = [
     {
         path: '/',
-        redirect: '/edu'
+        redirect: '/index'
     },
     {
         path: '*',
-        redirect: '/edu'
-    },
-    {
-        path: '/search',
-        name: 'search',
-        component: resolve => require(['../src/views/search.vue'], resolve),
-        meta: {
-            title: '搜索',
-        }
+        redirect: '/index'
     }
 ];
 var req = require.context('./views', true, /.*route\.js$/);

@@ -77,7 +77,11 @@
                         message:message
                     })
                 } else {
-                    this.$store.dispatch('queryOldAccount')
+                    let data ={
+                        username:this.username,
+                        password:this.password
+                    }
+                    this.$store.dispatch('queryOldAccount',data)
                 }
 
             },

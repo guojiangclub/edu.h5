@@ -272,6 +272,9 @@
                 color: #ffffff;
             }
         }
+        .van-nav-bar+div{
+            padding-top:0;
+        }
         .van-nav-bar__title{
             color: #ffffff;
         }

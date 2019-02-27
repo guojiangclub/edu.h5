@@ -351,31 +351,24 @@ export const querySvip = function ({commit,state}) {
 }
 //获取svip页面 相关课程推广位
 export const querySvipCourse = function ({commit,state}) {
-    /*EventBus.$toast.loading({
+    EventBus.$toast.loading({
         message: '加载中',
         mask:true
-    });*/
+    });
     EventBus.$http
-        .get(EventBus.$Config.baseUrl + 'api/edu/advert/svip/course')
+        .get(EventBus.$Config.baseUrl + 'api/edu/avert/svip/course')
         .then(res =>{
-            // res = res.data;
-            console.log('这个是',res);
-            /*if (res.status){
+            res = res.data;
+            if (res.status){
                 EventBus.$emit('svipCourse',res)
-                console.log('成功');
             }else {
                 EventBus.$dialog.alert({message: '请求失败'});
-                console.log('失败');
-            }*/
+            }
             EventBus.$toast.clear()
         },err=>{
-            console.log(err);
-            console.log(123456);
             EventBus.$dialog.alert({message: '服务端出错'});
             EventBus.$toast.clear()
-        }).then(ree => {
-        console.log(ree);
-    })
+        })
 
 }
 //请求详情页通知公告详情接口
@@ -510,7 +503,7 @@ export const queryOrdersvipPaid = function ({commit,state},data) {
         message: '加载中',
         mask:true
     });
-    EventBus.$https
+    EventBus.$http
         .post(EventBus.$Config.baseUrl + 'api/vip/order/paid',{
             order_no:data.order_no
         },{

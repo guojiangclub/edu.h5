@@ -320,10 +320,9 @@
                 }
                 this.$store.dispatch('queryOrdersvipPaid',data);
             }
-            this.$store.dispatch('querySvip');
-            this.getSvipCoursen();
 
-//            this.$store.dispatch('querySvipCourse');
+            this.$store.dispatch('querySvipCourse');
+            this.$store.dispatch('querySvip');
             EventBus.$on('svipPlans',this.getSvipPlans)
             EventBus.$on('svipCourse',this.getSvipCourse)
             EventBus.$on('createSvipOrder',this.getSvipOrder)
@@ -343,17 +342,6 @@
 
         },
         methods:{
-            getSvipCoursen(){
-                this.$http
-                    .get(this.$Config.baseUrl + 'api/edu/advert/svip/course')
-                    .then(res=>{
-                        console.log('这个是',res);
-                    },err=>{
-                        console.log(err);
-                        console.log(123456);
-                        this.$dialog.alert({message: '服务端出错'});
-                    })
-            },
             //检验是否支付成功接口
             getSvipPiad(res){
                 if(res.data.order.status == 2){
@@ -465,7 +453,7 @@
                    this.$store.dispatch('querySvipOrder',data);
                } else {
                    let source = this.$route.path;
-                   this.push({
+                   this.$router.push({
                        name:'users-register',
                        query:{
                            source:source

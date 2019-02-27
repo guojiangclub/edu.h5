@@ -17,8 +17,9 @@ export const queryCode = function ({commit,state},data) {
         res = res.data;
         if(res.success){
             EventBus.$emit('codeData',res);
+            EventBus.$emit('modifycodeData',res);
         } else {
-            EventBus.$dialog.alert({message: '请求失败'});
+            EventBus.$dialog.alert({message: res.message||'请求失败'});
         }
 
         EventBus.$toast.clear()
@@ -220,6 +221,36 @@ export const queryOldAccount = function ({commit,state},data) {
             res = res.data;
             if (res.status){
                 EventBus.$emit('oldAccountDate',res)
+            }else {
+                EventBus.$dialog.alert({message: res.message||'请求失败'});
+            }
+            EventBus.$toast.clear()
+        },err=>{
+            EventBus.$dialog.alert({message: '服务端出错'});
+            EventBus.$toast.clear()
+        })
+
+}
+//请求修改手机号的接口
+export const queryUpdatemobile = function ({commit,state},data) {
+    let oauth = Cache.get(cache_keys.token);
+    EventBus.$toast.loading({
+        message: '加载中',
+        mask:true
+    });
+    EventBus.$http
+        .post(EventBus.$Config.baseUrl + 'api/edu/users/update/mobile',{
+            mobile:data.mobile,
+            code:data.code
+        },{
+            headers:{
+                Authorization: oauth.access_token
+            }
+        })
+        .then(res =>{
+            res = res.data;
+            if (res.status){
+                EventBus.$emit('updateMobileData',res)
             }else {
                 EventBus.$dialog.alert({message: '请求失败'});
             }
