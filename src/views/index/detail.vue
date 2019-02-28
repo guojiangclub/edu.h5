@@ -40,7 +40,11 @@
         <div class="sales-promotion" v-if="detail.is_discount">
             <div class="preferential">特价优惠中</div>
             <div class="count-down">
-                仅剩 14 天 13时 38分 35秒
+                仅剩
+                <span>{{endTime.day}}</span>天
+                <span>{{endTime.hour}}</span>小时
+                <span>{{endTime.minute}}</span>分钟
+                <span>{{endTime.second}}</span>秒
             </div>
             <div class="origin-price">原价：¥{{detail.display_price}}</div>
         </div>

@@ -380,8 +380,8 @@
                         order_no:res.data.order.order_no,
                         channel:channel,
                         extra:{
-                            successUrl:origin+pathname+"#"+'/index/svip?order_no='+res.data.order.order_no,
-                            failUrl:origin+pathname+"#"+'/index/svip?order_no='+res.data.order.order_no
+                            successUrl:origin+pathname+"#"+'/svip?order_no='+res.data.order.order_no,
+                            failUrl:origin+pathname+"#"+'/svip?order_no='+res.data.order.order_no
                         }
                     }
                    this.$store.dispatch('querySvipOrderChare',data)

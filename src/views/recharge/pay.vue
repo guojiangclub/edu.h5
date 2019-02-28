@@ -248,8 +248,8 @@
                         channel:channel,
                         note:this.note,
                         extra:{
-                            successUrl:origin + pathname + '#'+ '/recharge/success?order_no='+this.info.order.sn,
-                            failUrl:origin + pathname + '#'+ '/recharge/success?order_no='+this.info.order.sn
+                            successUrl:origin + pathname + '#'+ '/success?order_no='+this.info.order.sn,
+                            failUrl:origin + pathname + '#'+ '/success?order_no='+this.info.order.sn
                         }
                     }
                     this.$store.dispatch('queryOrderChare',data)

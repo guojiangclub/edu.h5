@@ -71,5 +71,14 @@ export default [
             title:'svip页面'
         }
 
+    },
+    {
+        path:'/shareCirle',
+        name:'index-shareCirle',
+        component: resolve => require(['./shareCirle.vue'],resolve),
+        meta :{
+            title:'分享数据圈'
+        }
+
     }
 ]
