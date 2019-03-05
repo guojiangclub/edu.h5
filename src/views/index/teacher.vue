@@ -13,7 +13,7 @@
             <div class="introduce">
                 <div class="nick-name" v-if="detail.user">{{detail.user.user_name}}</div>
                 <div class="label" v-if="detail.members && detail.coteries">
-                    课程：{{detail.members.length}} 丨 数据圈：{{detail.coteries.length || 0}}
+                    课程：{{detail.members.length}} 丨 数据圈：{{detail.coteries.data.length || 0}}
                 </div>
             </div>
         </div>
@@ -26,26 +26,16 @@
             </div>
         </div>
         <!--讲师圈子-->
-        <div class="teacher-circle">
+        <div class="teacher-circle" v-if="detail.coteries">
             <div class="title mx-1px-bottom">讲师数据圈</div>
             <div class="cirle-list">
-                <div class="item">
+                <div class="item mx-1px-bottom" v-for="(item,index) in detail.coteries.data" @click="jumpShare(item.id)">
                     <div class="logo">
-                        <img src="https://wx3.sinaimg.cn/mw690/006ABCf7gy1fycfk2jk7sj30jx0kewq0.jpg">
+                        <img :src="item.avatar">
                     </div>
                     <div class="text">
-                        <div class="name">罗熙表情包</div>
-                        <div class="owner">黔在在</div>
-                    </div>
-                    <div class="iconfont">i</div>
-                </div>
-                <div class="item mx-1px-bottom">
-                    <div class="logo">
-                        <img src="https://wx4.sinaimg.cn/mw690/006ABCf7gy1fycfk0sy7yj30jw0jxtim.jpg"></img>
-                    </div>
-                    <div class="text">
-                        <div class="name">不要生气</div>
-                        <div class="owner">黔在在</div>
+                        <div class="name">{{item.name}}</div>
+                        <div class="owner">{{detail.user.user_name}}</div>
                     </div>
                     <div class="iconfont icon-jiantou"></div>
                 </div>
@@ -141,6 +131,14 @@
                     }
                 })
             },
+            jumpShare(id){
+                this.$router.push({
+                    name:'index-shareCirle',
+                    query:{
+                        id:id
+                    }
+                })
+            }
 
         }
 

@@ -71,19 +71,19 @@
                 <div class="teacher-to mx-1px-bottom">
                     <div class="title">师资介绍</div>
                     <div class="teacher-detail">
-                        <div class="avatar" v-if="detail.teacher && detail.teacher.avatar" @click="jump('index-teacher',detail_meta.teacher.user_id)">
-                            <img :src="detail.teacher.avatar || 'http://img1.imgtn.bdimg.com/it/u=70169729,3910397720&fm=26&gp=0.jpg'">
+                        <div class="avatar" v-if="detail_meta.teacher && detail_meta.teacher.avatar" @click="jump('index-teacher',detail_meta.teacher.user_id)">
+                            <img :src="detail_meta.teacher.avatar">
                         </div>
-                        <div class="avatar" v-else @click="jump('index-teacher',detail_meta.teacher.user_id)">
+                        <!--<div class="avatar" v-else @click="jump('index-teacher',detail_meta.teacher.user_id)">
                             <img src="http://img1.imgtn.bdimg.com/it/u=70169729,3910397720&fm=26&gp=0.jpg">
-                        </div>
-                        <div class="text" @click="jump('index-teacher',detail_meta.teacher.user_id)">
-                            <div class="name" v-if="detail.teacher">{{detail.teacher.name || '无名'}}老师</div>
-                            <div class="label">淘宝7年资深讲师淘宝7年资深讲师 国家工信淘宝7年资深讲师 国家工信 国家工信部高级电子商务师</div>
-                            <div class="circle mx-1px-top">
+                        </div>-->
+                        <div class="text">
+                            <div class="name" v-if="detail_meta.teacher" @click="jump('index-teacher',detail_meta.teacher.user_id)">{{detail_meta.teacher.user_name}}老师</div>
+                            <div class="label" v-if="detail_meta.teacher" @click="jump('index-teacher',detail_meta.teacher.user_id)">淘宝7年资深讲师淘宝7年资深讲师 国家工信淘宝7年资深讲师 国家工信 国家工信部高级电子商务师</div>
+                            <div class="circle mx-1px-top" @click="jumpShare(detail_meta.coterie.id)" v-if="detail_meta.coterie">
                                 <div class="cirle-name">相关数据圈</div>
-                                <div class="cirle-detail">
-                                    糖醋水蜜桃
+                                <div class="cirle-detail" v-if="detail_meta.coterie">
+                                    {{detail_meta.coterie.name}}
                                     <span class="iconfont icon-jiantou"></span>
                                 </div>
                             </div>
@@ -370,6 +370,14 @@
             this.width = document.body.clientWidth / 3;
         },
         methods:{
+            jumpShare(id){
+                this.$router.push({
+                    name:'index-shareCirle',
+                    query:{
+                        id:id
+                    }
+                })
+            },
             //onClickLeft
             onClickLeft(){
                 window.history.back(-1)

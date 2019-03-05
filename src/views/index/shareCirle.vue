@@ -9,40 +9,40 @@
         <div class="content">
             <div class="bg-top"></div>
             <div class="detail-box">
-                <div class="avatar">
-                    <img src="http://img4.imgtn.bdimg.com/it/u=1332451350,4287284270&fm=26&gp=0.jpg" alt="">
+                <div class="avatar" v-if="detail.coterie">
+                    <img :src="detail.coterie.avatar" alt="">
                 </div>
-                <div class="nick-name">五年前的你</div>
-                <div class="circle-master">圈主：黔在在</div>
-                <div class="describle">
+                <div class="nick-name" v-if="detail.coterie">{{detail.coterie.name}}</div>
+                <div class="circle-master" v-if="detail.user">圈主：{{detail.user.user_name}}</div>
+                <div class="describle" v-if="detail.coterie">
                     <div class="txt">
-                        我吃东西越来越清淡，对待人情世故越来越宽容，不乱发脾气也学会了忍让，慢慢地有了一颗成长的心。也开始害怕听到任何与病痛有关的事，最大的心愿变成了全家人身体健康。相比一两年前迫不及待要去看远方的心，我更希望花十分之九的时间在温柔灯光下和妈妈吃完的一餐饭。
+                        {{detail.coterie.description}}
                     </div>
                 </div>
-                <div class="list">
+                <div class="list" v-if="detail.coterie">
                     <div class="item">
-                        <div class="num">2.4K</div>
+                        <div class="num">{{detail.coterie.content_count}}</div>
                         <div class="line"></div>
                         <div class="txt">主题</div>
                     </div>
                     <div class="item">
-                        <div class="num">1K+</div>
+                        <div class="num">{{detail.coterie.member_count}}</div>
                         <div class="line"></div>
                         <div class="txt">成员</div>
                     </div>
                     <div class="item">
-                        <div class="num">45+</div>
+                        <div class="num">{{detail.coterie.recommend_count}}</div>
                         <div class="line"></div>
                         <div class="txt">精华</div>
                     </div>
                     <div class="item">
-                        <div class="num">1.7K+</div>
+                        <div class="num">{{detail.coterie.ask_count}}</div>
                         <div class="txt">问答</div>
                     </div>
                 </div>
                 <div class="code">
                     <div class="erweima">
-                        <img src="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3669963851,1477968510&fm=27&gp=0.jpg" alt="">
+                        <img :src="detail.mini_code" alt="">
                     </div>
                     <div class="text">
                         长按二维码识别，查看数据圈
@@ -66,7 +66,8 @@
         },
         data(){
             return{
-                is_navbar:true
+                is_navbar:true,
+                detail:''
 
             }
         },
@@ -74,12 +75,24 @@
             if(env.isWechat){
                 this.is_navbar = false
             }
+            let id = this.$route.query.id;
+            let data = {
+                id:id
+            }
+            this.$store.dispatch('queryCoterie',data)
+            EventBus.$on('getCoterie',this.getshareDetail);
+        },
+        beforeDestroy(){
+            EventBus.$off('getCoterie')
         },
         methods:{
             //onClickLeft
             onClickLeft(){
                 window.history.back(-1)
             },
+            getshareDetail(res){
+                this.detail = res.data
+            }
         }
     }
 

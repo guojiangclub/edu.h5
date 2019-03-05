@@ -8,10 +8,10 @@ var routes = [
         path: '/',
         redirect: '/index'
     },
-   /* {
+    {
         path: '*',
         redirect: '/index'
-    }*/
+    }
 ];
 var req = require.context('./views', true, /.*route\.js$/);
 

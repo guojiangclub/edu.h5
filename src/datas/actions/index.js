@@ -528,5 +528,27 @@ export const queryOrdersvipPaid = function ({commit,state},data) {
 
 
 }
+//请求圈子详情
+export const queryCoterie = function ({commit,state},data) {
+    EventBus.$toast.loading({
+        message: '加载中',
+        mask:true
+    });
+    EventBus.$http
+        .get(EventBus.$Config.baseUrl + 'api/edu/coterie/'+ data.id)
+        .then(res =>{
+            res = res.data;
+            if (res.status){
+                EventBus.$emit('getCoterie',res)
+            }else {
+                EventBus.$dialog.alert({message: res.message || '请求失败'});
+            }
+            EventBus.$toast.clear()
+        },err=>{
+            EventBus.$dialog.alert({message: '服务端出错'});
+            EventBus.$toast.clear()
+        })
+
+}
 
 
