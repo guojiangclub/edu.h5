@@ -1,7 +1,7 @@
 <template>
     <div id="lessons">
-        <div class="video-box">
-            <video :src="detail.media_uri"></video>
+        <div class="video-box" id="J_prismPlayer">
+            <!--<video :src="detail.media_uri"></video>-->
         </div>
         <div class="course-introduce">
             <div class="time-length mx-1px-bottom">
@@ -46,7 +46,8 @@
                 course_id:'',//课程id
                 course_detail:'',
                 activeVal:'',
-                newList:[]
+                newList:[],
+                aliplayer: ''
             }
         },
         created(){
@@ -77,14 +78,22 @@
         },
         mounted(){
 
-
         },
         methods:{
             getcourseDetail(res){
                 this.course_detail = res
             },
             getLessonsDetail(res){
-                this.detail = res.data
+                this.detail = res.data;
+
+                this.$nextTick(() => {
+                    this.aliplayer = new Aliplayer({
+                        id: 'J_prismPlayer',
+                        width: '100%',
+                        autoplay: true,
+                        source : res.data.media_uri,
+                    })
+                })
             },
             getLessonsList(res){
                 var newList = [];//筛选过后的数组

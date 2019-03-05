@@ -287,6 +287,7 @@
                         let data = {
                             open_id:openid
                         }
+                        console.log(window.location.href);
                         vm.$store.dispatch('queryquicklogin',data)
                         EventBus.$on('quickLoginData',vm.getLoginData)
 
