@@ -85,7 +85,7 @@
             EventBus.$off('lessonsDate')
             EventBus.$off('getLessonsList')
             EventBus.$off('detailData')
-            /*this.aliplayer.off('ended',this.endedNext)*/
+            this.aliplayer.off('ended',this.endedNext)
 
         },
         mounted(){
@@ -157,6 +157,11 @@
                             newUrl = val.PlayURL
                     }
                     })
+                } else {
+                    this.$dialog.alert({
+                        message:'视频数据错误'
+                    })
+                    return
                 }
                 this.$nextTick(() => {
                     this.aliplayer = new Aliplayer({
@@ -169,10 +174,9 @@
                         /*cover:res.data.vod.VideoMeta.CoverURL,*/
 //                        vid:'94cd2797dd274a1c8d04e80915694e25',
 //                        playauth:'eyJTZWN1cml0eVRva2VuIjoiQ0FJUzN3SjFxNkZ0NUIyeWZTaklyNG5HSStuZXFabFg5WTZlVzBYMWdYbGpmUGhJaHJ6dDFEejJJSGxQZTNGaEFPb2V2L2svbVc5VTdmb2Nsck1xRmNVYUdoR2ZNSk10djh3R29GUDRKcExGc3QySjZyOEpqc1ZtMEtRUjkxdXBzdlhKYXNEVkVma3VFNVhFTWlJNS8wMGU2TC8rY2lyWVhEN0JHSmFWaUpsaFE4MEtWdzJqRjFSdkQ4dFhJUTBRazYxOUszemRaOW1nTGlidWkzdnhDa1J2MkhCaWptOHR4cW1qL015UTV4MzFpMXYweStCM3dZSHRPY3FjYThCOU1ZMVdUc3Uxdm9oemFyR1Q2Q3BaK2psTStxQVU2cWxZNG1YcnM5cUhFa0ZOd0JpWFNaMjJsT2RpTndoa2ZLTTNOcmRacGZ6bjc1MUN0L2ZVaXA3OHhtUW1YNGdYY1Z5R0d0RHhrWk9aUXJ6emJZNWhLK2lnQVJtWGpJRFRiS3VTbWhnL2ZIY1dPRGxOZjljY01YSnFBWFF1TUdxRGNmRC9xUW1RT2xiK0cvWGFqUHBxajRBSjVsSHA3TWVNR1YrRGVMeVF5aDBFSWFVN2EwNDRxTDZvYnQ4WG1zUWFnQUduMnZXOUROQWJVSVRjK2x0bjZKa2lEbFZ5RGFObExPcG1wZlpKbU5LOFB6Um9MK0dRK2haYjNNeVhOalZxNTV4UjN1cHVsR0x0bHVLbFR4TmJwY0k2NTJXQjB1N2NQYU1TbFdLUHFJQkFRdU9EN2EwbG5VYVBzRG1wMVBSUFhuUS92TkMybFR2eFFZNi9tUmFGSk4rTGFHMnNFOUVQNXVuSitaL2FwOS9mY1E9PSIsIkF1dGhJbmZvIjoie1wiQ2FsbGVyXCI6XCJLQkJkYm5jL1lORHhyQXZLVUNYclR5aTZUem5hQ295RjBJaEtEMEp1STNzPVxcclxcblwiLFwiRXhwaXJlVGltZVwiOlwiMjAxOS0wMy0wNVQwOToyNzozNlpcIixcIk1lZGlhSWRcIjpcIjk0Y2QyNzk3ZGQyNzRhMWM4ZDA0ZTgwOTE1Njk0ZTI1XCIsXCJQbGF5RG9tYWluXCI6XCJ2b2QuaGVsbG9iaS5jb21cIixcIlNpZ25hdHVyZVwiOlwiUmorbnRBMXJoemFxNlJuUnVNazdsZzRic2hVPVwifSIsIlZpZGVvTWV0YSI6eyJTdGF0dXMiOiJOb3JtYWwiLCJWaWRlb0lkIjoiOTRjZDI3OTdkZDI3NGExYzhkMDRlODA5MTU2OTRlMjUiLCJUaXRsZSI6IjQyOCIsIkNvdmVyVVJMIjoiaHR0cDovL3ZvZC5oZWxsb2JpLmNvbS85NGNkMjc5N2RkMjc0YTFjOGQwNGU4MDkxNTY5NGUyNS9zbmFwc2hvdHMvNTk1OWM0Mjc2ODBhNDZmMjhkNDNhMzY1MWQ3Yjg0ZGItMDAwMDUuanBnIiwiRHVyYXRpb24iOjIyNDcuOTQ3fSwiQWNjZXNzS2V5SWQiOiJTVFMuTkpzaFNqREZ2Qkx1WWNEZXk2cHdkaXlGNiIsIlBsYXlEb21haW4iOiJ2b2QuaGVsbG9iaS5jb20iLCJBY2Nlc3NLZXlTZWNyZXQiOiI3b0ZIQ21NWkRkeGp0bVZYanJQb1JUVld0cEJ5cGdWOVc2aWFOaWlTeG9UNiIsIlJlZ2lvbiI6ImNuLXNoYW5naGFpIiwiQ3VzdG9tZXJJZCI6MTYyNzc1MzUwNTkwOTk4MX0=',
-
                         encryptType: 1
                     },fn=>{
-                        /*this.aliplayer.on('ended',this.endedNext)*/
+                        this.aliplayer.on('ended',this.endedNext)
 
                     })
                 })

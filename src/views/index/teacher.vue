@@ -26,7 +26,7 @@
             </div>
         </div>
         <!--讲师圈子-->
-        <div class="teacher-circle" v-if="detail.coteries">
+        <div class="teacher-circle" v-if="detail.coteries && detail.coteries.data && detail.coteries.data.length">
             <div class="title mx-1px-bottom">讲师数据圈</div>
             <div class="cirle-list">
                 <div class="item mx-1px-bottom" v-for="(item,index) in detail.coteries.data" @click="jumpShare(item.id)">
