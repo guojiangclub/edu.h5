@@ -2,12 +2,14 @@
     <div id="personal-center">
             <div class="top-bg">
                 <div class="header" v-if="token">
-                    <div class="avatar" v-if="info.user">
-                        <img :src="info.user.avatar" alt="">
-                    </div>
-                    <div class="info">
-                        <div class="nick-name" v-if="info.user && info.user.user_info_filled">
-                            {{info.user.nick_name || '无名'}}
+                    <div class="left-box">
+                        <div class="avatar" v-if="info.user">
+                            <img :src="info.user.avatar" alt="">
+                        </div>
+                        <div class="info">
+                            <div class="nick-name" v-if="info.user && info.user.user_info_filled">
+                                {{info.user.nick_name || '无名'}}
+                            </div>
                         </div>
                     </div>
                    <!-- <button v-if="!info.user.user_info_filled && token && init" class="user-btn">
@@ -267,7 +269,10 @@
                         border-radius: 50%;
                     }
                 }
-                .info{
+                .left-box{
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
 
                 }
                 .nick-name{
