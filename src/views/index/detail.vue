@@ -12,10 +12,6 @@
                     <span class="iconfont icon-shouye" ></span>
                     首页
                 </div>
-                <div class="share">
-                    <span class="iconfont icon-fenxiang"></span>
-                    分享课程
-                </div>
             </div>
             <div class="banner">
                 <img :src="detail.picture">

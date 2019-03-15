@@ -39,7 +39,7 @@
            <div class="bind_old" :class="is_new_user ? 'cur' : ''">
                <div class="paney">
                    <div class="title">绑定老用户</div>
-                   <div class="content mx-1px-bottom">是否绑定已有老程序</div>
+                   <div class="content mx-1px-bottom">是否绑定已有老用户</div>
                    <div class="btn-box">
                        <div class="cancle btn" @click="cancleBind">取消</div>
                        <div class="sure btn" @click="sureBind">确定</div>

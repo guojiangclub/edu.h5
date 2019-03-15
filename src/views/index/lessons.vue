@@ -25,8 +25,8 @@
         <div class="ul-content">
             <div class="item-list" v-for="(item,index) in classList" :key="index">
                 <div class="topic mx-1px-bottom" v-if="item.item_type == 'chapter'">{{item.title}}</div>
-                <div class="course-list" @click="palyStudy(item.id)">
-                    <div class="item mx-1px-bottom" :class="item.id == id ? 'activeitem' : ''" v-if="item.item_type == 'lesson'">
+                <div class="course-list" @click="palyStudy(item.id)" :class="item.id == id ? 'activeitem' : ''">
+                    <div class="item mx-1px-bottom" v-if="item.item_type == 'lesson'">
                         <div class="txt">
                             <span class="iconfont icon-shipinbofang"></span>
                             课时{{item.number}}： {{item.title}}
@@ -59,7 +59,8 @@
                 course_detail:'',
                 activeVal:'',
                 newList:[],
-                aliplayer: ''
+                aliplayer: '',
+                newUrl:''
             }
         },
         created(){
@@ -117,15 +118,19 @@
                     }
                     newList.forEach((val,index)=>{
                         if (val.id == id){
-                        idx  = index+1
-                    }
-                })
+                            idx  = index+1
+                        }
+                    })
                     id = newList[idx].id;
                     this.id = id;
-                    let data = {
-                        id:this.id
-                    }
-                    this.$store.dispatch('queryLessons',data)
+                    this.$router.replace({
+                        name:'index-lessons',
+                        params:{
+                            course_id:this.course_id,
+                            id:this.id
+                        }
+                    })
+
 
                 } else {
                     return
@@ -134,10 +139,13 @@
             },
             palyStudy(id){
                 if(this.course_detail.meta.isMember){
-                    let data = {
-                        id:id
-                    }
-                    this.$store.dispatch('queryLessons',data)
+                    this.$router.replace({
+                        name:'index-lessons',
+                        params:{
+                            course_id:this.course_id,
+                            id:id
+                        }
+                    })
                 } else {
                     this.$dialog.alert({
                         message:'请您先购买本课程'
@@ -148,6 +156,8 @@
                 this.course_detail = res
             },
             getLessonsDetail(res){
+                const that = this;
+
                 this.detail = res.data;
                 if(res.data.vod){
                     var  playInfo = res.data.vod.PlayInfoList.PlayInfo;
@@ -164,6 +174,7 @@
                     return
                 }
                 this.$nextTick(() => {
+//                    这里是创建播放器
                     this.aliplayer = new Aliplayer({
                         id: 'J_prismPlayer',
                         width: '100%',
@@ -175,11 +186,14 @@
 //                        vid:'94cd2797dd274a1c8d04e80915694e25',
 //                        playauth:'eyJTZWN1cml0eVRva2VuIjoiQ0FJUzN3SjFxNkZ0NUIyeWZTaklyNG5HSStuZXFabFg5WTZlVzBYMWdYbGpmUGhJaHJ6dDFEejJJSGxQZTNGaEFPb2V2L2svbVc5VTdmb2Nsck1xRmNVYUdoR2ZNSk10djh3R29GUDRKcExGc3QySjZyOEpqc1ZtMEtRUjkxdXBzdlhKYXNEVkVma3VFNVhFTWlJNS8wMGU2TC8rY2lyWVhEN0JHSmFWaUpsaFE4MEtWdzJqRjFSdkQ4dFhJUTBRazYxOUszemRaOW1nTGlidWkzdnhDa1J2MkhCaWptOHR4cW1qL015UTV4MzFpMXYweStCM3dZSHRPY3FjYThCOU1ZMVdUc3Uxdm9oemFyR1Q2Q3BaK2psTStxQVU2cWxZNG1YcnM5cUhFa0ZOd0JpWFNaMjJsT2RpTndoa2ZLTTNOcmRacGZ6bjc1MUN0L2ZVaXA3OHhtUW1YNGdYY1Z5R0d0RHhrWk9aUXJ6emJZNWhLK2lnQVJtWGpJRFRiS3VTbWhnL2ZIY1dPRGxOZjljY01YSnFBWFF1TUdxRGNmRC9xUW1RT2xiK0cvWGFqUHBxajRBSjVsSHA3TWVNR1YrRGVMeVF5aDBFSWFVN2EwNDRxTDZvYnQ4WG1zUWFnQUduMnZXOUROQWJVSVRjK2x0bjZKa2lEbFZ5RGFObExPcG1wZlpKbU5LOFB6Um9MK0dRK2haYjNNeVhOalZxNTV4UjN1cHVsR0x0bHVLbFR4TmJwY0k2NTJXQjB1N2NQYU1TbFdLUHFJQkFRdU9EN2EwbG5VYVBzRG1wMVBSUFhuUS92TkMybFR2eFFZNi9tUmFGSk4rTGFHMnNFOUVQNXVuSitaL2FwOS9mY1E9PSIsIkF1dGhJbmZvIjoie1wiQ2FsbGVyXCI6XCJLQkJkYm5jL1lORHhyQXZLVUNYclR5aTZUem5hQ295RjBJaEtEMEp1STNzPVxcclxcblwiLFwiRXhwaXJlVGltZVwiOlwiMjAxOS0wMy0wNVQwOToyNzozNlpcIixcIk1lZGlhSWRcIjpcIjk0Y2QyNzk3ZGQyNzRhMWM4ZDA0ZTgwOTE1Njk0ZTI1XCIsXCJQbGF5RG9tYWluXCI6XCJ2b2QuaGVsbG9iaS5jb21cIixcIlNpZ25hdHVyZVwiOlwiUmorbnRBMXJoemFxNlJuUnVNazdsZzRic2hVPVwifSIsIlZpZGVvTWV0YSI6eyJTdGF0dXMiOiJOb3JtYWwiLCJWaWRlb0lkIjoiOTRjZDI3OTdkZDI3NGExYzhkMDRlODA5MTU2OTRlMjUiLCJUaXRsZSI6IjQyOCIsIkNvdmVyVVJMIjoiaHR0cDovL3ZvZC5oZWxsb2JpLmNvbS85NGNkMjc5N2RkMjc0YTFjOGQwNGU4MDkxNTY5NGUyNS9zbmFwc2hvdHMvNTk1OWM0Mjc2ODBhNDZmMjhkNDNhMzY1MWQ3Yjg0ZGItMDAwMDUuanBnIiwiRHVyYXRpb24iOjIyNDcuOTQ3fSwiQWNjZXNzS2V5SWQiOiJTVFMuTkpzaFNqREZ2Qkx1WWNEZXk2cHdkaXlGNiIsIlBsYXlEb21haW4iOiJ2b2QuaGVsbG9iaS5jb20iLCJBY2Nlc3NLZXlTZWNyZXQiOiI3b0ZIQ21NWkRkeGp0bVZYanJQb1JUVld0cEJ5cGdWOVc2aWFOaWlTeG9UNiIsIlJlZ2lvbiI6ImNuLXNoYW5naGFpIiwiQ3VzdG9tZXJJZCI6MTYyNzc1MzUwNTkwOTk4MX0=',
                         encryptType: 1
-                    },fn=>{
-                        this.aliplayer.on('ended',this.endedNext)
-
                     })
+                    this.aliplayer.fullscreenService.cancelFullScreen;
+                    setTimeout(() => {
+                        this.aliplayer.on('ended',this.endedNext)
+                    }, 2500)
+
                 })
+
                 if(env.isWechat){
                     this.is_navbar = false;
                     setPageTitle(res.data.title)
@@ -196,7 +210,13 @@
                 this.newList = newList
             }
 
+        },
+        watch:{
+            '$route.params.id':function (id) {
+                window.location.reload();
+            }
         }
+
 
 
 
@@ -322,6 +342,11 @@
                             border-radius: 2px;
                             margin-left: 5px;
                         }
+
+                    }
+                    &.activeitem{
+                        color:#004E9D;
+                        background-color:#E9F4FF;
                     }
                 }
             }

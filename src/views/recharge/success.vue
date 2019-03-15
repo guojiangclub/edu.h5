@@ -2,7 +2,7 @@
     <div id="success">
        <div v-if="init">
            <van-nav-bar
-               title='付款成功页面'
+               title='付款结果'
                left-arrow
                @click-left="onClickLeft"
                v-if="is_navbar"
