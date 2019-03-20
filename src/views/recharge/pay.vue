@@ -219,8 +219,8 @@
             },
             //处理charge数据接口
             getCharge(res){
-                    if(res.data.redirectUrl){
-                        window.location.href = res.data.redirectUrl;
+                if(res.data.redirectUrl){
+                    window.location.href = res.data.redirectUrl;
                         Cache.remove(cache_keys.order_info);
                         Cache.remove(cache_keys.old_order_info);
                     } else {

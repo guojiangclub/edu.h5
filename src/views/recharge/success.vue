@@ -1,60 +1,57 @@
 <template>
     <div id="success">
-       <div v-if="init">
            <van-nav-bar
                title='付款结果'
                left-arrow
                @click-left="onClickLeft"
                v-if="is_navbar"
            />
-           <div class="header">
-               <div class="title">支付成功</div>
-               <!--<div class="topic">本次支付使用20积分，使用10元余额</div>-->
-               <div class="btn-box">
-                   <div class="study btn"  v-if="paid_info.order" @click="jumpDeatil(paid_info.order.course.id)">去学习</div>
-                   <div class="home btn" @click="jumpIndex">回首页</div>
-               </div>
-           </div>
-           <div class="course" v-if="paid_info.order">
-               <div class="title">课程详情</div>
-               <div class="li-item mx-1px-bottom" @click="jumpDeatil(paid_info.order.course.id)">
-                   <div class="left-info">
-                       <img :src="paid_info.order.course.picture">
-                   </div>
-                   <div class="right-info">
-                       <div class="name">{{paid_info.order.course.title}}</div>
-                       <div class="teach-box">
-                           <div class="money">¥ {{paid_info.order.course.display_price}}元</div>
-                       </div>
+           <div v-if="init">
+               <div class="header">
+                   <div class="title">支付成功</div>
+                   <!--<div class="topic">本次支付使用20积分，使用10元余额</div>-->
+                   <div class="btn-box">
+                       <div class="study btn"  v-if="paid_info.order" @click="jumpDeatil(paid_info.order.course.id)">去学习</div>
+                       <div class="home btn" @click="jumpIndex">回首页</div>
                    </div>
                </div>
-           </div>
-           <div class="teacher">
-               <div class="title">课程讲师数据圈</div>
-               <div class="cirle-list">
-                   <div class="item mx-1px-bottom">
-                       <div class="logo">
-                           <img src="https://wx3.sinaimg.cn/mw690/006ABCf7gy1fycfk2jk7sj30jx0kewq0.jpg">
+               <div class="course" v-if="paid_info.order">
+                   <div class="title">课程详情</div>
+                   <div class="li-item mx-1px-bottom" @click="jumpDeatil(paid_info.order.course.id)">
+                       <div class="left-info">
+                           <img :src="paid_info.order.course.picture">
                        </div>
-                       <div class="text">
-                           <div class="name">罗熙表情包</div>
-                           <div class="owner">黔在在</div>
+                       <div class="right-info">
+                           <div class="name">{{paid_info.order.course.title}}</div>
+                           <div class="teach-box">
+                               <div class="money">¥ {{paid_info.order.course.display_price}}元</div>
+                           </div>
                        </div>
-                       <div class="iconfont icon-jiantou"></div>
                    </div>
-                   <div class="item mx-1px-bottom">
-                       <div class="logo">
-                           <img src="https://wx4.sinaimg.cn/mw690/006ABCf7gy1fycfk0sy7yj30jw0jxtim.jpg">
+               </div>
+               <div class="teacher" v-if="paid_info.coteries && paid_info.coteries.data && paid_info.coteries.data.length">
+                   <div class="title">课程讲师数据圈</div>
+                   <div class="cirle-list">
+                       <div class="item mx-1px-bottom" v-for="(item,index) in paid_info.coteries.data" @click="jumpShare(item.id)">
+                           <div class="logo">
+                               <img :src="item.avatar">
+                           </div>
+                           <div class="text">
+                               <div class="name">{{item.name}}</div>
+                               <div class="owner">{{detail.user.user_name}}</div>
+                           </div>
+                           <div class="iconfont icon-jiantou"></div>
                        </div>
-                       <div class="text">
-                           <div class="name">不要生气</div>
-                           <div class="owner">黔在在</div>
-                       </div>
-                       <div class="iconfont icon-jiantou"></div>
                    </div>
                </div>
            </div>
-       </div>
+        <div v-else>
+            <div class="header">
+                <div class="title">支付失败</div>
+                <!--<div class="topic">本次支付使用20积分，使用10元余额</div>-->
+            </div>
+        </div>
+
 
     </div>
 
@@ -99,6 +96,14 @@
 
         },
         methods:{
+            jumpShare(id){
+                this.$router.push({
+                    name:'index-shareCirle',
+                    query:{
+                        id:id
+                    }
+                })
+            },
             onClickLeft(){
                 this.$router.push({
                     name:'index-index'

@@ -15,7 +15,7 @@ export default [
         name:'recharge-success',
         component: resolve => require(['./success.vue'],resolve),
         meta :{
-            title:'支付成功',
+            title:'支付结果',
             depth:10
         }
     }
