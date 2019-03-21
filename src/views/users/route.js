@@ -16,7 +16,8 @@ export default [
         name:'users-register',
         component: resolve => require(['./register.vue'],resolve),
         meta :{
-            title:'手机号登录'
+            title:'手机号登录',
+            depth:60
         }
     },
     {
@@ -24,7 +25,8 @@ export default [
         name:'users-oldlogin',
         component: resolve => require(['./oldlogin.vue'],resolve),
         meta :{
-            title:'老用户登录'
+            title:'老用户登录',
+            depth:61
         }
     },
     {
@@ -32,7 +34,8 @@ export default [
         name:'users-mycourse',
         component: resolve => require(['./mycourse.vue'],resolve),
         meta :{
-            title:'我的课程'
+            title:'我的课程',
+            depth:10
         }
     },
     {
@@ -40,7 +43,8 @@ export default [
         name:'users-setting',
         component: resolve => require(['./setting.vue'],resolve),
         meta :{
-            title:'设置'
+            title:'设置',
+            depth:20
         }
     },
     {
@@ -48,7 +52,8 @@ export default [
         name:'users-modify',
         component: resolve => require(['./modify.vue'],resolve),
         meta :{
-            title:'修改手机号'
+            title:'修改手机号',
+            depth:30
         }
     }
 ]

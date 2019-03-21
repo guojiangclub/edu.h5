@@ -14,7 +14,8 @@ export default [
         name:'index-detail',
         component: resolve => require(['./detail.vue'],resolve),
         meta :{
-            title:'课程详情页'
+            title:'课程详情页',
+            depth:20
         }
 
     },
@@ -23,7 +24,8 @@ export default [
         name:'index-search',
         component: resolve => require(['./search.vue'],resolve),
         meta :{
-            title:'搜索页'
+            title:'搜索页',
+            depth:20
         }
 
     },
@@ -32,7 +34,8 @@ export default [
         name:'index-teacher',
         component: resolve => require(['./teacher.vue'],resolve),
         meta :{
-            title:'教师详情页'
+            title:'教师详情页',
+            depth:30
         }
 
     },
@@ -41,7 +44,8 @@ export default [
         name:'index-classification',
         component: resolve => require(['./classification.vue'],resolve),
         meta :{
-            title:'分类页面'
+            title:'分类页面',
+            depth:20
         }
 
     },
@@ -50,7 +54,8 @@ export default [
         name:'index-studentinfo',
         component: resolve => require(['./studentinfo.vue'],resolve),
         meta :{
-            title:'学员信息'
+            title:'学员信息',
+            depth:40
         }
 
     },
@@ -59,7 +64,8 @@ export default [
         name:'index-lessons',
         component: resolve => require(['./lessons.vue'],resolve),
         meta :{
-            title:'课时详情'
+            title:'课时详情',
+            depth:30
         }
 
     },
@@ -68,7 +74,8 @@ export default [
         name:'index-svip',
         component: resolve => require(['./svip.vue'],resolve),
         meta :{
-            title:'svip页面'
+            title:'svip页面',
+            depth:10
         }
 
     },
@@ -77,7 +84,8 @@ export default [
         name:'index-shareCirle',
         component: resolve => require(['./shareCirle.vue'],resolve),
         meta :{
-            title:'分享数据圈'
+            title:'分享数据圈',
+            depth:50
         }
 
     }
