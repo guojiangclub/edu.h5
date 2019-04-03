@@ -7,12 +7,6 @@
             v-if="is_navbar"
         />
         <div class="header">
-            <div class="share-home">
-                <div class="home" @click="jumpIndex">
-                    <span class="iconfont icon-shouye" ></span>
-                    首页
-                </div>
-            </div>
             <div class="banner">
                 <img :src="detail.picture">
             </div>
@@ -140,7 +134,7 @@
         </div>
         <!--svip  加 免费试看-->
         <div class="svip-buy" v-if="!detail_meta.isMember">
-            <div class="svip" v-if="detail.price != 0 && detail_meta.isVip == false">
+            <div class="svip" v-if="detail.price != 0 && detail_meta.isVip == false" @click="jumpSvip">
                 <img src="http://ibrand-miniprogram.oss-cn-hangzhou.aliyuncs.com/18-12-19/61152215.jpg">
                 <div class="goodness">
                     成为svip，所选课程可省 ¥{{detail.display_price}}
@@ -181,10 +175,9 @@
             <div class="study-soon btn" @click="jumpStudy">立即学习</div>
         </div>
         <!--联系客服-->
-        <div class="customer-service" @click="changeAttention">
-            <div class="iconfont icon-lianxikefu"></div>
-            <div class="text">联系
-                <div>客服</div></div>
+        <div class="customer-service">
+            <div class="iconfont icon-lianxikefu" @click="changeAttention"></div>
+            <div class="iconfont icon-shouye" @click="jumpIndex"></div>
         </div>
         <!--新人优惠券-->
         <!-- <div class="couple-conpon">
@@ -518,6 +511,12 @@
                     name:'index-index'
                 })
 
+            },
+//            跳到svip页面
+            jumpSvip(){
+                this.$router.push({
+                    name:'index-svip'
+                })
             },
             //跳到教师详情页
             jump(name,id){

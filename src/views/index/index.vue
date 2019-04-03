@@ -449,7 +449,6 @@
             }
             .ul-content{
                 .li-item{
-                    padding: 20px 15px;
                     display: flex;
                     align-items: flex-start;
                     justify-content: space-between;

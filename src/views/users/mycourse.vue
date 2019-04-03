@@ -302,7 +302,6 @@
             margin-top: 10px;
             .li-list{
                 .item{
-                    padding: 20px 15px;
                     display: flex;
                     align-items: flex-start;
                     justify-content: space-between;
