@@ -39,8 +39,8 @@ export const queryLoginNew = function ({commit,state},data) {
         .post(EventBus.$Config.baseUrl + "api/oauth/sms",{
             mobile:data.mobile,
             code:data.code,
-            open_id:data.open_id
-
+            open_id:data.open_id,
+            app: 'edu'
         }).then(res =>{
         res = res.data;
         if(res.data.access_token){
@@ -158,9 +158,10 @@ export const queryWxOpenId = function ({commit,state},data) {
         mask:true
     });
     EventBus.$http
-        .get(EventBus.$Config.baseUrl + 'api/oauth/getRedirectUrl',{
+        .get(EventBus.$Config.baseUrl + 'api/oauth/official-account/get-redirect-url',{
             params:{
-                redirect_url:data.redirect_url
+                redirect_url:data.redirect_url,
+                app: 'edu'
             }
         })
         .then(res =>{
@@ -184,8 +185,9 @@ export const queryquicklogin = function ({commit,state},data) {
         mask:true
     });
     EventBus.$http
-        .post(EventBus.$Config.baseUrl + 'api/oauth/quicklogin',{
-            open_id:data.open_id
+        .post(EventBus.$Config.baseUrl + 'api/oauth/official-account/quick-login',{
+            open_id:data.open_id,
+            app: 'edu'
         })
         .then(res =>{
             res = res.data;

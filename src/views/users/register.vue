@@ -167,7 +167,7 @@
 
                     }
                 } else {
-                    this.$dialog.alert({message: '未能自动登录，请手动登录'});
+                    // this.$dialog.alert({message: '未能自动登录，请手动登录'});
                 }
 
             },

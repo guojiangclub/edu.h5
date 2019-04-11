@@ -107,6 +107,7 @@
             },
             //视频播放完成自动播放下一集
             endedNext(){
+                debugger
                 if(this.course_detail.meta.isMember){
                     var newList = this.newList;
                     var id = this.id;
