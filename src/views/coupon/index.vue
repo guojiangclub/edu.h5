@@ -13,97 +13,106 @@
             <div class="navbar-slider" :style="{width:width + 'px', transform: 'translateX('+ sliderOffset +'px)'}"></div>
         </div>
         <div class="coupon-content" v-if="activeIndex == 0">
-            <van-list v-model="tabList[0].loading" :finished="tabList[0].finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
-                <van-cell v-for="(item,index) in dataList[0]" :key="index">
-                    <div class="li-list">
-                        <div class="item">
-                            <div class="left-info">
-                                <div class="money" v-if="item.discount.action_type.type == 'cash'">
-                                    <span>¥</span>
-                                    {{item.discount.action_type.value}}
+            <div v-if="dataList && dataList[0] && dataList[0].length">
+                <van-list v-model="tabList[0].loading" :finished="tabList[0].finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
+                    <van-cell v-for="(item,index) in dataList[0]" :key="index">
+                        <div class="li-list">
+                            <div class="item">
+                                <div class="left-info">
+                                    <div class="money" v-if="item.discount.action_type.type == 'cash'">
+                                        <span>¥</span>
+                                        {{item.discount.action_type.value}}
+                                    </div>
+                                    <div class="money" v-if="item.discount.action_type.type == 'percentage'">
+                                        {{item.discount.action_type.value}}
+                                        <span>折</span>
+                                    </div>
+                                    <div class="label">{{item.discount.label}}</div>
                                 </div>
-                                 <div class="money" v-if="item.discount.action_type.type == 'percentage'">
-                                     {{item.discount.action_type.value}}
-                                     <span>折</span>
-                                 </div>
-                                <div class="label">{{item.discount.label}}</div>
-                            </div>
-                            <div class="right-info">
-                                <div class="title">{{item.discount.title}}</div>
-                                <div class="created-at">{{item.discount.use_start_time}}-{{item.discount.use_end_time}}</div>
-                            </div>
-                            <!--遮罩层-->
-                            <!--<div class="mask">
-                                <div class="cirles">
-                                    <span>已使用</span>
+                                <div class="right-info">
+                                    <div class="title">{{item.discount.title}}</div>
+                                    <div class="created-at">{{item.discount.use_start_time}}-{{item.discount.use_end_time}}</div>
                                 </div>
-                            </div>-->
+                                <!--遮罩层-->
+                                <!--<div class="mask">
+                                    <div class="cirles">
+                                        <span>已使用</span>
+                                    </div>
+                                </div>-->
+                            </div>
                         </div>
-                    </div>
-                </van-cell>
-            </van-list>
+                    </van-cell>
+                </van-list>
+            </div>
+            <div v-else class="no-data">暂无数据</div>
         </div>
         <div class="coupon-content" v-if="activeIndex == 1">
-            <van-list v-model="tabList[1].loading" :finished="tabList[1].finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
-                <van-cell v-for="(item,index) in dataList[1]" :key="index">
-                    <div class="li-list">
-                        <div class="item">
-                            <div class="left-info">
-                                <div class="money" v-if="item.discount.action_type.type == 'cash'">
-                                    <span>¥</span>
-                                    {{item.discount.action_type.value}}
+            <div v-if="dataList && dataList[1] && dataList[1].length">
+                <van-list v-model="tabList[1].loading" :finished="tabList[1].finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
+                    <van-cell v-for="(item,index) in dataList[1]" :key="index">
+                        <div class="li-list">
+                            <div class="item">
+                                <div class="left-info">
+                                    <div class="money" v-if="item.discount.action_type.type == 'cash'">
+                                        <span>¥</span>
+                                        {{item.discount.action_type.value}}
+                                    </div>
+                                    <div class="money" v-if="item.discount.action_type.type == 'percentage'">
+                                        {{item.discount.action_type.value}}
+                                        <span>折</span>
+                                    </div>
+                                    <div class="label">{{item.discount.label}}</div>
                                 </div>
-                                <div class="money" v-if="item.discount.action_type.type == 'percentage'">
-                                    {{item.discount.action_type.value}}
-                                    <span>折</span>
+                                <div class="right-info">
+                                    <div class="title">{{item.discount.title}}</div>
+                                    <div class="created-at">{{item.discount.use_start_time}}-{{item.discount.use_end_time}}</div>
                                 </div>
-                                <div class="label">{{item.discount.label}}</div>
-                            </div>
-                            <div class="right-info">
-                                <div class="title">{{item.discount.title}}</div>
-                                <div class="created-at">{{item.discount.use_start_time}}-{{item.discount.use_end_time}}</div>
-                            </div>
-                            <!--遮罩层-->
-                            <div class="mask">
-                                <div class="cirles">
-                                    <span>已使用</span>
+                                <!--遮罩层-->
+                                <div class="mask">
+                                    <div class="cirles">
+                                        <span>已使用</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </van-cell>
-            </van-list>
+                    </van-cell>
+                </van-list>
+            </div>
+            <div v-else class="no-data">暂无数据</div>
         </div>
         <div class="coupon-content" v-if="activeIndex == 2">
-            <van-list v-model="tabList[2].loading" :finished="tabList[2].finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
-                <van-cell v-for="(item,index) in dataList[2]" :key="index">
-                    <div class="li-list">
-                        <div class="item">
-                            <div class="left-info">
-                                <div class="money" v-if="item.discount.action_type.type == 'cash'">
-                                    <span>¥</span>
-                                    {{item.discount.action_type.value}}
+            <div v-if="dataList && dataList[2] && dataList[2].length">
+                <van-list v-model="tabList[2].loading" :finished="tabList[2].finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
+                    <van-cell v-for="(item,index) in dataList[2]" :key="index">
+                        <div class="li-list">
+                            <div class="item">
+                                <div class="left-info">
+                                    <div class="money" v-if="item.discount.action_type.type == 'cash'">
+                                        <span>¥</span>
+                                        {{item.discount.action_type.value}}
+                                    </div>
+                                    <div class="money" v-if="item.discount.action_type.type == 'percentage'">
+                                        {{item.discount.action_type.value}}
+                                        <span>折</span>
+                                    </div>
+                                    <div class="label">{{item.discount.label}}</div>
                                 </div>
-                                <div class="money" v-if="item.discount.action_type.type == 'percentage'">
-                                    {{item.discount.action_type.value}}
-                                    <span>折</span>
+                                <div class="right-info">
+                                    <div class="title">{{item.discount.title}}</div>
+                                    <div class="created-at">{{item.discount.use_start_time}}-{{item.discount.use_end_time}}</div>
                                 </div>
-                                <div class="label">{{item.discount.label}}</div>
-                            </div>
-                            <div class="right-info">
-                                <div class="title">{{item.discount.title}}</div>
-                                <div class="created-at">{{item.discount.use_start_time}}-{{item.discount.use_end_time}}</div>
-                            </div>
-                            <!--遮罩层-->
-                            <div class="mask">
-                                <div class="cirles">
-                                    <span>已失效</span>
+                                <!--遮罩层-->
+                                <div class="mask">
+                                    <div class="cirles">
+                                        <span>已失效</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </van-cell>
-            </van-list>
+                    </van-cell>
+                </van-list>
+            </div>
+            <div v-else class="no-data">暂无数据</div>
         </div>
     </div>
 
@@ -263,6 +272,11 @@
         height: 100%;
         overflow: auto;
         background-color:#F3F3F3;
+        .no-data{
+        text-align: center;
+        padding: 20px;
+        color: #9B9B9B;
+    }
         .van-nav-bar{
             background-color:#004E9D;
             position: fixed;
@@ -273,7 +287,7 @@
             }
         }
         .van-nav-bar+div{
-            padding-top:0;
+            padding-top:0!important;
         }
         .van-nav-bar__title{
             color: #ffffff;

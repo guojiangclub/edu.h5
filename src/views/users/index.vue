@@ -45,7 +45,10 @@
                 <div class="balance-point">
                     <div class="item" @click="jumpPath('coupon-index')">
                         <div class="iconfont icon-youhuiquan"></div>
-                        <div class="txt">我的优惠券</div>
+                        <div class="txt">
+                            <span>我的优惠券</span>
+                            <span class="number"><span>55</span></span>
+                        </div>
                         <div class="iconfont icon-jiantou"></div>
                     </div>
                 </div>
@@ -67,6 +70,21 @@
                         <div class="txt">设置</div>
                         <div class="iconfont icon-jiantou"></div>
                     </div>
+                    <div class="item" @click="jumpLocation('https://mobile.hellobi.com/#/question/0')">
+                        <div class="iconfont icon-wenda"></div>
+                        <div class="txt">问答</div>
+                        <div class="iconfont icon-jiantou"></div>
+                    </div>
+                    <div class="item" @click="jumpLocation('https://mobile.hellobi.com/#/activity')">
+                        <div class="iconfont icon-huodong"></div>
+                        <div class="txt">活动</div>
+                        <div class="iconfont icon-jiantou"></div>
+                    </div>
+                    <div class="item"  @click="jumpLocation('https://mobile.hellobi.com/#/blogs/0')">
+                        <div class="iconfont icon-boke"></div>
+                        <div class="txt">博客</div>
+                        <div class="iconfont icon-jiantou"></div>
+                    </div>
                 </div>
             </div>
             <!--弹出客服-->
@@ -74,8 +92,8 @@
 
             </div>
 
-            <div class="attention-WeChat" :class="show_attention ? 'cur' : ''">
-                <div class="service-box" v-if="service_info.online_service_self">
+            <div class="attention-WeChat" :class="show_attention ? 'cur' : ''" v-if="service_info.online_service_self">
+                <div class="service-box">
                     <div class="code item">
                         <img :src="service_info.online_service_self.qr_code" alt="" />
                         <div class="text">
@@ -98,6 +116,9 @@
                     </div>
                 </div>
             </div>
+        <div class="ibrand" bindtap="jumpWeb">
+            <div class="iconfont icon-dibu logo"></div>
+        </div>
         <!--tabbar-->
         <van-tabbar v-model="active" active-color="#004E9D" @change="jumpTab">
             <van-tabbar-item>
@@ -118,11 +139,7 @@
                      slot-scope="props">
             </van-tabbar-item>
         </van-tabbar>
-      <!--  <div class="ibrand" bindtap="jumpWeb">
-            <div class="iconfont icon-dibu logo"></div>
-            <div class="txt">www.ibrand.cc</div>
-        </div>
-        <div class="black-mask {{is_black ? 'cur' : ''}}"></div>-->
+        <!--<div class="black-mask" :class="is_black ? 'cur' : ''"></div>-->
     </div>
 
 
@@ -183,6 +200,9 @@
                     })
                 }
             },
+            jumpLocation(href){
+                window.location.href = href
+            },
             jumpSvip(){
                 this.$router.push({
                     name:'index-svip'
@@ -192,7 +212,10 @@
                 this.service_info = res.data.online_service_data
             },
             changeService(){
-                this.show_attention = !this.show_attention
+                if(this.service_info.online_service_self && this.service_info){
+                    this.show_attention = !this.show_attention
+                }
+
             },
             jumpPath(name){
                 var source = this.$route.path;
@@ -241,6 +264,9 @@
         height: 100%;
         overflow: auto;
         background-color:#F3F3F3;
+        .ibrand{
+            text-align: center;
+        }
         .top-bg {
             background-color: #004E9D;
 
@@ -361,6 +387,25 @@
                     flex: 1;
                     font-weight: 500;
                     padding-left: 10px;
+                    display: flex;
+                    justify-content:space-between;
+                    span{
+                        &.number{
+                            margin-right: 10px;
+                            span{
+                                display: inline-block;
+                                width: 25px;
+                                height: 25px;
+                                border-radius: 50%;
+                                background-color:#FF2741;
+                                color: #ffffff;
+                                line-height: 25px;
+                                text-align: center;
+                                font-size: 13px;
+                            }
+
+                        }
+                    }
                 }
                 .icon-i{
                     color: #D7D7D7;

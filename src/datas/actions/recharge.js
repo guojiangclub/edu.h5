@@ -46,7 +46,7 @@ export const queryOrderPaid = function ({commit,state},data) {
     });
     EventBus.$http
         .post(EventBus.$Config.baseUrl + 'api/edu/course/order/paid',{
-            order_no:data.order_no
+            order_no:data.order_no,
         },{
             headers:{
                 Authorization: oauth.access_token
@@ -56,7 +56,6 @@ export const queryOrderPaid = function ({commit,state},data) {
         if(res.status){
             EventBus.$emit('paidOrder',res);
         } else {
-            console.log(res);
             EventBus.$dialog.alert({message: res.message || '请求失败'});
         }
 

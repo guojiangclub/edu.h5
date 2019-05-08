@@ -24,7 +24,7 @@
         </div>
         <div class="ul-content">
             <div class="item-list" v-for="(item,index) in classList" :key="index">
-                <div class="topic mx-1px-bottom" v-if="item.item_type == 'chapter'">{{item.title}}</div>
+                <div class="topic mx-1px-bottom" v-if="item.item_type == 'chapter'">章节{{item.number}}：{{item.title}}</div>
                 <div class="course-list" @click="palyStudy(item.id)" :class="item.id == id ? 'activeitem' : ''">
                     <div class="item mx-1px-bottom" v-if="item.item_type == 'lesson'">
                         <div class="txt">

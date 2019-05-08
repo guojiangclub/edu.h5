@@ -34,7 +34,7 @@
                 <img  src="https://cdn.ibrand.cc/svip_nine.png">
             </div>
             <div class="content" v-if="svip_course && svip_course.machineCourses && svip_course.machineCourses.length">
-                <div class="detail">
+                <div class="detail" @click="jumpDetail(svip_course.machineCourses[0].associate.id)">
                     <img :src="svip_course.machineCourses[0].associate.picture" >
                     <div class="info-box">
                         <div class="left">
@@ -49,7 +49,7 @@
 
                 </div>
                 <div class="ul-list">
-                    <div class="li-item mx-1px-bottom" v-for="(item,index) in svip_course.machineCourses" :key="index" v-if="index != 0">
+                    <div class="li-item mx-1px-bottom" v-for="(item,index) in svip_course.machineCourses" :key="index" v-if="index != 0" @click="jumpDetail(item.associate.id)">
                         <div class="left-info">
                             <img :src="item.associate.picture">
                         </div>
@@ -78,7 +78,7 @@
                 <img src="https://cdn.ibrand.cc/fourteen.png">
             </div>
             <div class="content red" v-if="svip_course && svip_course.businessCourses && svip_course.businessCourses.length">
-                <div class="detail">
+                <div class="detail" @click="jumpDetail(svip_course.businessCourses[0].associate.id)">
                     <img :src="svip_course.businessCourses[0].associate.picture" >
                     <div class="info-box">
                         <div class="left">
@@ -93,7 +93,7 @@
 
                 </div>
                 <div class="ul-list">
-                    <div class="li-item mx-1px-bottom" v-for="(item,index) in svip_course.businessCourses" :key="index" v-if="index != 0">
+                    <div class="li-item mx-1px-bottom" v-for="(item,index) in svip_course.businessCourses" :key="index" v-if="index != 0" @click="jumpDetail(item.associate.id)">
                         <div class="left-info">
                             <img :src="item.associate.picture">
                         </div>
@@ -122,7 +122,7 @@
                 <img src="https://cdn.ibrand.cc/svip_six.png">
             </div>
             <div class="content yellow" v-if="svip_course && svip_course.bigdataCourses && svip_course.bigdataCourses.length">
-                <div class="detail">
+                <div class="detail" @click="jumpDetail(svip_course.bigdataCourses[0].associate.id)">
                     <img :src="svip_course.bigdataCourses[0].associate.picture" >
                     <div class="info-box">
                         <div class="left">
@@ -137,7 +137,7 @@
 
                 </div>
                 <div class="ul-list">
-                    <div class="li-item mx-1px-bottom" v-for="(item,index) in svip_course.bigdataCourses" :key="index" v-if="index != 0">
+                    <div class="li-item mx-1px-bottom" v-for="(item,index) in svip_course.bigdataCourses" :key="index" v-if="index != 0" @click="jumpDetail(item.associate.id)">
                         <div class="left-info">
                             <img :src="item.associate.picture">
                         </div>
@@ -166,7 +166,7 @@
                 <img src="https://cdn.ibrand.cc/svip_ten.png">
             </div>
             <div class="content green" v-if="svip_course && svip_course.biCourses && svip_course.biCourses.length">
-                <div class="detail">
+                <div class="detail" @click="jumpDetail(svip_course.biCourses[0].associate.id)">
                     <img :src="svip_course.biCourses[0].associate.picture" >
                     <div class="info-box">
                         <div class="left">
@@ -181,7 +181,7 @@
 
                 </div>
                 <div class="ul-list">
-                    <div class="li-item mx-1px-bottom" v-for="(item,index) in svip_course.biCourses" :key="index" v-if="index != 0">
+                    <div class="li-item mx-1px-bottom" v-for="(item,index) in svip_course.biCourses" :key="index" v-if="index != 0" @click="jumpDetail(item.associate.id)">
                         <div class="left-info">
                             <img :src="item.associate.picture">
                         </div>
@@ -212,7 +212,7 @@
                     <div class="txt">学院涵盖数据系列的课程：从基础的数据库知识，到商业智能解决方案，到数据挖掘，等系列</div>
                 </div>
                 <div class="ul-list">
-                    <div class="li-item mx-1px-bottom" v-for="(item,index) in svip_course.otherCourses" :key="index">
+                    <div class="li-item mx-1px-bottom" v-for="(item,index) in svip_course.otherCourses" :key="index" @click="jumpDetail(item.associate.id)">
                         <div class="left-info">
                             <img :src="item.associate.picture">
                         </div>
@@ -460,6 +460,15 @@
                        }
                    })
                }
+            },
+            //点击跳到详情页
+            jumpDetail(id){
+                this.$router.push({
+                    name:'index-detail',
+                    params:{
+                        id:id
+                    }
+                })
             }
 
         }
@@ -613,6 +622,7 @@
                     }
                     .right-info{
                         flex: 1;
+                        overflow: hidden;
                         .name{
                             color: #202020;
                             font-size: 15px;
@@ -634,9 +644,19 @@
                             line-height: 14px;
                             padding-bottom: 10px;
                             .time{
+                                width: 50%;
+                                overflow: hidden;
+                                white-space: nowrap;
+                                text-overflow: ellipsis;
                                 span{
                                     font-size: 12px;
                                 }
+                            }
+                            .many{
+                                width: 50%;
+                                overflow: hidden;
+                                white-space: nowrap;
+                                text-overflow: ellipsis;
                             }
                         }
                         .teach-box{
@@ -646,13 +666,22 @@
                             color:#909090;
                             font-size: 12px;
                             line-height: 14px;
+                            overflow: hidden;
                             .teacher{
+                                width: 50%;
+                                overflow: hidden;
+                                white-space: nowrap;
+                                text-overflow: ellipsis;
                                 span{
                                     font-size: 12px;
                                 }
                             }
                             .money{
+                                width: 50%;
                                 color: #4c0678;
+                                overflow: hidden;
+                                white-space: nowrap;
+                                text-overflow: ellipsis;
                             }
                         }
                     }

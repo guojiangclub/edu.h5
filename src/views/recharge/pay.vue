@@ -62,6 +62,7 @@
                    <div class="infomation mx-1px-bottom" @click="changeCoupon">
                        <div class="name">优惠券：</div>
                        <div class="txt" v-if="select_coupon">{{select_coupon.discount.label}}</div>
+                       <div  class="txt" v-if="!select_coupon && (penny == 0 || info.coupons.length == 0)">暂无可用优惠券</div>
                        <div class="iconfont icon-jiantou"></div>
                    </div>
                    <!-- <div class="infomation">

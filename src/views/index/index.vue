@@ -10,7 +10,7 @@
                 <!--轮播图-->
                 <div class="banner">
                     <van-swipe :autoplay="3000">
-                        <van-swipe-item v-for="(image, index) in homedata.banners" :key="index">
+                        <van-swipe-item v-for="(image, index) in homedata.banners" :key="index" @click="jumpLocation(image.link)">
                             <img :src="image.image" alt="">
                         </van-swipe-item>
                     </van-swipe>
@@ -18,7 +18,7 @@
                 </div>
             </div>
             <!--svip的广告图-->
-            <div class="svip-box">
+            <div class="svip-box" @click="jumpLocation(homedata.svipBanner[0].link)">
                 <img :src="homedata.svipBanner[0].image">
             </div>
             <!--优惠券-->
@@ -289,7 +289,14 @@
                 }
 
 
-            }
+            },
+            jumpLocation(href){
+                if(href){
+                    window.location.href = href
+                } else {
+                    return
+                }
+            },
 
 
         }
@@ -334,7 +341,6 @@
                 }
             }
             .banner{
-                height: 212px;
                 img{
                     height: 100%;
                     width: 100%;

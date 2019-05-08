@@ -12,55 +12,61 @@
         </div>
         <div class="ul-content">
             <div v-if="activeIndex == 0">
-                <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
-                    <van-cell v-for="(item,index) in dataList" :key="index">
-                        <div class="li-list">
-                            <div class="item" @click="jumpDetail(item.course.id)">
-                                <div class="left-info">
-                                    <img :src="item.course.picture">
-                                </div>
-                                <div class="right-info">
-                                    <div class="name">{{item.course.title}}</div>
-                                    <div class="tiem-box">
-                                        <div class="time">
-                                            <span class="iconfont icon-keshi"></span>
-                                            {{item.course.lesson_count}}课时
-                                        </div>
-                                        <div class="many">
-                                            {{item.course.student_count}}人学习
-                                        </div>
+                <div v-if="dataList && dataList.length">
+                    <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
+                        <van-cell v-for="(item,index) in dataList" :key="index">
+                            <div class="li-list">
+                                <div class="item" @click="jumpDetail(item.course.id)">
+                                    <div class="left-info">
+                                        <img :src="item.course.picture">
                                     </div>
-                                    <div class="teach-box">
-                                        <div class="teacher">
-                                            <span class="iconfont icon-laoshi"></span>
-                                            {{item.course.teacher.name || '无名'}}老师
+                                    <div class="right-info">
+                                        <div class="name">{{item.course.title}}</div>
+                                        <div class="tiem-box">
+                                            <div class="time">
+                                                <span class="iconfont icon-keshi"></span>
+                                                {{item.course.lesson_count}}课时
+                                            </div>
+                                            <div class="many">
+                                                {{item.course.student_count}}人学习
+                                            </div>
                                         </div>
-                                        <div class="money">已加入</div>
+                                        <div class="teach-box">
+                                            <div class="teacher">
+                                                <span class="iconfont icon-laoshi"></span>
+                                                {{item.course.teacher.name || '无名'}}老师
+                                            </div>
+                                            <div class="money">已加入</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </van-cell>
-                </van-list>
+                        </van-cell>
+                    </van-list>
+                </div>
+                <div v-else class="no-data">暂无数据</div>
             </div>
             <div class="li-list" v-if="activeIndex == 1">
-                <van-list v-model="anloading" :finished="anfinished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
-                    <van-cell v-for="(item,index) in announcement" :key="index">
-                        <div class="notice-item">
-                            <div class="content">
-                                <div v-html="item.content"></div>
-                            </div>
-                            <div class="teacher-time mx-1px-bottom">
-                                <div class="teacher">
-                                    <span class="iconfont icon-laoshi"></span>
-                                    {{item.course.teacher.name || '无名'}}老师
+                <div v-if="announcement && announcement.length">
+                    <van-list v-model="anloading" :finished="anfinished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
+                        <van-cell v-for="(item,index) in announcement" :key="index">
+                            <div class="notice-item">
+                                <div class="content">
+                                    <div v-html="item.content"></div>
                                 </div>
-                                <div class="time">{{item.created_at}}</div>
+                                <div class="teacher-time mx-1px-bottom">
+                                    <div class="teacher">
+                                        <span class="iconfont icon-laoshi"></span>
+                                        {{item.course.teacher.name || '无名'}}老师
+                                    </div>
+                                    <div class="time">{{item.created_at}}</div>
+                                </div>
+                                <div class="from">来自：{{item.course.title}}</div>
                             </div>
-                            <div class="from">来自：{{item.course.title}}</div>
-                        </div>
-                    </van-cell>
-                </van-list>
+                        </van-cell>
+                    </van-list>
+                </div>
+                <div v-else class="no-data">暂无数据</div>
             </div>
         </div>
         <!--tabbar-->
@@ -300,6 +306,11 @@
         }
         .ul-content{
             margin-top: 10px;
+            .no-data{
+                text-align: center;
+                padding: 20px;
+                color: #9B9B9B;
+            }
             .li-list{
                 .item{
                     display: flex;
