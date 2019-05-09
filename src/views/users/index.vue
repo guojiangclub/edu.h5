@@ -264,6 +264,7 @@
         height: 100%;
         overflow: auto;
         background-color:#F3F3F3;
+        padding-bottom: 70px;
         .ibrand{
             text-align: center;
         }

@@ -12,6 +12,15 @@ export default [
         }
     },
     {
+        path:'/about',
+        name:'about',
+        component: resolve => require(['./about.vue'],resolve),
+        meta :{
+            title:'关于我们',
+            depth:40
+        }
+    },
+    {
         path:'/register',
         name:'users-register',
         component: resolve => require(['./register.vue'],resolve),

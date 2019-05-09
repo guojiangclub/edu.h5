@@ -263,3 +263,26 @@ export const queryUpdatemobile = function ({commit,state},data) {
         })
 
 }
+
+
+// 获取关于我们信息
+export const getAboutInfo = function ({commit, state}) {
+    EventBus.$toast.loading({
+        message: '加载中',
+        mask:true
+    });
+    EventBus.$http
+        .get(EventBus.$Config.baseUrl + 'api/ibrand')
+        .then(res =>{
+            res = res.data;
+            if (res.status){
+                EventBus.$emit('aboutInfo',res.data)
+            }else {
+                EventBus.$dialog.alert({message: '请求失败'});
+            }
+            EventBus.$toast.clear()
+        },err=>{
+            EventBus.$dialog.alert({message: '服务端出错'});
+            EventBus.$toast.clear()
+        })
+}

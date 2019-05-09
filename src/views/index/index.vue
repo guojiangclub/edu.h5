@@ -22,7 +22,7 @@
                 <img :src="homedata.svipBanner[0].image">
             </div>
             <!--优惠券-->
-            <div class="coupon-box">
+            <div class="coupon-box" v-if="homedata.coupons && homedata.coupons.length">
                 <div class="scroll-view">
                     <div class="pa-li" v-for="(item,index) in homedata.coupons" :key="index" @click="receiveCoupon(item.id,item.is_receive,index)">
                         <div class="li-item">
