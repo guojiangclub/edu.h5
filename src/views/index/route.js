@@ -55,7 +55,8 @@ export default [
         component: resolve => require(['./studentinfo.vue'],resolve),
         meta :{
             title:'学员信息',
-            depth:40
+            depth:40,
+            authorization: true
         }
 
     },
@@ -65,7 +66,8 @@ export default [
         component: resolve => require(['./lessons.vue'],resolve),
         meta :{
             title:'课时详情',
-            depth:30
+            depth:30,
+            authorization: true
         }
 
     },

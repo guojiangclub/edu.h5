@@ -6,7 +6,7 @@
             @click-left="onClickLeft"
             v-if="is_navbar"
         />
-        <div class="navbar mx-1px-bottom">
+        <div class="navbar mx-1px-bottom" :class="is_navbar == false ? 'top_adr' : ''">
                 <div class="navbar-item" :class="index == activeIndex ? 'activity' : ''" v-for="(item,index) in tabList" :key="index" @click="tabClick(index,$event)">
                     <div class="navbar-title">{{item.title}}</div>
                 </div>
@@ -306,6 +306,9 @@
             background: #FFFFFF;
             font-size: 14px;
             color: #9B9B9B;
+            &.top_adr{
+                top: 0px;
+            }
 
             .navbar-item {
                 flex: 1;

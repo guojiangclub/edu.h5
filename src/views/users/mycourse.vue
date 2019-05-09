@@ -1,5 +1,4 @@
 <template>
-
     <div id="my_course">
         <div class="navbar mx-1px-bottom">
                 <div  class="navbar-item" :class="activeIndex == 0 ? 'activity' : ''" @click="tabClick(0,$event)">
@@ -276,6 +275,8 @@
         background-color: #f3f3f3;
         padding-bottom: 60px;
         .navbar {
+            position: fixed;
+            top: 0px;
             width: 100%;
             display: flex;
             height: 50px;
@@ -283,6 +284,10 @@
             background: #FFFFFF;
             font-size: 14px;
             color: #9B9B9B;
+            z-index: 20;
+            &.top_adr{
+                top: 0px;
+            }
 
             .navbar-item {
                 flex: 1;
@@ -305,7 +310,7 @@
             }
         }
         .ul-content{
-            margin-top: 10px;
+            margin-top: 50px;
             .no-data{
                 text-align: center;
                 padding: 20px;

@@ -79,9 +79,11 @@
                 this.is_navbar = false
             }
             let order_no = this.$route.query.order_no;
+            let charge_id = this.$route.query.charge_id;
             if(order_no){
                 let data = {
-                    order_no:order_no
+                    order_no:order_no,
+                    charge_id:charge_id || ''
                 }
                 this.$store.dispatch('queryOrderPaid',data)
                 EventBus.$on('paidOrder',this.getOrderInfo);

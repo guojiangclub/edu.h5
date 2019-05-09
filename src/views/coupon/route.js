@@ -8,7 +8,8 @@ export default [
         component: resolve => require(['./center.vue'],resolve),
         meta :{
             title:'可用优惠券',
-            depth:10
+            depth:10,
+            authorization: true
         }
 
 },
@@ -17,7 +18,8 @@ export default [
         name:'coupon-index',
         component: resolve => require(['./index.vue'],resolve),
         meta :{
-            title:'我的优惠券'
+            title:'我的优惠券',
+            authorization: true
         }
 
     }

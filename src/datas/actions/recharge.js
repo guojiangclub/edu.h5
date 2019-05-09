@@ -47,6 +47,7 @@ export const queryOrderPaid = function ({commit,state},data) {
     EventBus.$http
         .post(EventBus.$Config.baseUrl + 'api/edu/course/order/paid',{
             order_no:data.order_no,
+            charge_id:data.charge_id
         },{
             headers:{
                 Authorization: oauth.access_token

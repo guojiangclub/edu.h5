@@ -44,7 +44,8 @@ export default [
         component: resolve => require(['./mycourse.vue'],resolve),
         meta :{
             title:'我的课程',
-            depth:10
+            depth:10,
+            authorization: true
         }
     },
     {
@@ -53,7 +54,8 @@ export default [
         component: resolve => require(['./setting.vue'],resolve),
         meta :{
             title:'设置',
-            depth:20
+            depth:20,
+            authorization: true
         }
     },
     {
@@ -62,7 +64,8 @@ export default [
         component: resolve => require(['./modify.vue'],resolve),
         meta :{
             title:'修改手机号',
-            depth:30
+            depth:30,
+            authorization: true
         }
     }
 ]

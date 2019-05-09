@@ -8,7 +8,8 @@ export default [
         component: resolve => require(['./pay.vue'],resolve),
         meta :{
             title:'支付页面',
-            depth:40
+            depth:40,
+            authorization: true
         }
     },
     {
@@ -18,7 +19,8 @@ export default [
         meta :{
             title:'支付结果',
             depth:10,
-            depth:50
+            depth:50,
+            authorization: true
         }
     }
 ]

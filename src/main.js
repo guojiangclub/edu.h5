@@ -139,7 +139,7 @@ router.beforeEach((to, from, next) => {
     // window.scrollTo(0, 0);
 
     if (to.meta.authorization) {
-        var target = {name: to.meta.login || 'user-login', query: {source: to.path}};
+        var target = {name: to.meta.login || 'users-register', query: {source: to.path}};
         var oauth = Cache.get(cache_keys.token);
         oauth ? next() : next(target);
     } else {

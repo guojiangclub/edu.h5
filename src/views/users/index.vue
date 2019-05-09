@@ -47,7 +47,7 @@
                         <div class="iconfont icon-youhuiquan"></div>
                         <div class="txt">
                             <span>我的优惠券</span>
-                            <span class="number"><span>55</span></span>
+                            <span class="number" v-if="info"><span>{{info.coupons.total}}</span></span>
                         </div>
                         <div class="iconfont icon-jiantou"></div>
                     </div>
