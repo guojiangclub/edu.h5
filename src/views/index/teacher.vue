@@ -22,7 +22,7 @@
             <div class="title mx-1px-bottom">讲师介绍</div>
             <div class="label">
                 <div class="name" v-if="detail.user">{{detail.user.name}}老师</div>
-                <div class="txt">{{detail.user.details.signature}}</div>
+                <div class="txt" v-if="detail.user && detail.user.details">{{detail.user.details.signature}}</div>
             </div>
         </div>
         <!--讲师圈子-->

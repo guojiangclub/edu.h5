@@ -69,7 +69,7 @@
                         </div>-->
                         <div class="text">
                             <div class="name" v-if="detail_meta.teacher" @click="jump('index-teacher',detail_meta.teacher.user_id)">{{detail_meta.teacher.name}}老师</div>
-                            <div class="label" v-if="detail_meta.teacher" @click="jump('index-teacher',detail_meta.teacher.user_id)">{{detail_meta.teacher.details.signature}}</div>
+                            <div class="label" v-if="detail_meta.teacher && detail_meta.teacher.details" @click="jump('index-teacher',detail_meta.teacher.user_id)">{{detail_meta.teacher.details.signature}}</div>
                             <div class="circle mx-1px-top" @click="jumpShare(detail_meta.coterie.id)" v-if="detail_meta.coterie">
                                 <div class="cirle-name">相关数据圈</div>
                                 <div class="cirle-detail" v-if="detail_meta.coterie">

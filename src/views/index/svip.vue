@@ -40,7 +40,7 @@
                         <div class="left">
                             <span>{{svip_course.machineCourses[0].associate.teacher.name || '无名'}}</span>|
                             <span>{{svip_course.machineCourses[0].associate.lesson_count}}课时</span>|
-                            <span>{{svip_course.machineCourses[0].associate.student_count}}学习</span>
+                            <span>{{svip_course.machineCourses[0].associate.student_count}}人学习</span>
                         </div>
                         <div class="right">
                             {{svip_course.machineCourses[0].associate.display_price}}元
@@ -84,7 +84,7 @@
                         <div class="left">
                             <span>{{svip_course.businessCourses[0].associate.teacher.name || '无名'}}</span>|
                             <span>{{svip_course.businessCourses[0].associate.lesson_count}}课时</span>|
-                            <span>{{svip_course.businessCourses[0].associate.student_count}}学习</span>
+                            <span>{{svip_course.businessCourses[0].associate.student_count}}人学习</span>
                         </div>
                         <div class="right">
                             {{svip_course.businessCourses[0].associate.display_price}}元
@@ -128,7 +128,7 @@
                         <div class="left">
                             <span>{{svip_course.bigdataCourses[0].associate.teacher.name || '无名'}}</span>|
                             <span>{{svip_course.bigdataCourses[0].associate.lesson_count}}课时</span>|
-                            <span>{{svip_course.bigdataCourses[0].associate.student_count}}学习</span>
+                            <span>{{svip_course.bigdataCourses[0].associate.student_count}}人学习</span>
                         </div>
                         <div class="right">
                             {{svip_course.bigdataCourses[0].associate.display_price}}元
@@ -172,7 +172,7 @@
                         <div class="left">
                             <span>{{svip_course.biCourses[0].associate.teacher.name || '无名'}}</span>|
                             <span>{{svip_course.biCourses[0].associate.lesson_count}}课时</span>|
-                            <span>{{svip_course.biCourses[0].associate.student_count}}学习</span>
+                            <span>{{svip_course.biCourses[0].associate.student_count}}人学习</span>
                         </div>
                         <div class="right">
                             {{svip_course.biCourses[0].associate.display_price}}元
