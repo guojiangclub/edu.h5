@@ -523,7 +523,8 @@
                 this.$router.push({
                     name:name,
                     params:{
-                        id:id
+                        id:id,
+                        course_id:this.id
                     }
                 })
             },

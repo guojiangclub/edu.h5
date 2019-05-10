@@ -38,13 +38,14 @@
                                 <div class="time">
                                     <span class="iconfont icon-keshi"></span>
                                     {{item.lesson_count}}课时
+
                                 </div>
                                 <div class="many">
                                     {{item.student_count}}人学习
                                 </div>
                             </div>
                             <div class="teach-box">
-                                <div class="teacher" v-if="item.tearcher">
+                                <div class="teacher" v-if="item.teacher">
                                     <span class="iconfont icon-laoshi"></span>
                                     {{item.teacher.name || '无名'}}老师
                                 </div>

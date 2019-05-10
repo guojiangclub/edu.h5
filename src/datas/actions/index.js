@@ -209,6 +209,9 @@ export const querytearch = function ({commit,state},data) {
     });
     EventBus.$http
         .get(EventBus.$Config.baseUrl + 'api/edu/teacher/'+data.id,{
+            params:{
+                course_id:data.course_id
+            }
 
         }).then(res =>{
         res = res.data;

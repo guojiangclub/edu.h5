@@ -31,7 +31,7 @@
                                             </div>
                                         </div>
                                         <div class="teach-box">
-                                            <div class="teacher">
+                                            <div class="teacher" v-if="item.course.teacher">
                                                 <span class="iconfont icon-laoshi"></span>
                                                 {{item.course.teacher.name || '无名'}}老师
                                             </div>
@@ -54,7 +54,7 @@
                                     <div v-html="item.content"></div>
                                 </div>
                                 <div class="teacher-time mx-1px-bottom">
-                                    <div class="teacher">
+                                    <div class="teacher" v-if="item.course.teacher">
                                         <span class="iconfont icon-laoshi"></span>
                                         {{item.course.teacher.name || '无名'}}老师
                                     </div>

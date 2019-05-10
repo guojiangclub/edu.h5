@@ -11,7 +11,7 @@
                 <img :src="detail.user.avatar">
             </div>
             <div class="introduce">
-                <div class="nick-name" v-if="detail.user">{{detail.user.user_name}}</div>
+                <div class="nick-name" v-if="detail.user">{{detail.user.name}}</div>
                 <div class="label" v-if="detail.members && detail.coteries">
                     课程：{{detail.members.length}} 丨 数据圈：{{detail.coteries.data.length || 0}}
                 </div>
@@ -21,8 +21,8 @@
         <div class="teacher-info">
             <div class="title mx-1px-bottom">讲师介绍</div>
             <div class="label">
-                <div class="name" v-if="detail.user">{{detail.user.user_name}}老师</div>
-                <div class="txt">淘宝7年资深讲师 国家工信部高级电子商务师</div>
+                <div class="name" v-if="detail.user">{{detail.user.name}}老师</div>
+                <div class="txt">{{detail.user.details.signature}}</div>
             </div>
         </div>
         <!--讲师圈子-->
@@ -67,7 +67,7 @@
                             <div class="teach-box">
                                 <div class="teacher">
                                     <span class="iconfont icon-laoshi"></span>
-                                    {{detail.user.user_name}}老师
+                                    {{detail.user.name}}老师
                                 </div>
                                 <div class="money">¥ {{item.course.display_price}}元</div>
                             </div>
@@ -92,6 +92,7 @@
         data(){
             return {
                 teacher_id:'',
+                course_id:'',
                 detail:'',
                 is_navbar:true
 
@@ -103,8 +104,10 @@
                 this.is_navbar = false
             }
             this.teacher_id = this.$route.params.id;
+            this.course_id = this.$route.params.course_id;
             let data = {
-                id:this.teacher_id
+                id:this.teacher_id,
+                course_id:this.course_id
             }
             this.$store.dispatch('querytearch',data)
             EventBus.$on('tearcherdata',this.getTearchDetail)
