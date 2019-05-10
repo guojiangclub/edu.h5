@@ -384,7 +384,9 @@
                 margin-bottom: 20px;
                 border-radius: 4px;
                 input{
-                    padding:15px 0 15px 15px ;
+                    padding:0px 0 0px 15px ;
+                    height: 55px;
+                    line-height: 55px;
                     border-radius: 4px;
                 }
                 .input-placeholder{
@@ -402,7 +404,10 @@
                     background:rgba(155,155,155,.3);
                     border-radius: 4px;
                     input{
-                        padding:15px 0 15px 15px ;
+                        padding:0px 0 0px 15px ;
+                        height: 55px;
+                        line-height: 55px;
+                        border-radius: 4px;
                     }
                     .input-placeholder{
                         color: #9B9B9B;
