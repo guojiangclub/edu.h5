@@ -30,7 +30,7 @@
             <img src="https://cdn.ibrand.cc/svip_five.png">
         </div>
         <div class="contents">
-            <div class="title">
+            <div class="title" v-if="svip_course && svip_course.machineCourses && svip_course.machineCourses.length">
                 <img  src="https://cdn.ibrand.cc/svip_nine.png">
             </div>
             <div class="content" v-if="svip_course && svip_course.machineCourses && svip_course.machineCourses.length">
@@ -64,7 +64,7 @@
                                 </div>
                             </div>
                             <div class="teach-box">
-                                <div class="teacher">
+                                <div class="teacher" v-if="item.associate.teacher">
                                     {{item.associate.teacher.name || '无名'}}老师
                                 </div>
                                 <div class="money">¥ {{item.associate.display_price}}元</div>
@@ -74,7 +74,7 @@
                 </div>
 
             </div>
-            <div class="title">
+            <div class="title" v-if="svip_course && svip_course.businessCourses && svip_course.businessCourses.length">
                 <img src="https://cdn.ibrand.cc/fourteen.png">
             </div>
             <div class="content red" v-if="svip_course && svip_course.businessCourses && svip_course.businessCourses.length">
@@ -108,7 +108,7 @@
                                 </div>
                             </div>
                             <div class="teach-box">
-                                <div class="teacher">
+                                <div class="teacher" v-if="item.associate.teacher">
                                     {{item.associate.teacher.name || '无名'}}老师
                                 </div>
                                 <div class="money">¥ {{item.associate.display_price}}元</div>
@@ -118,7 +118,7 @@
                 </div>
 
             </div>
-            <div class="title">
+            <div class="title" v-if="svip_course && svip_course.bigdataCourses && svip_course.bigdataCourses.length">
                 <img src="https://cdn.ibrand.cc/svip_six.png">
             </div>
             <div class="content yellow" v-if="svip_course && svip_course.bigdataCourses && svip_course.bigdataCourses.length">
@@ -152,7 +152,7 @@
                                 </div>
                             </div>
                             <div class="teach-box">
-                                <div class="teacher">
+                                <div class="teacher" v-if="item.associate.teacher">
                                     {{item.associate.teacher.name || '无名'}}老师
                                 </div>
                                 <div class="money">¥ {{item.associate.display_price}}元</div>
@@ -162,7 +162,7 @@
                 </div>
 
             </div>
-            <div class="title">
+            <div class="title" v-if="svip_course && svip_course.biCourses && svip_course.biCourses.length">
                 <img src="https://cdn.ibrand.cc/svip_ten.png">
             </div>
             <div class="content green" v-if="svip_course && svip_course.biCourses && svip_course.biCourses.length">
@@ -196,7 +196,7 @@
                                 </div>
                             </div>
                             <div class="teach-box">
-                                <div class="teacher">
+                                <div class="teacher" v-if="item.associate.teacher">
                                     {{item.associate.teacher.name || '无名'}}老师
                                 </div>
                                 <div class="money">¥ {{item.associate.display_price}}元</div>
@@ -227,7 +227,7 @@
                                 </div>
                             </div>
                             <div class="teach-box">
-                                <div class="teacher">
+                                <div class="teacher" v-if="item.associate.teacher">
                                     {{item.associate.teacher.name || '无名'}}老师
                                 </div>
                                 <div class="money">¥ {{item.associate.display_price}}元</div>
