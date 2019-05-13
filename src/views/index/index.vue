@@ -38,17 +38,144 @@
                 </div>
             </div>
             <!--课程分类的菜单-->
-            <div class="menu-box">
+            <!--<div class="menu-box">
                 <div class="scroll-view">
-                    <div class="pa-li" v-for="(item,index) in homedata.categories" @click="jump('index-classification',item.id)">
+                    <div class="pa-li" @click="jump('index-classification',36)">
                         <div class="li-item">
                             <div class="top-info">
-                                {{item.short_name}}
+                                数据
                             </div>
                             <div class="bottom-info">
-                                {{item.name}}
+                                大数据
                             </div>
                         </div>
+                    </div>
+                    <div class="pa-li" @click="jump('index-classification',37)">
+                        <div class="li-item">
+                            <div class="top-info logo-1">
+                                分析
+                            </div>
+                            <div class="bottom-info">
+                                数据分析
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pa-li" @click="jump('index-classification',38)">
+                        <div class="li-item">
+                            <div class="top-info logo-2">
+                                挖掘
+                            </div>
+                            <div class="bottom-info">
+                                数据挖掘
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pa-li" @click="jump('index-classification',43)">
+                        <div class="li-item">
+                            <div class="top-info logo-3">
+                                库
+                            </div>
+                            <div class="bottom-info">
+                                数据库
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pa-li" @click="jump('index-classification',39)">
+                        <div class="li-item">
+                            <div class="top-info logo-4">
+                                学习
+                            </div>
+                            <div class="bottom-info">
+                                机器学习
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pa-li" @click="jump('index-classification',40)">
+                        <div class="li-item">
+                            <div class="top-info logo-5">
+                                智能
+                            </div>
+                            <div class="bottom-info">
+                                人工智能
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pa-li" @click="jump('index-classification',72)">
+                        <div class="li-item">
+                            <div class="top-info logo-6">
+                                职业
+                            </div>
+                            <div class="bottom-info">
+                                职业发展
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+            <!--分类菜单-->
+            <div class="classify-menu">
+                <div class="classify-item" @click="jump('index-classification',36)">
+                    <div class="top-info">
+                        数据
+                    </div>
+                    <div class="bottom-info">
+                        大数据
+                    </div>
+                </div>
+                <div class="classify-item" @click="jump('index-classification',37)">
+                    <div class="top-info logo-1">
+                        分析
+                    </div>
+                    <div class="bottom-info">
+                        数据分析
+                    </div>
+                </div>
+                <div class="classify-item" @click="jump('index-classification',38)">
+                    <div class="top-info logo-2">
+                        挖掘
+                    </div>
+                    <div class="bottom-info">
+                        数据挖掘
+                    </div>
+                </div>
+                <div class="classify-item" @click="jump('index-classification',43)">
+                    <div class="top-info logo-3">
+                        库
+                    </div>
+                    <div class="bottom-info">
+                        数据库
+                    </div>
+                </div>
+                <div class="classify-item" @click="jump('index-classification',39)">
+                    <div class="top-info logo-4">
+                        学习
+                    </div>
+                    <div class="bottom-info">
+                        机器学习
+                    </div>
+                </div>
+                <div class="classify-item" @click="jump('index-classification',40)">
+                    <div class="top-info logo-5">
+                        智能
+                    </div>
+                    <div class="bottom-info">
+                        人工智能
+                    </div>
+                </div>
+                <div class="classify-item" @click="jump('index-classification',72)">
+                    <div class="top-info logo-6">
+                        职业
+                    </div>
+                    <div class="bottom-info">
+                        职业发展
+                    </div>
+                </div>
+                <div class="classify-item" @click="jump('index-classification',41)">
+                    <div class="top-info logo-7">
+                        商业
+                    </div>
+                    <div class="bottom-info">
+                        商业智能BI
                     </div>
                 </div>
             </div>
@@ -425,7 +552,7 @@
                             width: 44px;
                             height: 44px;
                             border-radius: 50%;
-                            background-color:#4F4F4F;
+                            background-color:#887974;
                             line-height: 44px;
                             text-align: center;
                             margin-bottom: 10px;
@@ -434,6 +561,24 @@
                             overflow: hidden;
                             white-space: nowrap;
                             text-overflow: ellipsis;
+                            &.logo-1{
+                                background-color:#00b1d1;
+                            }
+                            &.logo-2{
+                                  background-color:#f5a1c7;
+                              }
+                            &.logo-3{
+                                background-color:#68a8d4;
+                            }
+                            &.logo-4{
+                                background-color:#7ec9ce;
+                            }
+                            &.logo-5{
+                                background-color:#f599a0;
+                            }
+                            &.logo-6{
+                                background-color:#c599d7;
+                            }
                         }
                         .bottom-info{
                             color: #909090;
@@ -441,6 +586,61 @@
                             line-height: 20px;
                         }
                     }
+                }
+
+            }
+        }
+        .classify-menu{
+            background: #fff;
+            padding-top: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            .classify-item{
+                padding-bottom:15px;
+                width: 25%;
+                text-align: center;
+                .top-info{
+                    display: inline-block;
+                    width: 44px;
+                    height: 44px;
+                    border-radius: 50%;
+                    background-color:#887974;
+                    line-height: 44px;
+                    text-align: center;
+                    margin-bottom: 10px;
+                    color: #FFFFFF;
+                    box-sizing: border-box;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    &.logo-1{
+                        background-color:#00b1d1;
+                    }
+                    &.logo-2{
+                        background-color:#f5a1c7;
+                    }
+                    &.logo-3{
+                        background-color:#68a8d4;
+                    }
+                    &.logo-4{
+                        background-color:#7ec9ce;
+                    }
+                    &.logo-5{
+                        background-color:#f599a0;
+                    }
+                    &.logo-6{
+                        background-color:#c599d7;
+                    }
+                    &.logo-7{
+                        background-color:#33b4ad;
+                    }
+                }
+                .bottom-info{
+                    color: #909090;
+                    font-size: 14px;
+                    line-height: 20px;
                 }
 
             }
