@@ -44,8 +44,7 @@ export default [
         component: resolve => require(['./mycourse.vue'],resolve),
         meta :{
             title:'我的课程',
-            depth:10,
-            authorization: true
+            depth:10
         }
     },
     {

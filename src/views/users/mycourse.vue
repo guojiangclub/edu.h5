@@ -1,72 +1,87 @@
 <template>
     <div id="my_course">
-        <div class="navbar mx-1px-bottom">
+        <div v-if="token">
+            <div class="navbar mx-1px-bottom">
                 <div  class="navbar-item" :class="activeIndex == 0 ? 'activity' : ''" @click="tabClick(0,$event)">
                     <div class="navbar-title">学习课程</div>
                 </div>
                 <div  class="navbar-item" :class="activeIndex == 1 ? 'activity' : ''" @click="tabClick(1,$event)">
                     <div class="navbar-title">通知公告</div>
                 </div>
-            <div class="navbar-slider" :style="{width:width + 'px', transform: 'translateX('+ sliderOffset +'px)'}"></div>
+                <div class="navbar-slider" :style="{width:width + 'px', transform: 'translateX('+ sliderOffset +'px)'}"></div>
+            </div>
+            <div class="ul-content">
+                <div v-if="activeIndex == 0">
+                    <div v-if="dataList && dataList.length">
+                        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
+                            <van-cell v-for="(item,index) in dataList" :key="index">
+                                <div class="li-list">
+                                    <div class="item" @click="jumpDetail(item.course.id)">
+                                        <div class="left-info">
+                                            <img :src="item.course.picture">
+                                        </div>
+                                        <div class="right-info">
+                                            <div class="name">{{item.course.title}}</div>
+                                            <div class="tiem-box">
+                                                <div class="time">
+                                                    <span class="iconfont icon-keshi"></span>
+                                                    {{item.course.lesson_count}}课时
+                                                </div>
+                                                <div class="many">
+                                                    {{item.course.student_count}}人学习
+                                                </div>
+                                            </div>
+                                            <div class="teach-box">
+                                                <div class="teacher" v-if="item.course.teacher">
+                                                    <span class="iconfont icon-laoshi"></span>
+                                                    {{item.course.teacher.name || '无名'}}老师
+                                                </div>
+                                                <div class="money">已加入</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </van-cell>
+                        </van-list>
+                    </div>
+                    <div v-else class="no-data">暂无数据</div>
+                </div>
+                <div class="li-list" v-if="activeIndex == 1">
+                    <div v-if="announcement && announcement.length">
+                        <van-list v-model="anloading" :finished="anfinished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
+                            <van-cell v-for="(item,index) in announcement" :key="index">
+                                <div class="notice-item">
+                                    <div class="content">
+                                        <div v-html="item.content"></div>
+                                    </div>
+                                    <div class="teacher-time mx-1px-bottom">
+                                        <div class="teacher" v-if="item.course.teacher">
+                                            <span class="iconfont icon-laoshi"></span>
+                                            {{item.course.teacher.name || '无名'}}老师
+                                        </div>
+                                        <div class="time">{{item.created_at}}</div>
+                                    </div>
+                                    <div class="from">来自：{{item.course.title}}</div>
+                                </div>
+                            </van-cell>
+                        </van-list>
+                    </div>
+                    <div v-else class="no-data">暂无数据</div>
+                </div>
+            </div>
         </div>
-        <div class="ul-content">
-            <div v-if="activeIndex == 0">
-                <div v-if="dataList && dataList.length">
-                    <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
-                        <van-cell v-for="(item,index) in dataList" :key="index">
-                            <div class="li-list">
-                                <div class="item" @click="jumpDetail(item.course.id)">
-                                    <div class="left-info">
-                                        <img :src="item.course.picture">
-                                    </div>
-                                    <div class="right-info">
-                                        <div class="name">{{item.course.title}}</div>
-                                        <div class="tiem-box">
-                                            <div class="time">
-                                                <span class="iconfont icon-keshi"></span>
-                                                {{item.course.lesson_count}}课时
-                                            </div>
-                                            <div class="many">
-                                                {{item.course.student_count}}人学习
-                                            </div>
-                                        </div>
-                                        <div class="teach-box">
-                                            <div class="teacher" v-if="item.course.teacher">
-                                                <span class="iconfont icon-laoshi"></span>
-                                                {{item.course.teacher.name || '无名'}}老师
-                                            </div>
-                                            <div class="money">已加入</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </van-cell>
-                    </van-list>
-                </div>
-                <div v-else class="no-data">暂无数据</div>
+        <div class="un-login" v-else>
+            <div class="avatar">
+                <img src="https://ibrand-miniprogram.oss-cn-hangzhou.aliyuncs.com/%E5%B0%8F%E7%A8%8B%E5%BA%8F/defaultAvatar.png" alt="">
             </div>
-            <div class="li-list" v-if="activeIndex == 1">
-                <div v-if="announcement && announcement.length">
-                    <van-list v-model="anloading" :finished="anfinished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
-                        <van-cell v-for="(item,index) in announcement" :key="index">
-                            <div class="notice-item">
-                                <div class="content">
-                                    <div v-html="item.content"></div>
-                                </div>
-                                <div class="teacher-time mx-1px-bottom">
-                                    <div class="teacher" v-if="item.course.teacher">
-                                        <span class="iconfont icon-laoshi"></span>
-                                        {{item.course.teacher.name || '无名'}}老师
-                                    </div>
-                                    <div class="time">{{item.created_at}}</div>
-                                </div>
-                                <div class="from">来自：{{item.course.title}}</div>
-                            </div>
-                        </van-cell>
-                    </van-list>
-                </div>
-                <div v-else class="no-data">暂无数据</div>
+            <div class="title">
+                未登录
             </div>
+            <div class="topic">点击立即登录查看我的课程</div>
+            <div class="btn-box" @click="jumpLogin()">
+                立即登录
+            </div>
+
         </div>
         <!--tabbar-->
         <van-tabbar v-model="active" active-color="#004E9D" @change="jumpTab">
@@ -126,26 +141,21 @@
                     normal: 'https://cdn.ibrand.cc/icon_course.png',
                     active: 'https://cdn.ibrand.cc/icon_course_HL.png'
                 },
+                token:''
             }
         },
         created(){
             let  oauth = Cache.get(cache_keys.token);
            if(oauth && oauth.access_token){
+               this.token  = oauth.access_token;
                let data = {
                    page:1
                }
                this.$store.dispatch('queryMycourseList',data)
                EventBus.$on('myCourseList',this.getMycourseList)
                EventBus.$on('mynoteList',this.getMynoteList)
-           } else {
-               let source = this.$route.path;
-               this.$router.push({
-                   name:'users-register',
-                   query:{
-                       source:source
-                   }
-               })
            }
+
 
         },
         beforeDestroy(){
@@ -257,6 +267,16 @@
                 this.more = current_page < total_pages;
                 this.init = true;
                 this.loading = false;
+            },
+//            跳到登录页面去
+            jumpLogin(){
+                let source = this.$route.path;
+                this.$router.push({
+                    name:'users-register',
+                    query:{
+                        source:source
+                    }
+                })
             }
 
         }
@@ -274,6 +294,41 @@
         overflow: auto;
         background-color: #f3f3f3;
         padding-bottom: 60px;
+        .un-login{
+            .avatar{
+                margin: 56px auto 11px auto;
+                width:80px;
+                height: 80px;
+                img{
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+            .title{
+                text-align: center;
+                color: #999999;
+                font-size: 16px;
+                line-height: 22px;
+                padding-bottom: 8px;
+            }
+            .topic{
+                text-align: center;
+                color: #999999;
+                font-size: 12px;
+                line-height: 14px;
+                padding-bottom: 39px;
+            }
+            .btn-box{
+                height: 50px;
+                line-height: 50px;
+                color: #ffffff;
+                text-align: center;
+                margin:0 40px;
+                font-size: 16px;
+                background-color:#004E9D;
+                border-radius:4px;
+            }
+        }
         .navbar {
             position: fixed;
             top: 0px;
