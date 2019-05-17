@@ -43,7 +43,7 @@ export const queryLoginNew = function ({commit,state},data) {
             app: 'edu'
         }).then(res =>{
         res = res.data;
-        if(res.data.access_token){
+        if(res.data && res.data.access_token){
             EventBus.$emit('loginDate',res);
         } else {
             EventBus.$dialog.alert({message: '验证码不正确'});
