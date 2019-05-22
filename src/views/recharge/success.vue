@@ -6,7 +6,7 @@
                @click-left="onClickLeft"
                v-if="is_navbar"
            />
-           <div v-if="init">
+           <div v-if="init && isSuccess">
                <div class="header">
                    <div class="title">支付成功</div>
                    <!--<div class="topic">本次支付使用20积分，使用10元余额</div>-->
@@ -45,10 +45,14 @@
                    </div>
                </div>
            </div>
-        <div v-else>
+        <div v-if="init == false && isSuccess == true">
             <div class="header">
                 <div class="title">支付失败</div>
-                <!--<div class="topic">本次支付使用20积分，使用10元余额</div>-->
+                <div class="topic">如已支付成功，请联系客服</div>
+                <div class="btn-box">
+                    <div class="study btn"  @click="jumpDeatil(paid_info.order.course.id)" v-if="paid_info.order">查看课程</div>
+                    <div class="home btn" @click="payAgain()" v-if="pay_again">重新支付</div>
+                </div>
             </div>
         </div>
 
@@ -71,7 +75,9 @@
                 order_no:'',
                 paid_info:'',
                 init:false,
+                isSuccess:false,
                 is_navbar:true,
+                pay_again:true
             }
         },
         created(){
@@ -86,10 +92,10 @@
                     charge_id:charge_id || ''
                 }
                 this.$store.dispatch('queryOrderPaid',data)
-                EventBus.$on('paidOrder',this.getOrderInfo);
             } else {
                 this.$dialog.alert('非法进入')
             }
+            EventBus.$on('paidOrder',this.getOrderInfo);
         },
         beforeDestroy(){
             EventBus.$off('paidOrder')
@@ -115,6 +121,11 @@
                 if(res.data.order.status == 'paid'){
                     this.paid_info = res.data;
                     this.init = true;
+                    this.isSuccess = true
+                } else {
+                    this.paid_info = res.data;
+                    this.init = false;
+                    this.isSuccess = true
                 }
 
             },
@@ -130,6 +141,22 @@
                 this.$router.push({
                     name:'index-index'
                 })
+            },
+            //点击重新支付按钮
+            payAgain(){
+                let order_no = this.$route.query.order_no;
+                let charge_id = this.$route.query.charge_id;
+                if(order_no){
+                    let data = {
+                        order_no:order_no,
+                        charge_id:charge_id || ''
+                    }
+                    this.$store.dispatch('queryOrderPaid',data);
+                    this.pay_again = false;
+                } else {
+                    this.$dialog.alert('非法进入')
+                }
+
             }
 
         }
