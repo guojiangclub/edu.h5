@@ -16,7 +16,7 @@ export default [
         name:'about',
         component: resolve => require(['./about.vue'],resolve),
         meta :{
-            title:'关于我们',
+            title:'技术支持',
             depth:40
         }
     },

@@ -62,12 +62,22 @@ let router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+    let title = to.meta.title || Config.doc_title;
+    let subTitle = '';
+    let image = '';
+    let systemInfo = Cache.get(cache_keys.system_info);
+    if (systemInfo && systemInfo.wechat_share) {
+        title = systemInfo.wechat_share.wechat_share_name;
+        subTitle = systemInfo.wechat_share.wechat_share_title;
+        image = systemInfo.wechat_share.wechat_share_img
+    }
+
     var agent_code = to.query.rf;
     if (agent_code) {
         Cache.set(cache_keys.agent_code, agent_code, 0)
     }
 
-    let title = to.meta.title || Config.doc_title;
+
     setPageTitle(title);
     var link = window.location.origin + '/#' + to.path;
     var info = Cache.get(cache_keys.info);
@@ -81,8 +91,9 @@ router.beforeEach((to, from, next) => {
     console.log(link);
     wechat.update_share({
         title:title,
-        desc:title,
-        link: link
+        desc:subTitle,
+        link: link,
+        imgUrl: image
     });
     global = global || globalConfigs.GLOBAL.ea
     if (to) {
@@ -155,7 +166,10 @@ router.afterEach(() => {
 window.EventBus = new Vue();
 
 
+
+
 if (process.env.NODE_ENV == 'production') {
+
 
 
     global = global || globalConfigs.GLOBAL.ea
@@ -190,18 +204,37 @@ if (process.env.NODE_ENV == 'production') {
             render: h => h(App),
             store: store
         })*/
+        EventBus.$http.get(EventBus.$Config.baseUrl + 'api/edu/system/init')
+            .then(res => {
+                res = res.data;
+                if (res.status) {
+                    Cache.set(cache_keys.system_info, res.data, 0, null)
+                }
+                wechat.wechat_getInfo(EventBus.$Config.baseUrl+"api/wechat/jssdkconfig",{url: encodeURIComponent(location.href.replace(/#.*$/, ""))},function(data){
+                    new Vue({
+                        el: '#app',
+                        store,
+                        router: router,
+                        render: h => h(App)
+                    });
+                    EventBus.wxShare=data;
+                    wechat.wechat_init(data);
+                });
+            }, err => {
+                wechat.wechat_getInfo(EventBus.$Config.baseUrl+"api/wechat/jssdkconfig",{url: encodeURIComponent(location.href.replace(/#.*$/, ""))},function(data){
+                    new Vue({
+                        el: '#app',
+                        store,
+                        router: router,
+                        render: h => h(App)
+                    });
+                    EventBus.wxShare=data;
+                    wechat.wechat_init(data);
+                });
+            })
 
 
-        wechat.wechat_getInfo(EventBus.$Config.baseUrl+"api/wechat/jssdkconfig",{url: encodeURIComponent(location.href.replace(/#.*$/, ""))},function(data){
-            new Vue({
-                el: '#app',
-                store,
-                router: router,
-                render: h => h(App)
-            });
-            EventBus.wxShare=data;
-            wechat.wechat_init(data);
-        });
+
 
     })
 } else {

@@ -116,7 +116,7 @@
                     </div>
                 </div>
             </div>
-        <div class="ibrand" bindtap="jumpWeb">
+        <div class="ibrand" @click="jumpWeb">
             <div class="iconfont icon-dibu logo"></div>
         </div>
         <!--tabbar-->
@@ -183,6 +183,11 @@
 
         },
         methods:{
+            jumpWeb() {
+                this.$router.push({
+                    name:'about'
+                })
+            },
             jumpTab(index){
                 if(index == 3){
                     return
@@ -266,6 +271,7 @@
         background-color:#F3F3F3;
         padding-bottom: 70px;
         .ibrand{
+            color: #9b9b9b;
             text-align: center;
         }
         .top-bg {

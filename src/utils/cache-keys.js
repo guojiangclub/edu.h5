@@ -7,6 +7,7 @@ export default function (cache) {
         edu_detail: 'edu_detail', //课程支付储存
         agent_code: 'agent_code',//rf
         order_info: 'order_info',
-        old_order_info:'old_order_info'
+        old_order_info:'old_order_info',
+        system_info: 'system_info'
     }
 }

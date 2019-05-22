@@ -639,8 +639,8 @@
                 }
                 if(env.isWechat){
                     this.is_navbar = false;
-                    setPageTitle(res.data.title)
                 }
+                setPageTitle(res.data.title, res.data.subtitle, res.data.picture)
             }
 
         }

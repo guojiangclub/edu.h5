@@ -48,9 +48,16 @@ export function objToArr(obj) {
 
     return arr;
 }
-export function setPageTitle(title) {
+export function setPageTitle(title, subTitle, image) {
     document.title = title;
-
+    console.log(title, subTitle, image);
+    let systemInfo = Cache.get(cache_keys.system_info);
+    if (systemInfo && systemInfo.wechat_share) {
+        title = title ||  systemInfo.wechat_share.wechat_share_name;
+        subTitle = subTitle || systemInfo.wechat_share.wechat_share_title;
+        image = image ||  systemInfo.wechat_share.wechat_share_img
+    }
+    console.log(systemInfo);
     if (Config.isIphone && Config.isWechat) {
         var body = document.getElementsByTagName('body')[0];
         var iframe = document.createElement('iframe');
@@ -75,9 +82,10 @@ export function setPageTitle(title) {
 	}
 
     wechat.update_share({
-        title:title,
-        desc:title,
-        link: link
+        title:title || '',
+        desc:subTitle ||  '',
+        link: link,
+        imgUrl: image || ''
     });
 
 }
