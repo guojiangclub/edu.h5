@@ -103,7 +103,7 @@
                                 <span class="iconfont icon-shipinbofang"></span>
                                 课时{{item.number}}： {{item.title}}
                             </div>
-                            <div class="free-btn" v-if="item.free && !detail_meta.isMerber">免费试看</div>
+                            <div class="free-btn" v-if="item.free && !detail_meta.isMember">免费试看</div>
                             <div class="the-length" v-else>{{item.length_min}}</div>
                         </div>
                     </div>
@@ -111,7 +111,7 @@
             </div>
             <!--当activeindex== 3 时 通知公告-->
             <div class="li-content" v-if="activeIndex == 2">
-                <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate" v-if="announcement.length">
+                <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate" v-if="announcement.length && detail_meta.isMember">
                     <van-cell v-for="(item,index) in announcement" :key="index">
                         <div class="notice-item">
                             <div class="content">
@@ -128,7 +128,8 @@
                         </div>
                     </van-cell>
                 </van-list>
-                <div class="only-see" v-if="!announcement.length">只有课程学员才能查看课程公告</div>
+                <div class="only-see" v-if="announcement.length == 0 && detail_meta.isMember">暂无公告数据</div>
+                <div class="only-see" v-if="detail_meta.isMember == false">只有课程学员才能查看公告</div>
             </div>
 
         </div>
