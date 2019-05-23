@@ -248,7 +248,7 @@ export const queryTakecoupon = function ({commit,state},data) {
             EventBus.$emit('reciveCoupon',res);
 
         } else {
-            EventBus.$dialog.alert({message: '请求失败'});
+            EventBus.$dialog.alert({message: res.message || '请求失败'});
         }
 
         EventBus.$toast.clear()
@@ -312,7 +312,7 @@ export const queryUpateInfo = function ({commit,state},data) {
             EventBus.$emit('updateInfo',res);
 
         } else {
-            EventBus.$dialog.alert({message: '请求失败'});
+            EventBus.$dialog.alert({message: res.message || '请求失败'});
         }
 
         EventBus.$toast.clear()
@@ -343,7 +343,7 @@ export const querySvip = function ({commit,state}) {
             if (res.status){
                 EventBus.$emit('svipPlans',res)
             }else {
-                EventBus.$dialog.alert({message: '请求失败'});
+                EventBus.$dialog.alert({message: res.message || '请求失败'});
             }
             EventBus.$toast.clear()
         },err=>{
@@ -365,7 +365,7 @@ export const querySvipCourse = function ({commit,state}) {
             if (res.status){
                 EventBus.$emit('svipCourse',res)
             }else {
-                EventBus.$dialog.alert({message: '请求失败'});
+                EventBus.$dialog.alert({message: res.message || '请求失败'});
             }
             EventBus.$toast.clear()
         },err=>{
@@ -398,7 +398,7 @@ export const queryNotice = function ({commit,state},data) {
                     EventBus.$emit('noticeData',res)
                 }
             }else {
-                EventBus.$dialog.alert({message: '请求失败'});
+                EventBus.$dialog.alert({message: res.message || '请求失败'});
             }
             EventBus.$toast.clear()
         },err=>{
@@ -426,7 +426,7 @@ export const queryLessons = function ({commit,state},data) {
             if (res.status){
                 EventBus.$emit('lessonsDate',res)
             }else {
-                EventBus.$dialog.alert({message: '请求失败'});
+                EventBus.$dialog.alert({message: res.message ||  '请求失败'});
             }
             EventBus.$toast.clear()
         },err=>{

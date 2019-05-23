@@ -23,7 +23,7 @@ export const queryCouponList = function ({commit,state},data) {
             if(res.meta && res.meta.pagination){
                 EventBus.$emit('couponList',res);
             } else {
-                EventBus.$dialog.alert({message: '请求失败'});
+                EventBus.$dialog.alert({message: res.message || '请求失败'});
             }
         } else {
             EventBus.$dialog.alert({message: '请求失败'});

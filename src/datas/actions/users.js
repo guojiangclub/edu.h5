@@ -80,7 +80,7 @@ export const queryMycourseList = function ({commit,state},data) {
                     EventBus.$emit('myCourseList',res)
                 }
             }else {
-                EventBus.$dialog.alert({message: '请求失败'});
+                EventBus.$dialog.alert({message: res.message || '请求失败'});
             }
             EventBus.$toast.clear()
         },err=>{
@@ -113,7 +113,7 @@ export const queryMynoteList = function ({commit,state},data) {
                     EventBus.$emit('mynoteList',res)
                 }
             }else {
-                EventBus.$dialog.alert({message: '请求失败'});
+                EventBus.$dialog.alert({message: res.message || '请求失败'});
             }
             EventBus.$toast.clear()
         },err=>{
@@ -141,7 +141,7 @@ export const queryMyinfo = function ({commit,state}) {
             if (res.status){
                 EventBus.$emit('myUserInfo',res)
             }else {
-                EventBus.$dialog.alert({message: '请求失败'});
+                EventBus.$dialog.alert({message: res.message || '请求失败'});
             }
             EventBus.$toast.clear()
         },err=>{
@@ -169,7 +169,7 @@ export const queryWxOpenId = function ({commit,state},data) {
             if (res.status){
                 EventBus.$emit('redirectUrl',res)
             }else {
-                EventBus.$dialog.alert({message: '请求失败'});
+                EventBus.$dialog.alert({message: res.message || '请求失败'});
             }
             EventBus.$toast.clear()
         },err=>{
@@ -194,7 +194,7 @@ export const queryquicklogin = function ({commit,state},data) {
             if (res.status){
                 EventBus.$emit('quickLoginData',res)
             }else {
-                EventBus.$dialog.alert({message: '请求失败'});
+                EventBus.$dialog.alert({message: res.message || '请求失败'});
             }
             EventBus.$toast.clear()
         },err=>{
@@ -254,7 +254,7 @@ export const queryUpdatemobile = function ({commit,state},data) {
             if (res.status){
                 EventBus.$emit('updateMobileData',res)
             }else {
-                EventBus.$dialog.alert({message: '请求失败'});
+                EventBus.$dialog.alert({message: res.message || '请求失败'});
             }
             EventBus.$toast.clear()
         },err=>{
@@ -278,7 +278,7 @@ export const getAboutInfo = function ({commit, state}) {
             if (res.status){
                 EventBus.$emit('aboutInfo',res.data)
             }else {
-                EventBus.$dialog.alert({message: '请求失败'});
+                EventBus.$dialog.alert({message: res.message || '请求失败'});
             }
             EventBus.$toast.clear()
         },err=>{
