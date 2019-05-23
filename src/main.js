@@ -149,8 +149,9 @@ router.beforeEach((to, from, next) => {
     // }
     // window.scrollTo(0, 0);
 
+    console.log('这个是什么', to, to.path);
     if (to.meta.authorization) {
-        var target = {name: to.meta.login || 'users-register', query: {source: to.path}};
+        var target = {name: to.meta.login || 'users-register', query: {source: to.fullPath}};
         var oauth = Cache.get(cache_keys.token);
         oauth ? next() : next(target);
     } else {
