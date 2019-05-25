@@ -797,6 +797,9 @@
         }
         .tab-content {
             background-color: #FFFFFF;
+            a {
+                color: #008cee;
+            }
             .li-content {
                 .title {
                     padding: 15px;
@@ -862,6 +865,9 @@
                 .course-to{
                     .content-to{
                         padding: 0 15px;
+                    }
+                    ul {
+                        padding-left: 15px;
                     }
                 }
                 .item-list {
