@@ -220,8 +220,9 @@
             },
             //处理charge数据接口
             getCharge(res){
-                if(res.data.redirectUrl){
-                    window.location.href = res.data.redirectUrl;
+                if (res.data.type == 'charge') {
+                    if(res.data.redirectUrl){
+                        window.location.href = res.data.redirectUrl;
                         Cache.remove(cache_keys.order_info);
                         Cache.remove(cache_keys.old_order_info);
                     } else {
@@ -229,6 +230,18 @@
                             message:res.message || '发起支付失败'
                         })
                     }
+                } else if (res.data.type == 'paid'){
+                    this.$router.replace({
+                        name:'recharge-success',
+                        query:{
+                           order_no:this.info.order.sn
+                        }
+                    })
+                } else {
+                    this.$dialog.alert({
+                        message:res.message || '发起支付失败'
+                    })
+                }
 
             },
             //去付款点击的事件
@@ -251,7 +264,8 @@
                         extra:{
                             successUrl:origin + pathname + '#'+ '/success?order_no='+this.info.order.sn,
                             failUrl:origin + pathname + '#'+ '/success?order_no='+this.info.order.sn
-                        }
+                        },
+                        use_vip:this.user_vip
                     }
                     this.$store.dispatch('queryOrderChare',data)
                 } else {

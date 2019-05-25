@@ -15,7 +15,8 @@ export const queryOrderChare = function ({commit,state},data) {
             coupon_id:data.coupon_id,
             channel:data.channel,
             note:data.note,
-            extra:data.extra
+            extra:data.extra,
+            use_vip:data.use_vip
         },{
             headers:{
                 Authorization: oauth.access_token
