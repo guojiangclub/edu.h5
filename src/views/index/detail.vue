@@ -620,10 +620,10 @@
             //获取课程详情数据
             getDetail(res){
                 let coupons = [];
-                if(this.detail.vipMember){
-                    let value_vip = this.detail.vipMember.plan.actions.course_discount_percentage;
-                    var s_money = this.detail.course.price;
-                    var off_money = s_money * [(100 - value_vip) /100];
+                if(res.meta && res.meta.vipMember){
+                    let value_vip = res.meta.vipMember.plan.actions.course_discount_percentage;
+                    var s_money = res.data.price;
+                    var off_money = s_money * [(value_vip) /100];
                     this.svipPrice =(off_money/100).toFixed(2);
                 }
                 if(res.meta.coupons && res.meta.coupons.length){

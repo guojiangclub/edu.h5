@@ -107,7 +107,7 @@
                    应付：<span>¥ {{amount}}</span>
                </div>
                <div class="money" v-else>
-                   应付：<span v-if="info.course">¥ {{info.course.display_price}}</span>
+                   应付：<span v-if="info.course">¥ {{info.order.display_total}}</span>
                </div>
                <div class="go-pay" @click="goPay">
                    去付款
@@ -173,7 +173,7 @@
             var bestCouponID = order_info.bestCouponID;
             if(bestCouponID){
                 var coupons = order_info.coupons;
-                var old_money = order_info.course.price;
+                var old_money = order_info.order.total;
                 var new_money='';
                 //如果有默认最优 优惠圈id ，选出这张优惠券
                 coupons.forEach((val)=>{
@@ -192,7 +192,7 @@
             }
             //完善信息
             var userDetail = order_info.userDetails;
-            if (userDetail) {
+            if (userDetail && userDetail.name) {
                 this.is_perfect=true
             } else {
                 this.is_perfect=false
@@ -356,7 +356,7 @@
                         }
                         if(this.select_coupon){
                             let new_money = '';
-                            let old_money = this.info.course.price;
+                            let old_money = this.info.order.total;
                             this.countMoney(new_money,old_money);
                         }
                     }
