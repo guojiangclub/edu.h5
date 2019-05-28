@@ -869,6 +869,9 @@
                     ul {
                         padding-left: 15px;
                     }
+                    table{
+                        width: 100%!important;
+                    }
                 }
                 .item-list {
                     .topic {
