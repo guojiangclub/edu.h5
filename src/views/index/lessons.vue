@@ -27,8 +27,8 @@
                 <div class="topic mx-1px-bottom" v-if="item.item_type == 'chapter'">章节{{item.number}}：{{item.title}}</div>
                 <div class="course-list" @click="palyStudy(item.id)" :class="item.id == id ? 'activeitem' : ''">
                     <div class="item mx-1px-bottom" v-if="item.item_type == 'lesson'">
+                        <span class="iconfont icon-shipinbofang"></span>
                         <div class="txt">
-                            <span class="iconfont icon-shipinbofang"></span>
                             课时{{item.number}}： {{item.title}}
                         </div>
                         <div class="the-length">{{item.length_min}}</div>
@@ -308,6 +308,9 @@
                     line-height: 50px;
                     color: #202020;
                     font-size: 14px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
                 }
                 .course-list {
                     .item {
@@ -319,16 +322,16 @@
                         display: flex;
                         align-items: center;
                         justify-content: space-between;
+                        span {
+                            display: inline-block;
+                            padding-right: 10px;
+
+                        }
                         .txt {
                             flex: 1;
                             overflow: hidden;
                             white-space: nowrap;
                             text-overflow: ellipsis;
-                            span {
-                                display: inline-block;
-                                padding-right: 10px;
-
-                            }
 
                         }
                         .the-length{
