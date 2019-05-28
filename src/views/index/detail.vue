@@ -99,8 +99,8 @@
                     <div class="topic mx-1px-bottom" v-if="item.item_type == 'chapter'">章节{{item.number}}：{{item.title}}</div>
                     <div class="course-list">
                         <div class="item mx-1px-bottom" v-if="item.item_type == 'lesson'" @click="jumpLesson(item.id,item.free)">
+                            <span class="iconfont icon-shipinbofang"></span>
                             <div class="txt">
-                                <span class="iconfont icon-shipinbofang"></span>
                                 课时{{item.number}}： {{item.title}}
                             </div>
                             <div class="free-btn" v-if="item.free && !detail_meta.isMember">免费试看</div>
@@ -877,6 +877,9 @@
                         line-height: 50px;
                         color: #202020;
                         font-size: 14px;
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
                     }
                     .course-list {
                         .item {
@@ -888,16 +891,16 @@
                             display: flex;
                             align-items: center;
                             justify-content: space-between;
+                            span {
+                                display: inline-block;
+                                padding-right: 10px;
+
+                            }
                             .txt {
                                 flex: 1;
                                 overflow: hidden;
                                 white-space: nowrap;
                                 text-overflow: ellipsis;
-                                span {
-                                    display: inline-block;
-                                    padding-right: 10px;
-
-                                }
 
                             }
                             .the-length{
