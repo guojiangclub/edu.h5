@@ -47,10 +47,11 @@
                        <div class="name">SVIP优惠</div>
                        <div class="txt">优惠 {{svip_price}}元</div>
                        <div class="check">
-                           <van-checkbox v-model="user_vip" checked-color="#004E9D" @change="changeVip"></van-checkbox>
+                           <van-checkbox v-model="user_vip" checked-color="#004E9D" @change="changeVip" :disabled="isDisabled"></van-checkbox>
                        </div>
                    </div>
-                   <div class="introduce mx-1px-bottom" v-if="info && info.isVip">免费购买课程剩余可使用{{info.freeCourseCount}}门</div>
+                   <div class="introduce mx-1px-bottom" v-if="info && info.isVip && info.freeCourseCount > 0">免费购买课程剩余可使用{{info.freeCourseCount}}门</div>
+                   <div class="introduce mx-1px-bottom" v-if="info && info.isVip && info.freeCourseCount <= 0">免费购买课程剩余可使用0门</div>
                   <!-- <div class="infomation" v-if="info.isVip == false">
                        <div class="name">SVIP优惠</div>
                        <div class="txt">勾选加入</div>
@@ -142,7 +143,8 @@
                 coupons:'',
                 bestCouponID:'',
                 buy_svip:false,
-                note:''
+                note:'',
+                isDisabled:false
             }
         },
         created(){
@@ -206,7 +208,8 @@
                 if(order_info.freeCourseCount == 0){
                     var s_money = order_info.course.price;
                     var off_money = s_money * [(100 - value_vip) /100];
-                    this.svip_price = (off_money/100).toFixed(2)
+                    this.svip_price = (off_money/100).toFixed(2);
+                    this.isDisabled = true
                 } else {
                     //如果剩余免费课程
                     this.svip_price = order_info.course.display_price
