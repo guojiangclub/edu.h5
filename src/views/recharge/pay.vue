@@ -205,7 +205,7 @@
                 //折数
                 var value_vip = order_info.vipMember.plan.actions.course_discount_percentage;
                 //如果没有剩余免费课程
-                if(order_info.freeCourseCount == 0){
+                if(order_info.freeCourseCount <= 0){
                     var s_money = order_info.course.price;
                     var off_money = s_money * [(100 - value_vip) /100];
                     this.svip_price = (off_money/100).toFixed(2);

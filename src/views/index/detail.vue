@@ -161,7 +161,7 @@
                         ¥ 0
                     </div>
                     <!-- 非免费课程，已经是 SVIP，同时免费课程使用完，则显示6折后的钱。-->
-                    <div class="money"  v-if="detail.display_price != 0 && detail_meta.isVip == true && detail_meta.freeCourseCount == 0">
+                    <div class="money"  v-if="detail.display_price != 0 && detail_meta.isVip == true && detail_meta.freeCourseCount <= 0">
                         ¥ {{svipPrice}}
                     </div>
                     <div class="unlock">解锁全部课时</div>

@@ -333,12 +333,21 @@
                                 font-size: 12px;
                                 line-height: 14px;
                                 .teacher{
+                                    flex: 1;
+                                    white-space: nowrap;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
                                     span{
                                         font-size: 12px;
                                     }
                                 }
                                 .money{
+                                    flex: 1;
+                                    text-align: right;
                                     color: #FF2741;
+                                    white-space: nowrap;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
                                 }
                             }
                         }
