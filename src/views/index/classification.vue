@@ -324,6 +324,7 @@
                     }
                     .right-info{
                         flex: 1;
+                        overflow: hidden;
                         .name{
                             color: #202020;
                             font-size: 15px;
