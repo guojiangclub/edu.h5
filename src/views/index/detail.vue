@@ -157,7 +157,7 @@
                         <span class="origin">{{detail.display_price}}</span>
                     </div>
                     <!-- 非免费课程，已经是 SVIP，同时免费课程未使用完，则显示0元。原价删除线显示。-->
-                    <div class="money"  v-if="detail.display_price != 0 && detail_meta.isVip == true && detail_meta.freeCourseCount != 0">
+                    <div class="money"  v-if="detail.display_price != 0 && detail_meta.isVip == true && detail_meta.freeCourseCount > 0">
                         ¥ 0
                     </div>
                     <!-- 非免费课程，已经是 SVIP，同时免费课程使用完，则显示6折后的钱。-->
