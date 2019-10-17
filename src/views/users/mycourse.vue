@@ -94,10 +94,10 @@
                 <img :src="props.active ? icon.active : icon.normal" alt="" slot="icon"
                 slot-scope="props">
             </van-tabbar-item>
-            <van-tabbar-item>
+           <!-- <van-tabbar-item>
                 <span>SVIP</span>
                 <img src="https://cdn.ibrand.cc/icon_svip.png" alt="" slot="icon">
-            </van-tabbar-item>
+            </van-tabbar-item>-->
             <van-tabbar-item>
                 <span>个人中心</span>
                 <img src="https://cdn.ibrand.cc/icon_user.png" alt="" slot="icon">
@@ -176,10 +176,6 @@
                         name:'index-index'
                     })
                 } else if(index == 2){
-                    this.$router.push({
-                        name:'index-svip'
-                    })
-                } else if(index == 3){
                     this.$router.push({
                         name:'users-index'
                     })

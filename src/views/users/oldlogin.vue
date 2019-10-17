@@ -8,9 +8,9 @@
         />
         <div class="header">
             <div class="logo">
-                <img src="http://ibrand-miniprogram.oss-cn-hangzhou.aliyuncs.com/18-12-29/45704537.jpg">
+                <img src="https://cdn.ibrand.cc/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20191015170325.jpg">
             </div>
-            <div class="text">最用心的商业智能在线学院</div>
+            <div class="text">最用心的商业智能果酱学院</div>
         </div>
         <div class="content">
             <div class="item mx-1px-bottom">

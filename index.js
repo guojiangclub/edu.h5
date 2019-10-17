@@ -5,7 +5,7 @@
 var globalConfigs = {
 
 	'GLOBAL': {
-		'baseUrl': process.env.NODE_ENV !== '"production"' ? '"https://swoole-hellobi-beta-admin.ibrand.cc/"' : '"{!API_URL}"', // 运行时自动替换变量
+		'baseUrl': process.env.NODE_ENV !== '"production"' ? '"https://guojiang-xueyuan-demo.ibrand.cc/"' : '"{!API_URL}"', // 运行时自动替换变量
         'ea': {
             'analytics':{
                 'accounts':{

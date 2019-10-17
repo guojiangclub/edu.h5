@@ -18,9 +18,9 @@
                 </div>
             </div>
             <!--svip的广告图-->
-            <div class="svip-box" @click="jumpLocation(homedata.svipBanner[0].link)">
+            <!--<div class="svip-box" @click="jumpLocation(homedata.svipBanner[0].link)">
                 <img :src="homedata.svipBanner[0].image">
-            </div>
+            </div>-->
             <!--优惠券-->
             <div class="coupon-box" v-if="homedata.coupons && homedata.coupons.length">
                 <div class="scroll-view">
@@ -146,7 +146,7 @@
                         数据库
                     </div>
                 </div>
-                <div class="classify-item" @click="jump('index-classification',39)">
+               <!-- <div class="classify-item" @click="jump('index-classification',39)">
                     <div class="top-info logo-4">
                         学习
                     </div>
@@ -177,7 +177,7 @@
                     <div class="bottom-info">
                         商业智能BI
                     </div>
-                </div>
+                </div>-->
             </div>
             <!--推荐课程列表-->
             <div class="recommend-list">
@@ -226,10 +226,10 @@
                 <span>我的课程</span>
                 <img src="https://cdn.ibrand.cc/icon_course.png" alt="" slot="icon">
             </van-tabbar-item>
-            <van-tabbar-item>
+            <!--<van-tabbar-item>
                 <span>SVIP</span>
                 <img src="https://cdn.ibrand.cc/icon_svip.png" alt="" slot="icon">
-            </van-tabbar-item>
+            </van-tabbar-item>-->
             <van-tabbar-item>
                 <span>个人中心</span>
                 <img src="https://cdn.ibrand.cc/icon_user.png" alt="" slot="icon">
@@ -323,10 +323,6 @@
                         name:'users-mycourse'
                     })
                 } else if(index == 2){
-                    this.$router.push({
-                        name:'index-svip'
-                    })
-                } else if(index == 3){
                     this.$router.push({
                         name:'users-index'
                     })

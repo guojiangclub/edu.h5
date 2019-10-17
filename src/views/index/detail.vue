@@ -135,7 +135,7 @@
         </div>
         <!--svip  加 免费试看-->
         <div class="svip-buy" v-if="!detail_meta.isMember">
-            <div class="svip" v-if="detail.price != 0 && detail_meta.isVip == false" @click="jumpSvip">
+            <!--<div class="svip" v-if="detail.price != 0 && detail_meta.isVip == false" @click="jumpSvip">
                 <img src="http://ibrand-miniprogram.oss-cn-hangzhou.aliyuncs.com/18-12-19/61152215.jpg">
                 <div class="goodness">
                     成为svip，所选课程可省 ¥{{detail.display_price}}
@@ -144,7 +144,7 @@
                     立即省钱
                     <span class="iconfont icon-jiantou"></span>
                 </div>
-            </div>
+            </div>-->
             <div class="buy-box">
                 <div class="how-much">
                     <!--如果价格为0，显示免费-->

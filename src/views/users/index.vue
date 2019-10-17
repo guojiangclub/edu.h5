@@ -60,17 +60,17 @@
                     </div>
                 </div>-->
                 <div class="balance-point">
-                    <div class="item" @click="changeService">
+                    <!--<div class="item" @click="changeService">
                         <div class="iconfont icon-lianxiwomen"></div>
                         <div class="txt">联系我们</div>
                         <div class="iconfont icon-jiantou"></div>
-                    </div>
+                    </div>-->
                     <div class="item"  @click="jumpPath('users-setting')">
                         <div class="iconfont icon-shezhi"></div>
                         <div class="txt">设置</div>
                         <div class="iconfont icon-jiantou"></div>
                     </div>
-                    <div class="item" @click="jumpLocation('https://mobile.hellobi.com/#/question/0')">
+                    <!--<div class="item" @click="jumpLocation('https://mobile.hellobi.com/#/question/0')">
                         <div class="iconfont icon-wenda"></div>
                         <div class="txt">问答</div>
                         <div class="iconfont icon-jiantou"></div>
@@ -84,7 +84,7 @@
                         <div class="iconfont icon-boke"></div>
                         <div class="txt">博客</div>
                         <div class="iconfont icon-jiantou"></div>
-                    </div>
+                    </div>-->
                 </div>
             </div>
             <!--弹出客服-->
@@ -117,7 +117,9 @@
                 </div>
             </div>
         <div class="ibrand" @click="jumpWeb">
-            <div class="iconfont icon-dibu logo"></div>
+            <div class="logo">
+                果酱社区提供技术支持
+            </div>
         </div>
         <!--tabbar-->
         <van-tabbar v-model="active" active-color="#004E9D" @change="jumpTab">
@@ -129,10 +131,10 @@
                 <span>我的课程</span>
                 <img src="https://cdn.ibrand.cc/icon_course.png" alt="" slot="icon">
             </van-tabbar-item>
-            <van-tabbar-item>
+            <!--<van-tabbar-item>
                 <span>SVIP</span>
                 <img src="https://cdn.ibrand.cc/icon_svip.png" alt="" slot="icon">
-            </van-tabbar-item>
+            </van-tabbar-item>-->
             <van-tabbar-item>
                 <span>个人中心</span>
                 <img :src="props.active ? icon.active : icon.normal" alt="" slot="icon"
@@ -184,20 +186,17 @@
         },
         methods:{
             jumpWeb() {
-                this.$router.push({
+                /*this.$router.push({
                     name:'about'
-                })
+                })*/
+                window.location.href = ' https://guojiang.club'
             },
             jumpTab(index){
-                if(index == 3){
+                if(index == 2){
                     return
                 } else if (index == 0){
                     this.$router.push({
                         name:'index-index'
-                    })
-                } else if(index == 2){
-                    this.$router.push({
-                        name:'index-svip'
                     })
                 } else if(index == 1){
                     this.$router.push({

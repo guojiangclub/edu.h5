@@ -9,7 +9,7 @@
        <div class="content">
            <div class="tips" v-if="message">{{message}}</div>
            <div class="phone__warning">
-               <img src="http://ibrand-miniprogram.oss-cn-hangzhou.aliyuncs.com/18-12-29/45704537.jpg">
+               <img src="https://cdn.ibrand.cc/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20191015170325.jpg">
                <!--<i class="iconfont icon-anquanjinggao"></i>-->
            </div>
            <!--<div class="register_header iconfont icon-youhuiquan"></div>-->
