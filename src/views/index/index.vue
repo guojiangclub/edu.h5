@@ -202,7 +202,7 @@
                                         </div>
                                     </div>
                                     <div class="teach-box">
-                                        <div class="teacher">
+                                        <div class="teacher" v-if="item.teacher">
                                             <span class="iconfont icon-laoshi"></span>
                                             {{item.teacher.name || '无名'}}老师
                                         </div>
