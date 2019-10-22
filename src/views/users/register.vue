@@ -147,7 +147,6 @@
 
             //获取到快捷登录的数据
             getLoginData(res){
-                console.log('数据呀',res);
                 if(res.data.access_token){
                     var result=res.data;
                     result.access_token =result.token_type + ' ' + result.access_token;
@@ -167,7 +166,7 @@
 
                     }
                 } else {
-                    // this.$dialog.alert({message: '未能自动登录，请手动登录'});
+                    this.$dialog.alert({message: '未能自动登录，请手动登录'});
                 }
 
             },
@@ -287,7 +286,6 @@
                         let data = {
                             open_id:openid
                         }
-                        console.log(window.location.href);
                         vm.$store.dispatch('queryquicklogin',data)
                         EventBus.$on('quickLoginData',vm.getLoginData)
 

@@ -264,7 +264,7 @@
             <img  src="https://cdn.ibrand.cc/fifteen.png">
         </div>
         <div class="copyright">
-            Copyright © 天善智能-上海拓善智能科技有限公司 2019
+            Copyright © 果酱社区 2019
         </div>
         <!--固定导航栏-->
         <div class="tabBar">

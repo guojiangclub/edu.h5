@@ -15,7 +15,7 @@
                    <!-- <button v-if="!info.user.user_info_filled && token && init" class="user-btn">
                         <div class="phone-text">点击完善个人信息</div>
                     </button>-->
-                    <div class="svip" @click="jumpSvip">
+                    <!--<div class="svip" @click="jumpSvip">
                         <div class="gift">
                             <span class="iconfont icon-gift"></span>
                         </div>
@@ -23,7 +23,7 @@
                             <div class="s-txt">SVIP</div>
                             <div class="t-txt">限时优惠中</div>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
                 <div class="header" v-else @click="jumpPath('users-register')">
                     <div class="txt">注册/登录</div>
