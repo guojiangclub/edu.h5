@@ -7,7 +7,8 @@
                             <img :src="info.user.avatar" alt="">
                         </div>
                         <div class="info">
-                            <div class="nick-name" v-if="info.user && info.user.user_info_filled">
+                            <!--&& info.user.user_info_filled-->
+                            <div class="nick-name" v-if="info.user">
                                 {{info.user.nick_name || '无名'}}
                             </div>
                         </div>

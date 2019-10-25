@@ -12,7 +12,7 @@
                 </div>
             <div class="navbar-slider" :style="{width:width + 'px', transform: 'translateX('+ sliderOffset +'px)'}"></div>
         </div>
-        <div class="coupon-content" v-if="activeIndex == 0">
+        <div class="coupon-content" v-if="activeIndex == 0" :class="is_navbar == false ? 'mar_fifty':''">
             <div v-if="dataList && dataList[0] && dataList[0].length">
                 <van-list v-model="tabList[0].loading" :finished="tabList[0].finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
                     <van-cell v-for="(item,index) in dataList[0]" :key="index">
@@ -46,7 +46,7 @@
             </div>
             <div v-else class="no-data">暂无数据</div>
         </div>
-        <div class="coupon-content" v-if="activeIndex == 1">
+        <div class="coupon-content" v-if="activeIndex == 1" :class="is_navbar == false ? 'mar_fifty':''">
             <div v-if="dataList && dataList[1] && dataList[1].length">
                 <van-list v-model="tabList[1].loading" :finished="tabList[1].finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
                     <van-cell v-for="(item,index) in dataList[1]" :key="index">
@@ -80,7 +80,7 @@
             </div>
             <div v-else class="no-data">暂无数据</div>
         </div>
-        <div class="coupon-content" v-if="activeIndex == 2">
+        <div class="coupon-content" v-if="activeIndex == 2" :class="is_navbar == false ? 'mar_fifty':''">
             <div v-if="dataList && dataList[2] && dataList[2].length">
                 <van-list v-model="tabList[2].loading" :finished="tabList[2].finished" finished-text="没有更多了" @load="loadMore" :immediate-check="immediate">
                     <van-cell v-for="(item,index) in dataList[2]" :key="index">
@@ -333,6 +333,9 @@
         .coupon-content{
             padding:10px 15px 15px 15px;
             margin-top: 96px;
+            &.mar_fifty{
+                margin-top: 50px;
+            }
             .van-cell{
                 margin-bottom:15px;
             }
