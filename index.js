@@ -1,6 +1,8 @@
 /**
  * Created by Administrator on 2017/7/5.
  */
+//https://swoole-hellobi-beta-admin.ibrand.cc/  天善学院
+//    https://guojiang-xueyuan-demo.ibrand.cc/
 
 var globalConfigs = {
 

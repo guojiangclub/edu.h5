@@ -283,7 +283,7 @@
             changeCoupon(){
                 if(this.penny == 0 || this.info.coupons.length == 0){
                     this.$dialog.alert({
-                        message:'暂无可用优惠券'
+                        message:'暂无其他可用优惠券'
                     })
                 } else {
                     this.$router.push({

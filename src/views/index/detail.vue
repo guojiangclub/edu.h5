@@ -230,7 +230,7 @@
                         可领优惠券
                     </div>
                     <div class="coupon-box" >
-                        <div class="item active" v-for="(item,index) in coupons" :key="index" @click="receiveCoupon(item.id,item.is_receive,index)">
+                        <div class="item active" v-for="(item,index) in coupons" :key="index" @click="receiveCoupons(item.id,item.is_receive,index)">
                             <div class="left-info">
                                 <div class="money" v-if="item.action_type.type == 'cash'">
                                     <span>¥</span>
@@ -313,7 +313,7 @@
                 show_coupons:false,
                 service_info:'',//客服数据
                 show_attention:false,//弹出客服
-                activeIndex:'',
+                activeIdx:'',
                 discount_id:'',
                 svipPrice:'',
                 announcement:[],
@@ -355,6 +355,7 @@
             EventBus.$off('serviceinfo');
             EventBus.$off('createOrder');
             EventBus.$off('noticeData');
+            EventBus.$off('reciveCoupon');
         },
         mounted(){
             this.width = document.body.clientWidth / 3;
@@ -483,9 +484,9 @@
               }
             },
             //点击领取优惠券
-            receiveCoupon(id,is_receive,index){
+            receiveCoupons(id,is_receive,index){
                 this.discount_id = id;
-                this.activeIndex = index;
+                this.activeIdx = index;
                 const oauth = Cache.get(cache_keys.token);
                 if(oauth && oauth.access_token){
                     if(is_receive){
@@ -504,7 +505,7 @@
             //点击领取优惠券的数据处理
             getCouponDate(res){
                 this.$toast("领取成功");
-                this.coupons[this.activeIndex].is_receive = true;
+                this.coupons[this.activeIdx].is_receive = true;
             },
             //跳到首页
             jumpIndex(){

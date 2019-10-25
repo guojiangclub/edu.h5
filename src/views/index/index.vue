@@ -507,14 +507,20 @@
                         .left-info{
                             font-size:20px;
                             color: #202020;
+                            flex: 1;
 
                         }
                         .right-info{
+                            flex: 1;
+                            overflow: hidden;
                             .label{
                                 font-size: 12px;
                                 color: #fff;
                                 line-height: 17px;
                                 padding: 2px;
+                                white-space: nowrap;
+                                text-overflow: ellipsis;
+                                overflow: hidden;
                             }
                             .soon{
                                 padding: 4px 12px;
